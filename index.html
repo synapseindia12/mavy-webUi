@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Mavy feed page - stay up to date with all the latest"/>
+    <title>Mavy | Feed</title>
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/slidebars.css">
+    <link rel="stylesheet" href="css/tooltipster.css">
+	<link rel="stylesheet" href="css/jquery.bxslider.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet' type='text/css'>
+</head>
+
+<body ng-app="mavyApp" style="position:relative">
+    <h1 class="hidden">Home Page</h1>
+	<div ng-view=""></div>
+    <!--slideout sidebar left-->
+    <!--end header logo & menu-->
+	<!--<div class="footer-wrapper">
+		<footer class="footer-text" ng-include="'footer.html'"></footer>
+	</div>-->
+    <!--end sb-site container-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+    window.jQuery || document.write('<script src="js/jquery-1.11.2.min.js"><\/script>')
+    </script>
+	<script src="http://agencydev.crresearch.com/api_crr/mobilehandler.ashx?proxy"></script>
+	<script src="js/jquery.bxslider.min.js"></script>
+    <script src="js/jquery.tooltipster.min.js"></script>
+    <script src="js/slidebars.js"></script>
+    <script src="js/main.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-route.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-cookies.js"></script>
+	<script type="text/javascript" src="http://rawgithub.com/gsklee/ngStorage/master/ngStorage.js"></script>
+	<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.7.0.js"></script>
+	<script src="http://rawgithub.com/GoDisco/ngFacebook/master/ngFacebook.js"></script>
+	<script src="js/app.js"></script>
+</body>
+
+</html>

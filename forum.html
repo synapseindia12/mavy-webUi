@@ -1,0 +1,291 @@
+    <h1 class="hidden">Forum Page</h1>
+    <!--slideout sidebar left-->
+	<div ng-include="'navigation.html'"></div>
+    <!--end header logo & menu-->
+    <!--main content-->
+    <div id="sb-site"><!--wrapper so content moves when slide out menus are clicked-->
+        <div class="grid-block wrap">
+            <section class="grid-block small-12 medium-8 vertical">
+                <h1 class="hidden">Forum</h1>
+
+                <!--forum topic collapsed-->
+            <div class="grid-content">
+                <!--container jquery expander-->
+                    <article class="card replyToPost">
+                        <div class="card-divider color-code-3">
+                            <h6 class="boxTitle">Create New Post</h6>
+                        </div>
+                    <form class="card-section" action="#" method="post">
+                            <div class="grid-block">
+                                <div class="small-12 medium-12 grid-content">
+                                    <label for="post-input" class="settingLabel hidden">
+                                        Post Title
+                                    </label>
+                                    <input type="text" class="post-input" name="post-input" id="post-input" placeholder="Post Title" value="">
+                                    
+                                    <label class="post-label hidden">
+                                        Create new post
+                                    </label>
+                                        <textarea cols="40" rows="8" name="comment" placeholder="Create new post" id="comment"></textarea>
+                                    
+                                    <div id="post-content">
+                                        <input type="submit" value="Submit Post" class="button fa float-right" id="new-post">
+                                    </div>
+                                </div>
+                            </div>
+                        </form><!--end form-->
+                    </article><!--end expand container card-->
+              </div><!--end grid content-->
+
+              <!--forum posts-->
+                <div class="grid-content">
+                    <article class="card replyToPost">
+                        <div class="card-divider reply">
+                            <!--post message counter and nav-->
+                            <div class="message-counter">
+                                <span class="fa fa-sort-asc scroll-up su1"></span>
+                                <div class="reply-count">3</div>
+                                <span class="fa fa-sort-desc scroll-dwn sd1"></span>
+                            </div>
+                        </div>
+                        <!--avatar container-->
+                        <div class="postContent card-section">
+                            <div class="posterAvatar">
+                                <a class="avatarContainer" href="#">
+                                    <img alt="profile image" class="profile" src="images/avatar.svg">
+                                </a>
+                            </div>
+                            <!--metadata for post reply-->
+                            <div class="postMeta">
+                                <p class="name">Cady Heron</p>
+                                <p class="userName">User Name</p>
+                                <h5 class="postTitle">What to Watch On Netflix</h5>
+                                <p class="set-width">Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
+                                </p>
+                                <p class="date"><strong>Yesterday</strong></p>
+                            </div>
+                            <p class="reply-to-post">
+                                <a href="forum.html#reply-box">Reply</a>
+                            </p>
+                        </div>
+                    </article>
+                </div>
+
+                <!--forum post expanded with sample comments-->
+                <div class="grid-content">
+                    <article class="card replyToPost">
+                        <div class="card-divider reply">
+                            <!--post message counter and nav-->
+                            <div class="message-counter">
+                                <span class="fa fa-sort-asc scroll-up su6"></span>
+                                <div class="reply-count">3</div>
+                                <span class="fa fa-sort-desc scroll-dwn sd6">
+                                    </span>
+                            </div>
+                        </div>
+                        <!--avatar container-->
+                        <div class="postContent card-section">
+                            <div class="posterAvatar">
+                                <a class="avatarContainer" href="#">
+                                    <img alt="profile image" class="profile" src="images/avatar.svg">
+                                </a>
+                            </div>
+                            <!--metadata for post reply-->
+                            <div class="postMeta">
+                                <p class="name">Cady Heron</p>
+                                <p class="userName">User Name</p>
+                                <h5 class="postTitle">What to Watch On Netflix</h5>
+                                <p class="set-width">Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
+                                </p>
+                                <p class="date"><strong>Yesterday</strong></p>
+                                <p class="reply-to-posts-count">
+                                    <a href="forum.html#reply-box" id="reply-padding">Reply</a>
+                                    <a href="#" class="expand-collapse-toggle">
+                                    Replies ( <span class="replies-count">3</span> ) 
+                                    </a>
+                                </p>
+                            </div>
+                            <!--example comments to post-->
+                            <div class="card">
+                                <div class="card-divider reply">
+                                </div>
+                                <!--example comment one-->
+                                <div class="post-comment-reply card-section">
+                                    <div class="posterAvatar">
+                                        <a class="avatarContainer" href="#">
+                                            <img alt="profile image" class="profile" src="images/avatar.svg">
+                                        </a>
+                                    </div>
+                                    <!--metadata for example comment one-->
+                                    <div class="postMeta">
+                                        <p class="name">Cady Heron</p>
+                                        <p class="userName">User Name</p>
+                                        <p class="set-width">Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
+                                        </p>
+                                        <p class="date"><strong>Yesterday</strong></p>
+                                        <p class="reply-to-post">
+                                            <a href="forum.html#reply-box">Reply</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!--end comment one card-->
+                            
+                            <!--start example comment two-->
+                            <div class="card">
+                                <div class="post-comment-reply card-section">
+                                    <div class="card-divider reply">
+                                    </div>
+                                    <div class="posterAvatar">
+                                        <a class="avatarContainer" href="#">
+                                            <img alt="profile image" class="profile" src="images/avatar.svg">
+                                        </a>
+                                    </div>
+                                    <!--metadata for comment two-->
+                                    <div class="postMeta">
+                                        <p class="name">Cady Heron</p>
+                                        <p class="userName">User Name</p>
+                                        <p class="set-width">Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
+                                        </p>
+                                        <p class="date"><strong>Yesterday</strong></p>
+                                        <p class="reply-to-post">
+                                            <a href="forum.html#reply-box">Reply</a>
+                                        </p>
+                                    </div>
+                                    <!--reply to example comment two-->
+                                    <div class="card">
+                                        <div class="post-comment-reply card-section">
+                                            <div class="card-divider reply">
+                                            </div>
+                                            <div class="posterAvatar">
+                                                <a class="avatarContainer" href="#">
+                                                    <img alt="profile image" class="profile" src="images/avatar.svg">
+                                                </a>
+                                            </div>
+                                            <!--metadata for example comment two-->
+                                            <div class="postMeta">
+                                                <p class="name">Cady Heron</p>
+                                                <p class="userName">User Name</p>
+                                                <p class="set-width">Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
+                                                </p>
+                                                <p class="date"><strong>Yesterday</strong></p>
+                                                <p class="reply-to-post">
+                                                    <a href="forum.html#reply-box">Reply</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div><!--end reply to example comment two-->
+                                </div>
+                            </div><!--end example comment two-->
+
+                            <!--reply form-->
+                            <div class="card comment-form">
+                                <form id="replyForm" class="card-section" action="#" method="post">
+                                    <div class="grid-block" id="reply-box">
+                                        <div class="small-12 medium-12 grid-content">
+                                            <label class="forum-label">
+                                                Reply to Post
+                                                <textarea cols="40" rows="8" name="comment" id="reply"></textarea>
+                                            </label>
+                                            <div id="comment-button">
+                                                <a href="#" class="button" id="add-media">
+                                                    <span class="fa fa-camera"></span>
+                                                    Upload Media
+                                                </a>
+                                                <input type="submit" value="Submit Reply" class="button fa" id="add-comment">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div><!--end reply form container-->
+                        </div>
+                    </article>
+                </div>
+                <!--end forum post expanded with sample comments-->
+            </section>
+
+            <!--start right sidebar content-->
+            <div class="grid-content small-12 medium-4 message-side-bar">
+                <aside class="card">
+                    <h2 class="hidden">Sidebar Content</h2>
+                    <div class="card-section updateWidget">
+                        <h6 class="boxTitle">Updates</h6>
+                        <div id="updateContent">
+                            <span class="messageWaiting"></span>
+                            <p class="updates">You have<span id="messageCount"> two </span>messages waiting</p>
+                            <span class="forumReply"></span>
+                            <p class="updates">Somebody replied to your forum post</p>
+                        </div>
+                    </div>
+                </aside>
+
+                <!--start daily poll radio form-->
+                <form class="card dailyPoll" action="" method="post">
+                    <div class="card-section">
+                        <h6 class="boxTitle">Daily Poll</h6>
+                        <div id="pollContent">
+                            <h5 class="pollQuestion" id="currentQuestion">What is your favorite Robin Williams movie?</h5>
+                            <p>
+                                <input type="radio" name="poll-radio" value="" id="poll-radio-1">
+                                <label for="poll-radio-1" class="inline-label">
+                                    Choice One
+                                </label>
+                            </p>
+                            <p>
+                                <input type="radio" name="poll-radio" value="" id="poll-radio-2">
+                                <label for="poll-radio-2" class="inline-label">
+                                    Choice Two
+                                </label>
+                            </p>
+                            <p>
+                                <input type="radio" name="poll-radio" value="" id="poll-radio-3">
+                                <label for="poll-radio-3" class="inline-label">
+                                    Choice Three
+                                </label>
+                            </p>
+                            <p>
+                                <input type="radio" name="poll-radio" value="" id="poll-radio-4">
+                                <label for="poll-radio-4" class="inline-label">
+                                    Choice Four
+                                </label>
+                            </p>
+                            <p>
+                                <input type="radio" name="poll-radio" value="" id="poll-radio-5">
+                                <label for="poll-radio-5" class="inline-label">
+                                    Choice Five
+                                </label>
+                            </p>
+                            <button type="submit" name="poll-submit" class="button" id="pollSubmit">Submit Vote</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!--start poll result box-->
+                <aside class="card pollResults">
+                    <div class="card-section">
+                        <h6 class="boxTitle">Results To Yesterday's Poll</h6>
+                        <div id="pollResults">
+                            <h5 class="pollQuestion" id="pastQuestion">What is your favorite Beatle's song?</h5>
+                            <div class="results">
+                                <p class="percents"><span id="result-poll-1">22%</span>Choice One</p>
+                                <p class="percents"><span id="result-poll-2">12%</span>Choice Two</p>
+                                <p class="percents"><span id="result-poll-3" class="highValue">45%</span>Choice Three
+                                    <p>
+                                        <p class="percents"><span id="result-poll-4">10%</span>Choice Four</p>
+                                        <p class="percents"><span id="result-poll-5">11%</span>Choice Five</p>
+                            </div>
+                            <a class="button" id="more-polls-link" href="results.html">See More Polls</a>
+                        </div>
+                    </div>
+                </aside><!--end poll result box-->
+            </div>
+        </div>
+    </div><!--end sb-site container-->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+    window.jQuery || document.write('<script src="js/jquery-1.11.2.min.js"><\/script>')
+    </script>
+    <script src="js/jquery.tooltipster.min.js"></script>
+    <script src="js/jquery.simple-expand.min.js"></script>
+    <script src="js/slidebars.js"></script>
+    <script src="js/main.js"></script>

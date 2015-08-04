@@ -1,0 +1,192 @@
+    <h1 class="hidden">Messages Page</h1>
+    <!--slideout sidebar left-->
+	<div ng-include="'navigation.html'"></div>
+	<!--end header logo & menu-->
+	<!--main content-->
+    <div id="sb-site"><!--wrapper so content moves when slide out menus are clicked-->
+
+        <!--main content-->
+        <div class="grid-block wrap">
+            <section class="grid-block small-12 medium-8 small-order-2 medium-order-1 vertical">
+                <h2 class="hidden">Messages Content</h2>
+                <!--main content grid-->
+					<div class="grid-content">
+						<article class="card replyToPost" ng-repeat="message in messages">
+							<div class="card-divider">
+								<h6 class="boxTitle post-recipient">{{message.CreatedUser.DisplayName}}</h6>
+								<span class="unread-notification-circle"></span>
+							</div>
+							<div class="postContent card-section">
+								<div class="posterAvatar">
+									<a class="avatarContainer" href="#">
+										<img alt="profile image" class="profile" src="{{message.CreatedUser.AvatarUrl}}" />
+									</a>
+								</div>
+								<div class="forumMeta">
+									<h5 class="postTitle">
+										{{message.LastMessage.Subject}}
+									</h5>
+									<p ng-bind="message.LastMessage.Body"></p>
+									<p class="date">{{message.CreatedDate | date:"MM/dd/yyyy 'at' h:mma"}}</p>
+								</div>
+							</div>
+						</article>
+
+                    <!--<article class="card replyToPost">
+                        <div class="card-divider">
+                            <h6 class="boxTitle post-recipient">
+                                Community Manager
+                            </h6>
+                            <span class="read-notification-circle"></span>
+                        </div>
+                        <div class="postContent card-section">
+                            <div class="posterAvatar">
+                                <a class="avatarContainer" href="#">
+                                    <img alt="profile image" class="profile" src="images/avatar.svg">
+                                </a>
+                            </div>
+                            <div class="forumMeta">
+                                <h5 class="postTitle">
+                                    New Results From a Project
+                                </h5>
+                                <p>Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
+                                </p>
+                                <p class="date">Today</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card replyToPost">
+                        <div class="card-divider message-box">
+                            <h6 class="boxTitle post-recipient">
+                                Community Manager
+                            </h6>
+                            <span class="unread-notification-circle"></span>
+                        </div>
+                        <div class="postContent card-section">
+                            <div class="posterAvatar">
+                                <a class="avatarContainer" href="#">
+                                    <img alt="profile image" class="profile" src="images/avatar.svg">
+                                </a>
+                            </div>
+                            <div class="forumMeta">
+                                <h5 class="postTitle">
+                                    New Results From a Project
+                                </h5>
+                                <p>Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
+                                </p>
+                                <p class="date">Today</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card replyToPost">
+                        <div class="card-divider">
+                            <h6 class="boxTitle post-recipient">
+                                Community Manager
+                            </h6>
+                            <span class="unread-notification-circle"></span>
+                        </div>
+                        <div class="postContent card-section">
+                            <div class="posterAvatar">
+                                <a class="avatarContainer" href="#">
+                                    <img alt="profile image" class="profile" src="images/avatar.svg">
+                                </a>
+                            </div>
+                            <div class="forumMeta">
+                                <h5 class="postTitle">
+                                    New Results From a Project
+                                </h5>
+                                <p>Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
+                                </p>
+                                <p class="date">Today</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card replyToPost">
+                        <div class="card-divider">
+                            <h6 class="boxTitle post-recipient">
+                                Community Manager
+                            </h6>
+                            <span class="read-notification-circle"></span>
+                        </div>
+                        <div class="postContent card-section">
+                            <div class="posterAvatar">
+                                <a class="avatarContainer" href="#">
+                                    <img alt="profile image" class="profile" src="images/avatar.svg">
+                                </a>
+                            </div>
+                            <div class="forumMeta">
+                                <h5 class="postTitle">
+                                    New Results From a Project
+                                </h5>
+                                <p>Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
+                                </p>
+                                <p class="date">Today</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card replyToPost">
+                        <div class="card-divider">
+                            <h6 class="boxTitle post-recipient">
+                                Community Manager
+                            </h6>
+                            <span class="read-notification-circle"></span>
+                        </div>
+                        <div class="postContent card-section">
+                            <div class="posterAvatar">
+                                <a class="avatarContainer" href="#">
+                                    <img alt="profile image" class="profile" src="images/avatar.svg">
+                                </a>
+                            </div>
+                            <div class="forumMeta">
+                                <h5 class="postTitle">
+                                    New Results From a Project
+                                </h5>
+                                <p>Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
+                                </p>
+                                <p class="date">Today</p>
+                            </div>
+                        </div>
+                    </article>-->
+
+                </div>
+            </section><!--end main content-->
+
+            <!--start right sidebar content message box-->
+            <div class="grid-content small-12 medium-4 small-order-1 medium-order-2 message-side-bar">
+                <aside class="card messageFilter">
+                    <div class="card-section">
+                        <h6 class="boxTitle">
+                            By Recipient
+                        </h6>
+                        <ul class="fa-ul by-recipient">
+                            <li>
+                                <a href="#">
+                                    <span class="fa fa-users"></span>
+                                Community Managers ( 
+                                    <span id="community-count"> 3</span>
+                                 )</a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <span class="fa fa-certificate"></span> 
+                                Moderator ( 
+                                    <span id="moderator-count"> 1</span>
+                                 )</a>
+                            </li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div><!--end sb-site container-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+    window.jQuery || document.write('<script src="js/jquery-1.11.2.min.js"><\/script>')
+    </script>
+    <script src="js/jquery.tooltipster.min.js"></script>
+    <script src="js/slidebars.js"></script>
+    <script src="js/main.js"></script>

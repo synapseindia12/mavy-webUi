@@ -1,0 +1,101 @@
+<div ng-include="'navigation.html'"></div>
+<div id="sb-site"><!--wrapper so content moves when slide out menus are clicked-->
+        <div class="grid-block wrap">
+            <section class="grid-block small-12 medium-8 vertical">
+                <h1 class="hidden">Feed Content</h1>
+                <!--main content begins-->
+                <div class="grid-content">
+                    <article class="card replyToPost">
+                        <div class="card-divider color-code-1">
+                            <h6 class="boxTitle">Reply to your post</h6>
+                        </div>
+                        <!--avatar container-->
+                        <div class="postContent card-section" ng-repeat="post in tempArray">
+                            <div class="posterAvatar">
+                                <a class="avatarContainer" href="#">
+                                    <img alt="profile image" class="profile" src="{{post.AvatarUrl}}" />
+                                </a>
+                            </div>
+                            <!--metadata for post reply-->
+                            <div class="postMeta">
+                                <!--post message counter and nav-->
+                                <div class="message-counter">
+                                    <span class="fa fa-sort-asc scroll-up su1"></span>
+                                <div class="reply-count">3</div>
+                                    <span class="fa fa-sort-desc scroll-dwn sd1"></span>
+                                </div>
+                                <p class="name">{{post.UserName}}</p>
+                                <p class="userName">User Name</p>
+                                <h5 class="postTitle">What to Watch On Netflix</h5>
+                                <p class="set-width">Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
+                                </p>
+                                <p class="date"><strong>Yesterday</strong></p>
+                            </div>
+                        </div>
+                    </article>
+                    <!--end of post box-->
+
+                    <!--start nested assignment boxes-->
+					<div class="grid-block small-up-1 medium-up-2 large-up-2">                    
+						<div class="grid-content" ng-repeat="assignment in allAssignments">
+							<article class="card card-margin">
+								<div class="card-divider color-code-2">
+                                    <h6 class="boxTitle">New Assignment |<span class="assignment-type"> Quiz</span></h6>
+                                </div>
+								<div class="card-section">
+									<h6 class="boxTitle">New Assignment |<span class="assignment-type"> Quiz</span></h6>
+									<h3 class="quizTitle">{{assignment.moduleTitle}}</h3>
+									<p dynamic="{{assignment.options.instructions}}"></p>
+								</div>
+							</article>
+						</div>
+					</div>
+                </div>
+            </section>
+
+            <!--right sidebar content-->
+            <div class="grid-content small-12 medium-4 message-side-bar">
+                <aside class="card">
+                    <h2 class="hidden">Sidebar</h2>
+                    <!--notification box-->
+                    <div class="card-section updateWidget">
+                        <h6 class="boxTitle">Updates</h6>
+                        <div id="updateContent">
+                            <span class="messageWaiting"></span>
+                            <p class="updates">You have<span id="messageCount"> two </span>messages waiting</p>
+                            <span class="forumReply"></span>
+                            <p class="updates">Somebody replied to your forum post</p>
+                        </div>
+                    </div>
+                </aside>
+                <!--start daily poll radio form-->
+                <div ng-include="'polls.html'"></div>
+                <!--start poll result box-->
+                <aside class="card pollResults">
+                    <div class="card-section">
+                        <h6 class="boxTitle">Results To Yesterday's Poll</h6>
+                        <div id="pollResults">
+                            <h5 class="pollQuestion" id="pastQuestion">What is your favorite Beatle's song?</h5>
+                            <div class="results">
+                                <p class="percents"><span id="result-poll-1">22%</span>Choice One</p>
+                                <p class="percents"><span id="result-poll-2">12%</span>Choice Two</p>
+                                <p class="percents"><span id="result-poll-3" class="highValue">45%</span>Choice Three
+                                    <p>
+                                <p class="percents"><span id="result-poll-4">10%</span>Choice Four</p>
+                                <p class="percents"><span id="result-poll-5">11%</span>Choice Five</p>
+                            </div>
+                            <a class="button" id="more-polls-link" href="results.html">See More Polls</a>
+                        </div>
+                    </div>
+                </aside><!--end poll result box-->
+            </div>
+        </div>
+    </div>
+	
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+    window.jQuery || document.write('<script src="js/jquery-1.11.2.min.js"><\/script>')
+    </script>
+    <script src="js/jquery.tooltipster.min.js"></script>
+    <script src="js/slidebars.js"></script>
+    <script src="js/main.js"></script>

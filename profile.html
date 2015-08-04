@@ -1,0 +1,218 @@
+
+    <h1 class="hidden">Profile Settings Page</h1>
+    <!--slideout sidebar left-->
+	<!--<div data-ng-include data-ng-src="getHtml()"></div>-->
+	<div ng-include="'navigation.html'"></div>
+	<!--end header logo & menu-->
+    <div id="sb-site"><!--wrapper so content moves when slide out menus are clicked-->
+        <!--left sidebar content-->
+        <section class="grid-block wrap" id="profile">
+            <h2 class="hidden">Left Sidebar</h2>
+        
+            <!--start user image, meta & badges-->
+            <div class="grid-content small-12 medium-3 medium-order-1 small-order-3">
+                <div class="settingAvatar">
+                    <a class="avatarContainer" href="#">
+                        <img alt="profile image" class="profile" src="images/avatar.svg">
+                    </a>
+                </div>
+                <div class="settingMeta">
+                    <p>Cady Heron</p>
+                </div>
+
+                <aside class="card badges">
+                    <h6 class="boxTitle card-section">Badges</h6>
+                    <img src="images/placeholder-badge.svg" alt="badge">
+                    <img src="images/placeholder-badge.svg" alt="badge">
+                    <img src="images/placeholder-badge.svg" alt="badge">
+                    <img src="images/placeholder-badge.svg" alt="badge">
+                    <img src="images/placeholder-badge.svg" alt="badge">
+                    <img src="images/placeholder-badge.svg" alt="badge">
+                </aside>
+            </div><!--end left sidebar content-->
+
+            <section class="grid-content small-12 medium-6 small-order-2 medium-order-2">
+                <h2 class="hidden">Profile Form</h2>
+                <!--start profile form section-->
+                    <article class="card">
+                        <div class="card-divider profile-header">
+                            <h6 class="divider-line">Profile</h6>
+                        </div>
+                        <form id="profile-form" action="#" method="post">
+                            <div class="grid-content card-section small-12 medium-12">
+                                    <label for="userFirstName" class="settingLabel">
+                                        First Name
+                                    </label>
+                                    <input type="text" class="name first bottom-border" name="first_name" id="userFirstName" placeholder="FIRST NAME" value="">
+                                    <label for="userLastName" class="settingLabel">
+                                        Last Name
+                                    </label>
+                                    <input type="text" class="name last bottom-border" placeholder="LAST NAME" name="last_name" id="userLastName" value="">
+                                
+                                    <label for="userEmail" class="settingLabel">
+                                        Email Address
+                                    </label>
+                                    <input type="email" class="email bottom-border" placeholder="EMAIL" name="location" id="userEmail" value="">
+
+                                    <div class="dob-labels">
+                                        <label class="dob month settingLabel">
+                                            Month
+                                        </label>
+                                        <label class="dob day settingLabel">
+                                           Day
+                                        </label>
+                                        <label class="dob year settingLabel">
+                                            Year
+                                        </label>
+                                    </div>
+
+                                <div class="dob-input">
+                                    <select name="months" class="dob bottom-border">
+                                        <option value="-">-</option>
+                                        <option value="January">1</option>
+                                        <option value="February">2</option>
+                                        <option value="March">3</option>
+                                        <option value="April">4</option>
+                                        <option value="May">5</option>
+                                        <option value="June">6</option>
+                                        <option value="July">7</option>
+                                        <option value="August">8</option>
+                                        <option value="September">9</option>
+                                        <option value="October">10</option>
+                                        <option value="November">11</option>
+                                        <option value="December">12</option>
+                                    </select>
+
+                                    <select id="form_dob_day" class="dob bottom-border" name="dob_day">
+                                        <option value="-">-</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                        <option value="21">21</option>
+                                        <option value="22">22</option>
+                                        <option value="23">23</option>
+                                        <option value="24">24</option>
+                                        <option value="25">25</option>
+                                        <option value="26">26</option>
+                                        <option value="27">27</option>
+                                        <option value="28">28</option>
+                                        <option value="29">29</option>
+                                        <option value="30">30</option>
+                                        <option value="31">31</option>
+                                    </select>
+
+                                    <select id="birthyear" name="birthyear" class="dob bottom-border" ng-repeat="item in numbers">
+                                        <option value="-">-</option>
+                                        <option value="{{item}}">{{item}}</option>
+                                        <!--<option value="2006">2006</option>
+                                        <option value="2005">2005</option>
+                                        <option value="2004">2004</option>
+                                        <option value="2003">2003</option>
+                                        <option value="2002">2002</option>
+                                        <option value="2001">2001</option>
+                                        <option value="2000">2000</option>
+                                        <option value="1999">1999</option>
+                                        <option value="1998">1998</option>
+                                        <option value="1997">1997</option>
+                                        <option value="1996">1996</option>
+                                        <option value="1995">1995</option>
+                                        <option value="1994">1994</option>
+                                        <option value="1993">1993</option>
+                                        <option value="1992">1992</option>
+                                        <option value="1991">1991</option>
+                                        <option value="1990">1990</option>
+                                        <option value="1989">1989</option>
+                                        <option value="1988">1988</option>
+                                        <option value="1987">1987</option>
+                                        <option value="1986">1986</option>
+                                        <option value="1985">1985</option>
+                                        <option value="1984">1984</option>
+                                        <option value="1983">1983</option>
+                                        <option value="1982">1982</option>
+                                        <option value="1981">1981</option>
+                                        <option value="1980">1980</option>
+                                        <option value="1979">1979</option>
+                                        <option value="1978">1978</option>
+                                        <option value="1977">1977</option>
+                                        <option value="1976">1976</option>
+                                        <option value="1975">1975</option>
+                                        <option value="1974">1974</option>
+                                        <option value="1973">1973</option>
+                                        <option value="1972">1972</option>
+                                        <option value="1971">1971</option>
+                                        <option value="1970">1970</option>-->
+                                    </select>
+                                </div>
+                               
+                                    <label for="userGender" class="settingLabel">
+                                        Gender
+                                    </label>
+
+                                    <select class="gender" name="gender" id="userGender">
+                                        <option value="-">-</option>
+                                        <option value="female">Female</option>
+                                        <option value="male">Male</option>
+                                    </select>
+
+                                    <label for="zipcode" class="settingLabel">
+                                        Zip Code
+                                    </label>
+                                    <input type="email" class="zipcode bottom-border" name="zipcode" id="zipcode" value="">
+
+                                    <label for="userMobile" class="settingLabel">
+                                        Mobile Number
+                                    </label>
+                                    <input type="text" class="mobile bottom-border" name="mobile" id="userMobile" value="">
+
+                                <input type="submit" class="button submit-changes" value="Submit" id="submit">
+                            </div>
+                        </form>
+                    </article>
+            </section><!--end main profile content-->
+
+            <!--start setting menu right-->
+			<nav class="grid-content small-12 medium-2 small-order-1 medium-order-3" ng-include="'settings_nav.html'"></nav>
+			<!--end sidebar right-->
+            
+        </section><!--main wrap-->
+        <!-- Start Footer -->
+        <footer class="footer-text">
+            <ul>
+                <li class="copyright">&#169; Mavy</li>
+                <li>
+                    <a href="#">Terms of Use</a>
+                </li>
+                <li>
+                    <a href="#">Feedback</a>
+                </li>
+                <li>
+                    <a href="#">Privacy</a>
+                </li>
+            </ul>
+        </footer>
+    </div><!--end sb-site container-->
+    <!--sb site-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+    window.jQuery || document.write('<script src="js/jquery-1.11.2.min.js"><\/script>')
+    </script>
+    <script src="js/jquery.tooltipster.min.js"></script>
+    <script src="js/slidebars.js"></script>
+    <script src="js/main.js"></script>

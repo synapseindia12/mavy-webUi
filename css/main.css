@@ -1,0 +1,940 @@
+/*  ==================================================
+    GLOBAL STYLES
+    ================================================= */
+body {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    background-color: #eeeeee;
+    padding: 0;
+    margin: 0;
+}
+
+.grid-block.wrap {
+    padding-top: 2.5em;
+    margin-top: -.234em;
+    background-color: #eeeeee;
+    padding-bottom: 7.125em;/*sticky footer*/
+}
+
+h2 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+}
+
+h3 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+}
+
+h4 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+}
+
+.postTitle {
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.card h6 {
+    color: #9193c1;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.assignment-type {
+    text-transform: capitalize;
+}
+
+p.name {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+p.userName {
+    margin-top: -1.563em;
+    font-weight: 400;
+}
+
+p.rewards {
+    margin-top: -1.438em;
+    font-weight: 700;
+    font-size: .7rem;
+}
+
+/*--applied to elements that are hidden from view but not from robots--*/
+.hidden {
+    position: absolute;
+    width: .063em; /* Setting this to 0 make it invisible for VoiceOver */
+    height: .063em; /* Setting this to 0 make it invisible for VoiceOver */
+    padding: 0;
+    margin: -.063em;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;    
+}
+
+.reply-count {
+    color: #5ac8de;
+}
+
+/*  ==================================================
+    FOOTER
+    ================================================= */
+footer {
+    background-color: #f5f5f5;
+}
+
+footer {
+    /*height: 3.125em;*/
+    width: 100%;
+    position: absolute;
+    left: 0;
+}
+.footer-wrapper {
+  position: relative;
+}
+
+.footer-text {
+    text-align: center;
+    padding-top: .625em;
+    padding-bottom: .313em;
+}
+
+.footer-text ul {
+    list-style-type: none;
+}
+
+.footer-text ul li {
+    display: inline;
+    padding: 1em;
+    font-size: .7rem;
+    margin-left: 0;
+}
+
+.footer-text ul li a {
+    text-decoration: none;
+    color: #5d5d81;
+}
+
+.copyright {
+    color: #aeaaaa;
+}
+/*  ==================================================
+    FEED PAGE
+    ================================================== */
+
+.card-divider.color-code-1 {
+    background-color: #58c8de;
+    padding: .313em;
+    margin-bottom: 1.250em;
+}
+
+.card-divider.color-code-3 {
+    background-color: #9193c1;
+    padding: .313em;
+    margin-bottom: 1.250em;
+    text-align: center;
+}
+
+.card-divider.color-code-1 h6, 
+.card-divider.color-code-2 h6,
+.card-divider.color-code-3 h6 {
+    color: #fff;
+    padding-left: .688em;
+    padding-top: .313em;
+}
+
+.card-divider.color-code-2 {
+    background-color: #77accf;
+    padding: .313em;
+}
+/*--sets main content beneath fixed header--*/
+
+#sb-site::before {
+    padding-top: 4.5em;
+}
+
+.postMeta,
+.forumMeta,
+.authorMeta,
+.replyMeta {
+    margin-left: 5.938em;
+}
+
+.posterAvatar {
+    width: 3.125em;
+    float: left;
+    margin-top: .188em;
+    margin-left: 1.240em;
+}
+
+.date {
+    font-weight: 700;
+}
+
+.card-divider {
+    background-color: #fff;
+}
+
+/*  ==================================================
+    SIDEBAR MENU ON MESSAGE PAGE
+    ================================================= */
+
+.fa-ul {
+    line-height: 1;
+}
+
+.fa-ul > li {
+    margin-bottom: 1.875em;
+}
+
+.fa-certificate:before {
+    padding-right: 1.3em;
+    font-size: 1.6rem;
+}
+
+.fa-users:before {
+    padding-right: 1.1em;
+    font-size: 1.6rem;
+}
+
+.message-box {
+    position: relative;
+}
+
+/*  ==================================================
+    HEADER
+    ================================================= */
+#main-header {
+    background: rgb(90,200,222); /* Old browsers */
+        background: -moz-linear-gradient(left, rgba(90,200,222,1) 0%, rgba(119,172,207,1) 40%, rgba(145,147,193,1) 90%, rgba(174,119,178,1) 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(90,200,222,1)), color-stop(40%,rgba(119,172,207,1)), color-stop(90%,rgba(145,147,193,1)), color-stop(100%,rgba(174,119,178,1))); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(left, rgba(90,200,222,1) 0%,rgba(119,172,207,1) 40%,rgba(145,147,193,1) 90%,rgba(174,119,178,1) 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(left, rgba(90,200,222,1) 0%,rgba(119,172,207,1) 40%,rgba(145,147,193,1) 90%,rgba(174,119,178,1) 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(left, rgba(90,200,222,1) 0%,rgba(119,172,207,1) 40%,rgba(145,147,193,1) 90%,rgba(174,119,178,1) 100%); /* IE10+ */
+        background: linear-gradient(to right, rgba(90,200,222,1) 0%,rgba(119,172,207,1) 40%,rgba(145,147,193,1) 90%,rgba(174,119,178,1) 100%); /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5ac8de', endColorstr='#ae77b2',GradientType=1 ); /* IE6-9 */
+        copy
+    height: 5em;
+    padding-top: 1.250em;
+    margin-bottom: 3.125em;
+    width: 100%;
+    box-sizing:border-box;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: -3.438em;
+}
+
+a:hover.glow {
+    -webkit-filter: drop-shadow( .025em .025em .13em #eeeeee );
+            filter: drop-shadow( .025em .025em .13em #eeeeee ); 
+    opacity: 1;
+}
+
+.fa-bars {
+    color: #fff;
+    margin-top: .233em;
+    margin-left: .538em;
+    cursor: pointer;
+}
+
+@media (min-width: 48.125em) {
+    .logo {
+        float: left;
+        margin-top: -1.250em;
+        padding: .625em;
+    }
+
+    img.mavy-logo {
+    margin-left: 1.250em;
+}
+
+    .fa-bars {
+        margin-left: 2.188em;
+        margin-top: .188em;
+    }
+}
+
+.link-icon {
+    width: 1.875em;
+}
+
+#feed a {
+    margin: 0 1.250em 0 .625em;
+}
+
+#assignment a {
+    margin-right: -.313em;
+}
+
+/*  ==================================================
+    FIXED NAVIGATION HEADER
+    ================================================= */
+#main-header {
+    position: fixed;
+    z-index: 10000;
+    width: 100%;
+}
+
+.mavy-logo {
+    width: 3.125em;
+    height: auto;
+    margin-right: .938em;
+    margin-bottom: .625em;
+}
+
+.profile-toggle {
+    margin-top: .250em;
+}
+
+/*  ==================================================
+    RIGHT SLIDE OUT SETTING PANEL
+    ================================================= */
+header.profile-header {
+    color: #fff;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    background-color: #9193c1;
+    padding: .625em;
+}
+
+.legal {
+    margin-top: 1.250em;
+}
+
+.slide-right-links li > a {
+    color: #fff;
+}
+
+.slide-right-links li > a:hover {
+    background-color: rgba(93, 93, 129, 0.69);
+}
+
+#reward-amount {
+    margin-left: .625em;
+}
+
+.block-list header {
+    text-align: left;
+    background-color: #5d5d81;
+}
+
+.gradient-right {
+    background: rgb(174,119,178); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(174,119,178,1) 0%, rgba(119,172,207,1) 91%, rgba(119,172,207,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(174,119,178,1)), color-stop(91%,rgba(119,172,207,1)), color-stop(100%,rgba(119,172,207,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(174,119,178,1) 0%,rgba(119,172,207,1) 91%,rgba(119,172,207,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(174,119,178,1) 0%,rgba(119,172,207,1) 91%,rgba(119,172,207,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(174,119,178,1) 0%,rgba(119,172,207,1) 91%,rgba(119,172,207,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(174,119,178,1) 0%,rgba(119,172,207,1) 91%,rgba(119,172,207,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ae77b2', endColorstr='#77accf',GradientType=0 ); /* IE6-9 */
+}
+
+.sb-slidebar.sb-active.gradient-left {
+    background: rgb(90,200,222); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(90,200,222,1) 0%, rgba(119,172,207,1) 39%, rgba(145,147,193,1) 89%, rgba(174,119,178,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(90,200,222,1)), color-stop(39%,rgba(119,172,207,1)), color-stop(89%,rgba(145,147,193,1)), color-stop(100%,rgba(174,119,178,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(90,200,222,1) 0%,rgba(119,172,207,1) 39%,rgba(145,147,193,1) 89%,rgba(174,119,178,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(90,200,222,1) 0%,rgba(119,172,207,1) 39%,rgba(145,147,193,1) 89%,rgba(174,119,178,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(90,200,222,1) 0%,rgba(119,172,207,1) 39%,rgba(145,147,193,1) 89%,rgba(174,119,178,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(90,200,222,1) 0%,rgba(119,172,207,1) 39%,rgba(145,147,193,1) 89%,rgba(174,119,178,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5ac8de', endColorstr='#ae77b2',GradientType=0 ); /* IE6-9 */
+}
+
+header#slide-right {
+    background: transparent;
+    padding: .563em 0 .063em .750em;
+}
+
+.profile-link {
+    color: #fff;
+}
+
+.profile-link:hover {
+    opacity: .8;
+}
+
+#slide-menu-profile {
+    margin-right: .938em;
+    margin-left: .313em;
+}
+
+.log-out {
+    background-color: rgba(93, 93, 129, 0.39);
+}
+
+/*  ==================================================
+    DESK TOP NAVIGATION IN HEADER (hidden on mobile view)
+    ================================================= */
+.sb-mobile-menu li {
+    list-style-type: none;
+    padding-top: 1.875em;
+}
+
+.sb-mobile-menu a {
+    color: #fff;
+}
+
+.sb-mobile-menu a:hover {
+    opacity: .8;
+}
+
+#desktop-menu {
+    float: right;
+}
+
+#desktop-menu ul {
+    list-style: none;
+}
+
+#desktop-menu ul li {
+    display: inline;
+}
+
+#desktop-menu ul li a {
+    color: #fff;
+}
+
+#hide {
+    display: none;
+}
+
+.sb-toggle-right {
+    margin-left: 2.500em;
+    margin-right: .938em;
+    cursor: pointer;
+}
+
+@media (min-width: 48.125em) {
+    #hide {
+        display: inline;
+    }
+    .fa.fa-bars.fa-2x {
+        display: none;
+    }
+    .sb-toggle-right {
+    margin-left: 1.875em;
+    margin-right: 3.125em;
+    }
+}
+
+.nav-notification-forum {
+    position: relative;
+    top: -1.125em;
+    left: 3.813em;
+}
+
+.nav-notification-messages {
+    position: relative;
+    top: -1.125em;
+    left: 3.5em;
+}
+
+.slide-notification-messages,
+.slide-notification-forum {
+    position: relative;
+    top: -.875em;
+    left: -.063em;
+}
+
+/*  ==================================================
+    LEFT SLIDE OUT MENU
+    ================================================= */
+.left-close, 
+.right-close {
+    color: #fff;
+    padding: 1.250em;
+}
+
+.sb-left {
+    text-align: right;
+}
+
+.sb-left ul {
+    text-align: center;
+}
+
+#feedLink, #assignmentsLink {
+    margin-left: -1.813em;
+}
+
+/*  ==================================================
+    RIGHT SIDEBAR CONTENT ON MAIN PAGES
+    ================================================= */
+.updateWidget p:before {
+    content: "";
+    background-color: #d5539e;
+    color: #191919;
+    width: .938em;
+    height: .938em;
+    display: inline-block;
+    border-radius: 100%;
+    border: 0;
+    text-align: center;
+    margin: 0 .938em -.188em 0;
+}
+
+/*----Updates in right sidebar on main pages----*/
+.unread-notification-circle {
+    background-color: #d5539e;
+    width: 1.250em;
+    height: 1.250em;
+    border-radius: 100%;
+    border: 0;
+    display: inline-block;
+    float: right;
+    margin-top: -1.875em;
+    margin-right: .625em;
+}
+
+.read-notification-circle {
+    width: 1.250em;
+    height: 1.250em;
+    border-radius: 100%;
+    border: .063em solid #d5539e;
+    display: inline-block;
+    float: right;
+    margin-top: -1.875em;
+    margin-right: .625em;
+}
+
+/*-daily poll radio buttons-*/
+span#result-poll-1,
+span#result-poll-2,
+span#result-poll-3,
+span#result-poll-4,
+span#result-poll-5 {
+    padding: .250em;
+    font-size: 1rem;
+}
+
+/*-poll results-*/
+.percents span {
+    color: #191919;
+    width: 2.5em;
+    height: 2.5em;
+    display: inline-block;
+    border-radius: 100%;
+    border: .125em solid #9193c1;
+    text-align: center;
+    margin: 0 .938em -.188em 0;
+}
+
+/*-text on percents for survey page-*/
+.result-text {
+    padding: .250em;
+    font-size: 1rem;
+}
+
+.highValue {
+    background-color: #5ac8de;
+}
+
+.inline-label {
+    font-size: 1rem;
+    color: #191919;
+}
+
+.pollQuestion {
+    margin: .625em 0 1.250em 0;
+}
+
+#pollContent,
+#updateContent,
+#pollResults {
+    margin-left: 1.250em;
+}
+
+/*  ==================================================
+    ASSIGNMENT PAGE 
+    ================================================= */
+
+.featuredAssignment {
+    background-color: #77accf;
+    color: #f5f5f5;
+}
+
+.grid-block.small-up-2.medium-up-2.large-up-2 {
+    margin-bottom: -1.225em;
+}
+
+.assgnTitle {
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    margin-bottom: .313em;
+}
+
+/*  ==================================================
+    FORUM PAGE
+    ================================================= */
+.message-counter {
+    float: right;
+    margin-right: 1.875em;
+    margin-top: 1.875em;
+    font-size: 1.4rem;
+    color: #451681;
+}
+
+/*sets paragraph width*/
+.set-width {
+    width: 90%;
+}
+
+.reply-to-post {
+    text-align: right;
+    margin-right: 2.813em;
+}
+
+#reply-padding {
+    padding-right: 1.875em;
+}
+
+.reply-to-posts-count {
+    color: #50a2b8;
+    text-align: right;
+}
+
+.reply {
+    text-align: right;
+    margin-right: 1.875em;
+}
+
+#comment-button{
+    margin-top: 1.875em;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+}
+
+#comment-button input,
+#comment-button a {
+    font-family: 'Roboto', sans-serif;
+    font-size: .9rem;
+}
+
+input#new-post {
+    font-family: 'Roboto', sans-serif;
+}
+
+label.forum-label {
+    font-size: 1.3rem;
+}
+
+.modal-button {
+    text-align: center;
+}
+
+/*  ==================================================
+    REWARDS PAGE
+    ================================================= */
+.reward-buttons {
+    float: right;
+}
+
+#earned-credit,
+#current-credit {
+    font-size: 3rem;
+    border: .125em solid #f5f5f5;
+    text-align: center;
+}
+
+.reward-sidebar {
+    text-align: center;
+}
+
+.gift-card-img img {
+    width: 9.375em;
+    height: auto;
+}
+
+.voucher {
+    margin-top: .625em;
+    margin-left: .625em;
+}
+
+/*  ==================================================
+    POLL RESULTS PAGE
+    ================================================= */
+.page-title h3 {
+    text-align: center;
+    color: #50a2b8;
+    font-size: 2rem;
+}
+
+.submit-changes {
+    float: right;
+    clear: both;
+}
+
+/*  ==================================================
+    LEFT SIDEBAR ON SETTING PAGES (profile.html, notifications.html, resetpassword.html)
+    ================================================= */
+.badges {
+    text-align: center;
+}
+
+.badges h6 {
+    text-align: left;
+}
+
+.badges img {
+    width: 6.250em;
+    height: auto;
+    margin: .313em;
+}
+
+.settingAvatar {
+    text-align: center;
+    width: 33%;
+    margin: auto;
+}
+
+.settingMeta p {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #9193c1;
+    text-align: center;
+}
+
+/*  ==================================================
+    SETTING MENU ON RIGHT SIDEBAR OF SETTING PAGES (profile.html, notifications.html, resetpassword.html)
+    ================================================= */
+.setting-block li > a {
+    color: #868181;
+    line-height: 1;
+    font-size: 1rem;
+}
+
+.setting-block li > a:hover {
+    color: #191919;
+    background-color: #e4e4e5;
+}
+
+.setting-log-out a {
+    color: #9193c1;
+}
+
+.setting-menu {
+    margin-left: .625em;
+    color: #9193c1;
+}
+
+.setting-page-active {
+    background-color: #e2e2e2
+}
+
+/*  ==================================================
+    PROFILE PAGE
+    ================================================= */
+.profile-border {
+    margin-bottom: -1.250em;
+}
+
+input.bottom-border {
+    border: 0;
+    border-radius: 0;
+    border-bottom: .063em solid #77accf;
+    width: 50%;
+    clear: both;
+}
+
+.settingLabel {
+    color: #aeaaaa;
+    clear: both;
+}
+
+.gender {
+    width: 6.250em;
+}
+
+.dob-labels {
+    margin-bottom: .625em;
+}
+
+/*  ==================================================
+    NOTIFICATION PAGE
+    ================================================= */
+h5.header-label {
+    color: #888888;
+    font-size: 1.3rem;
+}
+
+.profile-header h6 {
+    text-transform: capitalize;
+    font-size: 1.7rem;
+    font-weight: 400;
+    padding-bottom: .625em;
+}
+
+.button-wrapper {
+    margin-top: 1.250em;
+}
+
+.switch-wrapper p {
+    display: inline-block;
+    color: #aeaaaa;
+}
+
+.switch {
+    top: .625em;
+}
+
+/*  ==================================================
+    RESET PASSWORD PAGE
+    ================================================= */
+.forgotten-password-link {
+    font-size: .8rem;
+    margin-top: -.625em;
+    margin-bottom: .625em;
+}
+
+.forgotten-password-link a:hover {
+    color: #d5539e;
+}
+
+.pswd {
+    margin-top: 1.250em;
+}
+
+label.dob {
+    width: 2.813em;
+    display: inline;
+    margin-right: 2.250em;
+}
+
+select.dob, input.dob {
+    width: 2.813em;
+    display: inline;
+    margin-right: 1.688em;
+}
+
+.day {
+    margin-left: .063em;
+}
+
+.year {
+    margin-left: .563em;
+}
+
+.setting-block {
+    background-color: transparent;
+    border: 0;
+    box-shadow: 0 0 0 transparent;
+}
+
+/* CSS for sign Up page */
+.wrapper {
+  display: table;
+  width: 100%;
+  height: 75%;
+}
+
+.vertical-align-center {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+img#mavy-text {
+    width: 145px;
+    /*width: 15%; responsive*/
+    
+}
+
+img#mavy-logo {
+    width: 90px;
+    /*width: 10%; responsive*/
+    
+}
+
+/*--form page--*/
+.logo {
+    text-align: center;
+    padding-top: 26px;
+}
+
+.logo a {
+    display: block;
+    padding-bottom: 16px;
+}
+
+/*--form--*/
+/*Mobile*/
+.inputBox {
+    width: 285px;
+    height: 35px;
+    padding: 10px;
+}
+
+.inputButton {
+    width: 135px;
+    height: 31px;
+    border: none;
+    border-radius: 2px;
+}
+
+#facebook {
+    background-color: #3b5998;
+    color: #fff;
+    margin-right: 10px;
+}
+
+#signIn {
+    background-color: #77accf;
+    color: #fff;
+}
+
+#signUp:hover {
+    text-decoration: underline;
+}
+
+.center {
+    text-align: center;
+}
+
+.white {
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: .9rem;
+}
+
+button:hover {
+    -webkit-box-shadow: 0px 0px 5px 4px rgba(116, 118, 119, 0.92);
+    -moz-box-shadow: 0px 0px 5px 4px rgba(116, 118, 119, 0.92);
+    box-shadow: 0px 0px 5px 4px rgba(116, 118, 119, 0.92);
+    cursor: pointer; 
+    cursor: hand; 
+}
+
+#facebook {
+    position: relative;
+    padding-left: 20px;
+}
+
+.absolute {
+    position: absolute;
+    font-size: 1.2rem;
+    top: 6px;
+    left: 10px;
+}
+
+/*--badges--*/
+
+.badge img {
+    height: 40px;
+    margin: 0 16px 0 5px;
+}
+.sign-up {
+    background-image: url('../images/bgimglg.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
+.votingDone{
+	height: 100px; 
+	padding:10px;
+}

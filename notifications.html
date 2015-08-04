@@ -1,0 +1,182 @@
+    <h1 class="hidden">Notification Page</h1>
+    <!--slideout sidebar left-->
+    <div ng-include="'navigation.html'"></div>
+    <!--end header logo & menu-->
+
+    <div id="sb-site"><!--wrapper so content moves when slide out menus are clicked-->
+        <section class="grid-block wrap" id="profile">
+            <h2 class="hidden">Left Sidebar</h2>
+ 
+            <!--start user image, meta & badges-->
+            <div class="grid-content small-12 medium-3 medium-order-1 small-order-3">
+                <div class="settingAvatar">
+                    <a class="avatarContainer" href="#">
+                        <img alt="profile image" class="profile" src="images/avatar.svg">
+                    </a>
+                </div>
+                <div class="settingMeta">
+                    <p>Cady Heron</p>
+                </div>
+
+                <aside class="card badges">
+                    <h6 class="boxTitle card-section">Badges</h6>
+                    <img src="images/placeholder-badge.svg" alt="badge">
+                    <img src="images/placeholder-badge.svg" alt="badge">
+                    <img src="images/placeholder-badge.svg" alt="badge">
+                    <img src="images/placeholder-badge.svg" alt="badge">
+                    <img src="images/placeholder-badge.svg" alt="badge">
+                    <img src="images/placeholder-badge.svg" alt="badge">
+                </aside>
+            </div>
+
+
+            <section class="grid-content small-12 medium-6 small-order-2 medium-order-2">
+                <h2 class="hidden">Notification Page</h2>
+                <!--start notification switch content-->
+                    <article class="card switches">
+                        <div class="card-divider profile-header">
+                            <h6 class="divider-line">Notifications</h6>
+                        </div>
+
+                    <div class="switch-container">
+                        <!--start assignment switches-->
+                        <form id="assignments-switch" action="#" class="card-section notifications" method="post">
+                            <div class="grid-content">
+                                <section class="notification-switch">
+                                    <h5 class="header-label">
+                                            Assignments
+                                    </h5>
+                                        <div class="button-wrapper">
+                                            <div class="switch-wrapper">
+                                                <div class="switch">
+                                                    <input type="checkbox" id="assignment-switch-email">
+                                                    <label for="assignment-switch-email"></label>
+                                                </div>
+                                                <p>Email</p>
+                                            </div>
+                                        
+                                            <div class="switch-wrapper">
+                                                <div class="switch">
+                                                    <input type="checkbox" id="assignment-switch-sms">
+                                                    <label for="assignment-switch-sms"></label>
+                                                </div>
+                                                <p>SMS</p>
+                                            </div>
+                                        
+
+                                            <div class="switch-wrapper">
+                                                <div class="switch">
+                                                    <input type="checkbox" id="assignment-switch-push">
+                                                    <label for="assignment-switch-push"></label>
+                                                </div>
+                                                <p>Push</p>
+                                            </div>
+                            </div><!--end button wrapper-->
+                        </section>
+                        </div>
+                    </form><!--end assignment switches-->
+
+                        <!--start forum switches-->
+                        <form id="forum-switch" action="#" class="card-section notifications" method="post">
+                            <div class="grid-content">
+                                <section class="notification-switch">
+                                    <h5 class="header-label">
+                                            Forum
+                                    </h5>
+                                    <div class="button-wrapper">
+                                        <div class="switch-wrapper">
+                                            <div class="switch">
+                                                <input type="checkbox" id="forum-switch-email">
+                                                <label for="forum-switch-email"></label>
+                                            </div>
+                                            <p>Email</p>
+                                        </div>
+                                        <div class="switch-wrapper">
+                                            <div class="switch">
+                                                <input type="checkbox" id="forum-switch-sms">
+                                                <label for="forum-switch-sms"></label>
+                                            </div>
+                                            <p>SMS</p>
+                                        </div>
+
+                                        <div class="switch-wrapper">
+                                            <div class="switch">
+                                                <input type="checkbox" id="forum-switch-push">
+                                                <label for="forum-switch-push"></label>
+                                            </div>
+                                            <p>Push</p>
+                                        </div>
+                                    </div><!--end button wrapper-->
+                                </section>
+                            </div>
+                        </form><!--end forum switches-->
+
+                        <!--start message switches-->
+                        <form id="message-switch" action="#" class="card-section notifications" method="post">
+                            <div class="grid-content">
+                                <section class="notification-switch">
+                                    <h5 class="header-label">
+                                            Messages
+                                    </h5>
+                                        <div class="button-wrapper">
+                                            <div class="switch-wrapper">
+                                                <div class="switch">
+                                                    <input type="checkbox" id="message-switch-email">
+                                                    <label for="message-switch-email"></label>
+                                                </div>
+                                                <p>Email</p>
+                                            </div>
+
+                                            <div class="switch-wrapper">
+                                                <div class="switch">
+                                                    <input type="checkbox" id="message-switch-sms">
+                                                    <label for="message-switch-sms"></label>
+                                                </div>
+                                                <p>SMS</p>
+                                            </div>
+
+                                            <div class="switch-wrapper">
+                                                <div class="switch">
+                                                    <input type="checkbox" id="message-switch-push">
+                                                    <label for="message-switch-push"></label>
+                                                </div>
+                                                <p>Push</p>
+                                            </div>
+                                        </div><!--button wrapper-->
+                                </section>
+                            </div>
+                        </form><!--end message switches-->
+                </div><!--end switches container-->
+            </article>
+        </section><!--end main notification content-->
+            
+            <!--start setting menu right-->
+             <nav class="grid-content small-12 medium-2 small-order-1 medium-order-3" ng-include="'settings_nav.html'"></nav>
+        </section><!--main wrap-->
+        <!-- Start Footer -->
+        <footer class="footer-text">
+            <ul>
+                <li class="copyright">&#169; Mavy</li>
+                <li>
+                    <a href="#">Terms of Use</a>
+                </li>
+                <li>
+                    <a href="#">Feedback</a>
+                </li>
+                <li>
+                    <a href="#">Privacy</a>
+                </li>
+            </ul>
+        </footer>
+    </div><!--end sb-site wrapper-->
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+    window.jQuery || document.write('<script src="js/jquery-1.11.2.min.js"><\/script>')
+    </script>
+    <script src="js/jquery.tooltipster.min.js"></script>
+    <script src="js/slidebars.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
