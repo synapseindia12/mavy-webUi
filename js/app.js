@@ -1,5 +1,5 @@
 var myApp = angular.module("mavyApp", ['ngRoute', 'ngCookies', 'ngStorage', 'ngFacebook']);
-myApp.config(function($routeProvider, $httpProvider) {
+myApp.config(function($routeProvider, $httpProvider, $facebookProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'signup.html',
