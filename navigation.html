@@ -17,14 +17,14 @@
 						<img class="link-icon" src="images/forum.svg" alt="forum page link">
 					</a>
 
-					<span id="forum-count" class="secondary badge forum-count slide-notification-forum">1</span>
+					<span id="forum-count" class="secondary badge forum-count slide-notification-forum" ng-bind="forumsCount"></span>
 				</li>
 				<li>
 					<a id="messagesLink" href="messages.html" class="tooltip glow" title="Messages">
 						<img class="link-icon" src="images/messages.svg" alt="message page link">
 					</a>
 					
-					<span id="message-count" class="secondary badge message-count slide-notification-messages">8</span>
+					<span id="message-count" class="secondary badge message-count slide-notification-messages" ng-bind="msgCount"></span>
 				</li>
 			</ul>
 	</nav>
@@ -111,13 +111,13 @@
 						</a>
 					</li>
 					<li>
-						<span class="secondary badge forum-count nav-notification-forum">1</span>
+						<span class="secondary badge forum-count nav-notification-forum" ng-bind="forumsCount"></span>
 						<a ng-href="#/forum" class="tooltip glow" title="Forum">
 							<img class="link-icon" src="images/forum.svg" alt="forum page link">
 						</a>
 					</li>
 					<li>
-						<span class="secondary badge message-count nav-notification-messages">8</span>
+						<span class="secondary badge message-count nav-notification-messages" ng-bind="msgCount"></span>
 						<a ng-href="#/messages" class="tooltip glow" title="Messages">
 							<img class="link-icon" src="images/messages.svg" alt="message page link">
 						</a>

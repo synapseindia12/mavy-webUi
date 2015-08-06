@@ -21,15 +21,14 @@
                                 <!--post message counter and nav-->
                                 <div class="message-counter">
                                     <span class="fa fa-sort-asc scroll-up su1"></span>
-                                <div class="reply-count">3</div>
+                                <div class="reply-count">{{post.NumberOfPosts}}</div>
                                     <span class="fa fa-sort-desc scroll-dwn sd1"></span>
                                 </div>
                                 <p class="name">{{post.UserName}}</p>
                                 <p class="userName">User Name</p>
-                                <h5 class="postTitle">What to Watch On Netflix</h5>
-                                <p class="set-width">Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
-                                </p>
-                                <p class="date"><strong>Yesterday</strong></p>
+                                <h5 class="postTitle">{{post.Subject}}</h5>
+                                <p class="set-width">{{post.MostRecentMessage}}</p>
+                                <p class="date"><strong>{{post.ThreadReplyDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
                             </div>
                         </div>
                     </article>

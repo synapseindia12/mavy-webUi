@@ -36,49 +36,15 @@
                         </form><!--end form-->
                     </article><!--end expand container card-->
               </div><!--end grid content-->
-
-              <!--forum posts-->
-                <div class="grid-content">
-                    <article class="card replyToPost">
-                        <div class="card-divider reply">
-                            <!--post message counter and nav-->
-                            <div class="message-counter">
-                                <span class="fa fa-sort-asc scroll-up su1"></span>
-                                <div class="reply-count">3</div>
-                                <span class="fa fa-sort-desc scroll-dwn sd1"></span>
-                            </div>
-                        </div>
-                        <!--avatar container-->
-                        <div class="postContent card-section">
-                            <div class="posterAvatar">
-                                <a class="avatarContainer" href="#">
-                                    <img alt="profile image" class="profile" src="images/avatar.svg">
-                                </a>
-                            </div>
-                            <!--metadata for post reply-->
-                            <div class="postMeta">
-                                <p class="name">Cady Heron</p>
-                                <p class="userName">User Name</p>
-                                <h5 class="postTitle">What to Watch On Netflix</h5>
-                                <p class="set-width">Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
-                                </p>
-                                <p class="date"><strong>Yesterday</strong></p>
-                            </div>
-                            <p class="reply-to-post">
-                                <a href="forum.html#reply-box">Reply</a>
-                            </p>
-                        </div>
-                    </article>
-                </div>
-
-                <!--forum post expanded with sample comments-->
-                <div class="grid-content">
+			 
+			   <!--forum post expanded with sample comments-->
+                <div class="grid-content" ng-repeat="items in activeThreads">
                     <article class="card replyToPost">
                         <div class="card-divider reply">
                             <!--post message counter and nav-->
                             <div class="message-counter">
                                 <span class="fa fa-sort-asc scroll-up su6"></span>
-                                <div class="reply-count">3</div>
+                                <div class="reply-count">{{items.ReplyCount}}</div>
                                 <span class="fa fa-sort-desc scroll-dwn sd6">
                                     </span>
                             </div>
@@ -87,98 +53,53 @@
                         <div class="postContent card-section">
                             <div class="posterAvatar">
                                 <a class="avatarContainer" href="#">
-                                    <img alt="profile image" class="profile" src="images/avatar.svg">
+                                    <img alt="profile image" class="profile" src="{{items.Content.CreatedByUser.AvatarUrl}}">
                                 </a>
                             </div>
                             <!--metadata for post reply-->
                             <div class="postMeta">
-                                <p class="name">Cady Heron</p>
+                                <p class="name">{{items.Author.DisplayName}}</p>
                                 <p class="userName">User Name</p>
-                                <h5 class="postTitle">What to Watch On Netflix</h5>
-                                <p class="set-width">Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
-                                </p>
-                                <p class="date"><strong>Yesterday</strong></p>
+                                <h5 class="postTitle">{{items.Subject}}</h5>
+                                <p class="set-width" dynamic="{{items.Body}}"></p>
+                                <p class="date"><strong>{{items.Date | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
                                 <p class="reply-to-posts-count">
-                                    <a href="forum.html#reply-box" id="reply-padding">Reply</a>
-                                    <a href="#" class="expand-collapse-toggle">
-                                    Replies ( <span class="replies-count">3</span> ) 
+                                    <a ng-click='getChilds(items.Id)'>Reply</a>
+                                    <a href="#" class="expand-collapse-toggle" ng-if="showCommentbox(items.Id)">
+                                    Replies ( <span class="replies-count">{{items.ReplyCount}}</span> ) 
                                     </a>
                                 </p>
                             </div>
                             <!--example comments to post-->
-                            <div class="card">
+                            <div class="card" ng-repeat="reply in childThreads" ng-if="items.Id == reply.ThreadId">
+								<div>
                                 <div class="card-divider reply">
                                 </div>
                                 <!--example comment one-->
                                 <div class="post-comment-reply card-section">
                                     <div class="posterAvatar">
                                         <a class="avatarContainer" href="#">
-                                            <img alt="profile image" class="profile" src="images/avatar.svg">
+                                            <img alt="profile image" class="profile" src="{{reply.Content.CreatedByUser.AvatarUrl}}">
                                         </a>
                                     </div>
                                     <!--metadata for example comment one-->
                                     <div class="postMeta">
-                                        <p class="name">Cady Heron</p>
-                                        <p class="userName">User Name</p>
-                                        <p class="set-width">Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
-                                        </p>
-                                        <p class="date"><strong>Yesterday</strong></p>
+                                        <p class="name">{{reply.Author.DisplayName}}</p>
+                                        <p class="userName">{{reply.Author.Username}}</p>
+                                        <p class="set-width" dynamic="{{reply.Subject}}"></p>
+                                        <p class="date"><strong>{{reply.Date | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
                                         <p class="reply-to-post">
                                             <a href="forum.html#reply-box">Reply</a>
                                         </p>
                                     </div>
                                 </div>
+								</div>
                             </div><!--end comment one card-->
                             
-                            <!--start example comment two-->
-                            <div class="card">
-                                <div class="post-comment-reply card-section">
-                                    <div class="card-divider reply">
-                                    </div>
-                                    <div class="posterAvatar">
-                                        <a class="avatarContainer" href="#">
-                                            <img alt="profile image" class="profile" src="images/avatar.svg">
-                                        </a>
-                                    </div>
-                                    <!--metadata for comment two-->
-                                    <div class="postMeta">
-                                        <p class="name">Cady Heron</p>
-                                        <p class="userName">User Name</p>
-                                        <p class="set-width">Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
-                                        </p>
-                                        <p class="date"><strong>Yesterday</strong></p>
-                                        <p class="reply-to-post">
-                                            <a href="forum.html#reply-box">Reply</a>
-                                        </p>
-                                    </div>
-                                    <!--reply to example comment two-->
-                                    <div class="card">
-                                        <div class="post-comment-reply card-section">
-                                            <div class="card-divider reply">
-                                            </div>
-                                            <div class="posterAvatar">
-                                                <a class="avatarContainer" href="#">
-                                                    <img alt="profile image" class="profile" src="images/avatar.svg">
-                                                </a>
-                                            </div>
-                                            <!--metadata for example comment two-->
-                                            <div class="postMeta">
-                                                <p class="name">Cady Heron</p>
-                                                <p class="userName">User Name</p>
-                                                <p class="set-width">Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
-                                                </p>
-                                                <p class="date"><strong>Yesterday</strong></p>
-                                                <p class="reply-to-post">
-                                                    <a href="forum.html#reply-box">Reply</a>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div><!--end reply to example comment two-->
-                                </div>
-                            </div><!--end example comment two-->
+                            
 
                             <!--reply form-->
-                            <div class="card comment-form">
+                            <div class="card comment-form" ng-if="showCommentbox(items.Id)">
                                 <form id="replyForm" class="card-section" action="#" method="post">
                                     <div class="grid-block" id="reply-box">
                                         <div class="small-12 medium-12 grid-content">
@@ -200,7 +121,15 @@
                         </div>
                     </article>
                 </div>
-                <!--end forum post expanded with sample comments-->
+			  
+			  
+			  
+			  
+			  
+
+             
+
+              
             </section>
 
             <!--start right sidebar content-->
@@ -289,3 +218,4 @@
     <script src="js/jquery.simple-expand.min.js"></script>
     <script src="js/slidebars.js"></script>
     <script src="js/main.js"></script>
+	
