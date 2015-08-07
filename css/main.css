@@ -805,7 +805,7 @@ label.dob {
 }
 
 select.dob, input.dob {
-    width: 2.813em;
+    width: 4.813em;
     display: inline;
     margin-right: 1.688em;
 }

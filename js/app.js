@@ -65,7 +65,7 @@ myApp.controller('fbCtrl', function ($scope) {
 
 }); 
 
-myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieStore, $localStorage, $window){
+myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieStore, $localStorage, $window, $facebook){
 
 	if ($localStorage.loggedIn) {
 		$location.path('/dashboard');
@@ -79,7 +79,8 @@ myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieSt
 		$scope.userSysteminfo = [];
 		if($scope.uname && $scope.password){
 			endpoints.mobileHandler.login($scope.uname, $scope.password, $scope.userSysteminfo, function(result){
-				if(result){					
+				if(result){
+					debugger;
 					$scope.uname = '';
 					$scope.password = '';
 					$localStorage.loggedIn = true;
@@ -108,7 +109,7 @@ myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieSt
 	};	
 });
 
-myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localStorage){
+myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localStorage, $location){
 
 	if(!$localStorage.loginDetails){
 		delete $localStorage.loggedIn;
@@ -127,6 +128,8 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 	var endpoints = {};
 	endpoints.apiKey = $scope.apiKey;
 	endpoints.mobileHandler = new MobileHandler();
+	alert('Stop Here');
+	debugger;
 	endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
 			debugger;
 		if(forums.result.result.Threads) {
@@ -151,13 +154,13 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 		debugger;
 	});
 	endpoints.mobileHandler.getAssignments($scope.apiKey, $scope.userId, $scope.panelistId, function(result){
-			if (result.result.success){
-				for (var i=0; i< result.result.result.length; i++) {
-					$scope.allAssignments.push(result.result.result[i]);
-				}
+		if (result.result.success){
+			for (var i=0; i< result.result.result.length; i++) {
+				$scope.allAssignments.push(result.result.result[i]);
 			}
-			$scope.$apply();
-		});
+		}
+		$scope.$apply();
+	});
 	endpoints.mobileHandler.getDashboard($scope.apiKey,$scope.userId,2,null,null, function(result){
 		$scope.replyPosts = result.result.result;
 		for(var i=0; i< $scope.replyPosts.Entries.length; i++){
@@ -189,15 +192,12 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 				$('.votingDone').animate({height: '0px', border: 'none', margin: '0', padding: '0'}, "500");
 			}, 3000);
 		}
-	}
+	};
 	
 });
 
 myApp.controller('navCtrl', function($scope, $cookieStore, $location, $localStorage){
 	$scope.logout = function() {
-		debugger;
-		$cookieStore.remove('loginDetails');
-		$cookieStore.remove('Logged_in');
 		delete $localStorage.loggedIn;
 		delete $localStorage.loginDetails;
 		$location.path('/');
@@ -345,19 +345,115 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 	// });
 });
 
-myApp.controller('profileCtrl', function($scope){
-	$scope.getHtml = function() {
-		return './navigation.html';
+myApp.controller('profileCtrl', function($scope, $localStorage, $location){
+	if(!$localStorage.loginDetails){
+		delete $localStorage.loggedIn;
+		$location.path('/');
 	}
+	$scope.messages = [];
+	$scope.tempArr = [];
+	
+	/* Getting all local Storage data for User Authentication */
+	var loginDetails = $localStorage.loginDetails;
+	$scope.apiKey = loginDetails[0].value;
+	$scope.userId = loginDetails[1].value;
+	$scope.panelistId = loginDetails[2].value;
+	$scope.registrationId = loginDetails[3].value;
+	var sectionId = 2;
+	
+	var endpoints = {};
+	endpoints.apiKey = $scope.apiKey;
+	// Creating new handler for APIs
+	endpoints.mobileHandler = new MobileHandler();
+	//Querying APi for response using endpoints
 	$scope.profilePage = 'setting-page-active';
+	
+	endpoints.mobileHandler.getPanelistAttributes($scope.apiKey, $scope.userId, $scope.panelistId, function(callback){
+		if(callback.result.success){
+			$scope.avatarUrl = callback.result.result.AvatarUrl;
+			$scope.fname = callback.result.result.fname1;
+			$scope.lname = callback.result.result.lname1;
+			$scope.email = callback.result.result.email;
+			$scope.selectedMonth = callback.result.result.bdate.slice('/')[0];
+			$scope.selectedDate = callback.result.result.bdate.slice('/')[2];
+			$scope.selectedYear = callback.result.result.bdate.slice('/')[4]+callback.result.result.bdate.slice('/')[5]+callback.result.result.bdate.slice('/')[6]+callback.result.result.bdate.slice('/')[7];
+			$scope.gender = callback.result.result.gend;
+			$scope.zipcode = callback.result.result.zipc;
+			$scope.mobileNumber = callback.result.result.cell_phone;
+			$scope.$apply();
+			
+		}
+	});
+	
+	endpoints.mobileHandler.getPanelistBadges($scope.apikey, $scope.userId, $scope.panelistId, function(result){
+		alert(result);
+		debugger;
+	});
+	
+	$scope.updateProfile = function() {
+		$scope.fname;
+		$scope.lname;
+		
+		
+		debugger;
+	};
 });
 
 myApp.controller('notificationCtrl', function($scope){
 	$scope.notificationPage = 'setting-page-active';
 });
 
-myApp.controller('resetpasswordCtrl', function($scope){
+myApp.controller('resetpasswordCtrl', function($scope, $localStorage, $location){
 	$scope.resetPassword = 'setting-page-active';
+	if(!$localStorage.loginDetails){
+		delete $localStorage.loggedIn;
+		$location.path('/');
+	}
+	
+	/* Getting all local Storage data for User Authentication */
+	var loginDetails = $localStorage.loginDetails;
+	$scope.apiKey = loginDetails[0].value;
+	$scope.userId = loginDetails[1].value;
+	$scope.panelistId = loginDetails[2].value;
+	$scope.registrationId = loginDetails[3].value;
+	var sectionId = 2;
+	
+	var endpoints = {};
+	endpoints.apiKey = $scope.apiKey;
+	// Creating new handler for APIs
+	endpoints.mobileHandler = new MobileHandler();
+	
+	$scope.resetPass = function() {
+		$scope.currentPass = $scope.cpass;
+		$scope.newPass = $scope.npass;
+		$scope.verifyNewPass = $scope.vnpass;
+		if($scope.vnpass == $scope.npass){
+			endpoints.mobileHandler.changePassword($scope.apiKey, $scope.userId, $scope.currentPass, $scope.newPass, function(result){
+				if(result.result.success){
+					alert('Password Changed');
+					debugger;
+					$scope.cpass = '';
+					$scope.npass = '';
+					$scope.vnpass = '';
+					delete $localStorage.loggedIn;
+					delete $localStorage.loginDetails;
+					$location.path('/');
+					$scope.$apply();
+				}
+				else{
+					debugger;
+					alert(result.result.message);
+				}
+			});
+		}
+		else{
+			alert('Password Do not match');
+			$scope.npass = '';
+			$scope.vnpass = '';
+			return;
+		}
+	};
+	
 }).directive('dynamic', function ($compile) {
   return {
     restrict: 'A',

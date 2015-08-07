@@ -13,11 +13,11 @@
             <div class="grid-content small-12 medium-3 medium-order-1 small-order-3">
                 <div class="settingAvatar">
                     <a class="avatarContainer" href="#">
-                        <img alt="profile image" class="profile" src="images/avatar.svg">
+                        <img alt="profile image" class="profile" src="{{avatarUrl}}">
                     </a>
                 </div>
                 <div class="settingMeta">
-                    <p>Cady Heron</p>
+                    <p>{{fname}} {{lname}}</p>
                 </div>
 
                 <aside class="card badges">
@@ -38,21 +38,21 @@
                         <div class="card-divider profile-header">
                             <h6 class="divider-line">Profile</h6>
                         </div>
-                        <form id="profile-form" action="#" method="post">
+                        <form id="profile-form" ng-submit="updateProfile()" method="post">
                             <div class="grid-content card-section small-12 medium-12">
                                     <label for="userFirstName" class="settingLabel">
                                         First Name
                                     </label>
-                                    <input type="text" class="name first bottom-border" name="first_name" id="userFirstName" placeholder="FIRST NAME" value="">
+                                    <input type="text" class="name first bottom-border" name="first_name" id="userFirstName" placeholder="FIRST NAME" ng-model="fname" />
                                     <label for="userLastName" class="settingLabel">
                                         Last Name
                                     </label>
-                                    <input type="text" class="name last bottom-border" placeholder="LAST NAME" name="last_name" id="userLastName" value="">
+                                    <input type="text" class="name last bottom-border" placeholder="LAST NAME" name="last_name" id="userLastName" ng-model="lname" />
                                 
                                     <label for="userEmail" class="settingLabel">
                                         Email Address
                                     </label>
-                                    <input type="email" class="email bottom-border" placeholder="EMAIL" name="location" id="userEmail" value="">
+                                    <input type="email" class="email bottom-border" placeholder="EMAIL" name="location" id="userEmail" ng-model="email" />
 
                                     <div class="dob-labels">
                                         <label class="dob month settingLabel">
@@ -67,24 +67,23 @@
                                     </div>
 
                                 <div class="dob-input">
-                                    <select name="months" class="dob bottom-border">
-                                        <option value="-">-</option>
-                                        <option value="January">1</option>
-                                        <option value="February">2</option>
-                                        <option value="March">3</option>
-                                        <option value="April">4</option>
-                                        <option value="May">5</option>
-                                        <option value="June">6</option>
-                                        <option value="July">7</option>
-                                        <option value="August">8</option>
-                                        <option value="September">9</option>
-                                        <option value="October">10</option>
-                                        <option value="November">11</option>
-                                        <option value="December">12</option>
+                                    <select name="months" class="dob bottom-border" ng-model="selectedMonth">
+                                        <option value=""></option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
                                     </select>
-
-                                    <select id="form_dob_day" class="dob bottom-border" name="dob_day">
-                                        <option value="-">-</option>
+                                    <select id="form_dob_day" class="dob bottom-border" name="dob_day" ng-model="selectedDate">
+										<option value=""></option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -117,11 +116,9 @@
                                         <option value="30">30</option>
                                         <option value="31">31</option>
                                     </select>
-
-                                    <select id="birthyear" name="birthyear" class="dob bottom-border" ng-repeat="item in numbers">
-                                        <option value="-">-</option>
-                                        <option value="{{item}}">{{item}}</option>
-                                        <!--<option value="2006">2006</option>
+                                    <select id="birthyear" name="birthyear" class="dob bottom-border" ng-model="selectedYear">
+                                        <option value=""></option>
+                                        <option value="2006">2006</option>
                                         <option value="2005">2005</option>
                                         <option value="2004">2004</option>
                                         <option value="2003">2003</option>
@@ -157,7 +154,7 @@
                                         <option value="1973">1973</option>
                                         <option value="1972">1972</option>
                                         <option value="1971">1971</option>
-                                        <option value="1970">1970</option>-->
+                                        <option value="1970">1970</option>
                                     </select>
                                 </div>
                                
@@ -165,23 +162,23 @@
                                         Gender
                                     </label>
 
-                                    <select class="gender" name="gender" id="userGender">
+                                    <select class="gender" name="gender" id="userGender" ng-model="gender">
                                         <option value="-">-</option>
-                                        <option value="female">Female</option>
-                                        <option value="male">Male</option>
+                                        <option value="F">Female</option>
+                                        <option value="M">Male</option>
                                     </select>
 
                                     <label for="zipcode" class="settingLabel">
                                         Zip Code
                                     </label>
-                                    <input type="email" class="zipcode bottom-border" name="zipcode" id="zipcode" value="">
+                                    <input type="text" class="zipcode bottom-border" name="zipcode" id="zipcode" ng-model="zipcode" />
 
                                     <label for="userMobile" class="settingLabel">
                                         Mobile Number
                                     </label>
-                                    <input type="text" class="mobile bottom-border" name="mobile" id="userMobile" value="">
+                                    <input type="text" class="mobile bottom-border" name="mobile" id="userMobile" ng-model="mobileNumber" />
 
-                                <input type="submit" class="button submit-changes" value="Submit" id="submit">
+                                <input type="submit" class="button submit-changes" value="Submit" id="submit" />
                             </div>
                         </form>
                     </article>
