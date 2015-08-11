@@ -15,21 +15,21 @@
                         <div class="card-divider color-code-3">
                             <h6 class="boxTitle">Create New Post</h6>
                         </div>
-                    <form class="card-section" action="#" method="post">
+                    <form class="card-section" method="post">
                             <div class="grid-block">
                                 <div class="small-12 medium-12 grid-content">
                                     <label for="post-input" class="settingLabel hidden">
                                         Post Title
                                     </label>
-                                    <input type="text" class="post-input" name="post-input" id="post-input" placeholder="Post Title" value="">
+                                    <input type="text" class="post-input" name="post-input" id="post-input" placeholder="Post Title" value="" ng-model="postTitle">
                                     
                                     <label class="post-label hidden">
                                         Create new post
                                     </label>
-                                        <textarea cols="40" rows="8" name="comment" placeholder="Create new post" id="comment"></textarea>
+                                        <textarea cols="40" rows="8" name="comment" placeholder="Create new post" id="comment" ng-model="postBody"></textarea>
                                     
                                     <div id="post-content">
-                                        <input type="submit" value="Submit Post" class="button fa float-right" id="new-post">
+                                        <input type="submit" value="Submit Post" class="button fa float-right" id="new-post" ng-Click="submitPost()">
                                     </div>
                                 </div>
                             </div>

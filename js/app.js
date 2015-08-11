@@ -330,6 +330,30 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
 			}
 		}
 		
+	};
+	
+	$scope.submitPost = function(){
+		$scope.threadInfo=[{"name":"Subject","value":$scope.postTitle},{"name":"Body","value":$scope.postBody}];
+		endpoints.mobileHandler.createThread($scope.apiKey,$scope.userId,3,$scope.threadInfo,function(response){
+			alert(response);
+			debugger;
+			if(response.result.success){
+				endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
+					if(forums.result.result.Threads) {
+						alert('here');
+						$rootScope.forumsCount=forums.result.result.Threads.length;
+						$rootScope.allForums=forums.result.result.Threads;
+						for(var i=0; i<$rootScope.allForums.length; i++){			
+							$scope.activeThreads.push($rootScope.allForums[i]);
+						}
+						$scope.postTitle="";
+						$scope.postBody="";
+						$scope.$apply();
+					}
+					debugger;
+				});
+			}
+		});		
 	}
 	
 });
