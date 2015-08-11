@@ -193,11 +193,43 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 });
 
 myApp.controller('navCtrl', function($scope, $cookieStore, $location, $localStorage){
+	if(!$localStorage.loginDetails){
+		delete $localStorage.loggedIn;
+		$location.path('/');
+	};
+	
+	var loginDetails = $localStorage.loginDetails;
+	$scope.apiKey = loginDetails[0].value;
+	$scope.userId = loginDetails[1].value;
+	$scope.panelistId = loginDetails[2].value;
+	$scope.registrationId = loginDetails[3].value;
+	
+	var endpoints = {};
+	endpoints.apiKey = $scope.apiKey;
+	endpoints.mobileHandler = new MobileHandler();
+	
+	endpoints.mobileHandler.getPanelistAttributes($scope.apiKey, $scope.userId, $scope.panelistId, function(callback){
+		if(callback.result.success){
+			$scope.avatarUrl = callback.result.result.AvatarUrl;
+			$scope.fname = callback.result.result.fname1;
+			$scope.lname = callback.result.result.lname1;
+			// $scope.email = callback.result.result.email;
+			// $scope.selectedMonth = callback.result.result.bdate.slice('/')[0];
+			// $scope.selectedDate = callback.result.result.bdate.slice('/')[2];
+			// $scope.selectedYear = callback.result.result.bdate.slice('/')[4]+callback.result.result.bdate.slice('/')[5]+callback.result.result.bdate.slice('/')[6]+callback.result.result.bdate.slice('/')[7];
+			// $scope.gender = callback.result.result.gend;
+			// $scope.zipcode = callback.result.result.zipc;
+			// $scope.mobileNumber = callback.result.result.cell_phone;
+			$scope.$apply();			
+		}
+	});
+	
 	$scope.logout = function() {
 		delete $localStorage.loggedIn;
 		delete $localStorage.loginDetails;
 		$location.path('/');
 	}
+	
 });
 
 myApp.controller('assignmentCtrl', function($scope, $location, $localStorage){
