@@ -39,10 +39,10 @@
 						<div class="grid-content" ng-repeat="assignment in allAssignments">
 							<article class="card card-margin">
 								<div class="card-divider color-code-2">
-                                    <h6 class="boxTitle">New Assignment |<span class="assignment-type"> Quiz</span></h6>
+                                    <h6 class="boxTitle">New Assignment |<span class="assignment-type" ng-if="assignment.moduleType == 1"> Discussion(s)</span><span class="assignment-type" ng-if="assignment.moduleType == 2"> Quiz</span><span class="assignment-type" ng-if="assignment.moduleType == 3"> Diary</span><span class="assignment-type" ng-if="assignment.moduleType == 4"> Sponsored Quiz</span></h6>
                                 </div>
 								<div class="card-section">
-									<h6 class="boxTitle">New Assignment |<span class="assignment-type"> Quiz</span></h6>
+									<!--<h6 class="boxTitle">New Assignment |<span class="assignment-type"> Quiz</span></h6>-->
 									<h3 class="quizTitle">{{assignment.moduleTitle}}</h3>
 									<p dynamic="{{assignment.options.instructions}}"></p>
 								</div>
@@ -54,9 +54,8 @@
 
             <!--right sidebar content-->
             <div class="grid-content small-12 medium-4 message-side-bar">
-                <aside class="card">
+                <!--<aside class="card">
                     <h2 class="hidden">Sidebar</h2>
-                    <!--notification box-->
                     <div class="card-section updateWidget">
                         <h6 class="boxTitle">Updates</h6>
                         <div id="updateContent">
@@ -66,27 +65,11 @@
                             <p class="updates">Somebody replied to your forum post</p>
                         </div>
                     </div>
-                </aside>
+                </aside>-->
                 <!--start daily poll radio form-->
                 <div ng-include="'polls.html'"></div>
                 <!--start poll result box-->
-                <aside class="card pollResults">
-                    <div class="card-section">
-                        <h6 class="boxTitle">Results To Yesterday's Poll</h6>
-                        <div id="pollResults">
-                            <h5 class="pollQuestion" id="pastQuestion">What is your favorite Beatle's song?</h5>
-                            <div class="results">
-                                <p class="percents"><span id="result-poll-1">22%</span>Choice One</p>
-                                <p class="percents"><span id="result-poll-2">12%</span>Choice Two</p>
-                                <p class="percents"><span id="result-poll-3" class="highValue">45%</span>Choice Three
-                                    <p>
-                                <p class="percents"><span id="result-poll-4">10%</span>Choice Four</p>
-                                <p class="percents"><span id="result-poll-5">11%</span>Choice Five</p>
-                            </div>
-                            <a class="button" id="more-polls-link" href="results.html">See More Polls</a>
-                        </div>
-                    </div>
-                </aside><!--end poll result box-->
+                <!--end poll result box-->
             </div>
         </div>
     </div>

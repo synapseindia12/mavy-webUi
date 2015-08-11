@@ -114,6 +114,11 @@ button:hover {
 
 /*--badges--*/
 
+.badge{
+	width: auto;
+	background: none;
+}
+
 .badge img {
     height: 40px;
     margin: 0 16px 0 5px;

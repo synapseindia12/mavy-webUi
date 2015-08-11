@@ -1,9 +1,9 @@
-<form class="card dailyPoll" action="" method="post" ng-if="allPolls.length > 0">
-	<div class="card-section" ng-repeat="poll in allPolls | limitTo:1">
+<form class="card dailyPoll" action="" method="post">
+	<div class="card-section">
 		<h6 class="boxTitle">Daily Poll</h6>
 		<div id="pollContent">
-			<h5 class="pollQuestion" id="currentUpdaQuestion">{{poll.label}}</h5>
-			<p ng-repeat="option in poll.options.categories track by $index">
+			<h5 class="pollQuestion" id="currentUpdaQuestion">{{latestPoll.label}}</h5>
+			<p ng-repeat="option in latestPoll.options.categories track by $index">
 				<input type="radio" name="poll-radio" value="{{option.values}}" id="poll-radio-{{$index}}">
 				<label for="poll-radio-{{$index}}" id="label-{{$index}}" class="inline-label">
 					{{option.description}}
@@ -38,3 +38,21 @@
 	</div>
 </form>
 <div ng-if="allPolls.length <= 0" class="votingDone card dailyPoll" style="">Thanks For your voting. Polls have been finished.</div>
+
+<aside class="card pollResults">
+	<div class="card-section">
+		<h6 class="boxTitle">Results For Previous Polls</h6>
+		<div id="pollResults">
+			<h5 class="pollQuestion" id="pastQuestion">What is your favorite Beatle's song?</h5>
+			<div class="results">
+				<p class="percents"><span id="result-poll-1">22%</span>Choice One</p>
+				<p class="percents"><span id="result-poll-2">12%</span>Choice Two</p>
+				<p class="percents"><span id="result-poll-3" class="highValue">45%</span>Choice Three
+					<p>
+				<p class="percents"><span id="result-poll-4">10%</span>Choice Four</p>
+				<p class="percents"><span id="result-poll-5">11%</span>Choice Five</p>
+			</div>
+			<a class="button" id="more-polls-link" href="results.html">See More Polls</a>
+		</div>
+	</div>
+</aside>

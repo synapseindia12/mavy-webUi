@@ -128,30 +128,22 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 	var endpoints = {};
 	endpoints.apiKey = $scope.apiKey;
 	endpoints.mobileHandler = new MobileHandler();
-	alert('Stop Here');
-	debugger;
+
 	endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
-			debugger;
 		if(forums.result.result.Threads) {
-				debugger;
 			$rootScope.forumsCount=forums.result.result.Threads.length;
-			$rootScope.allForums=forums.result.result.Threads;
-			
+			$rootScope.allForums=forums.result.result.Threads;			
 			$scope.$apply();
 		}
-		
-		
-		//alert($scope.activeThreads[0].Author.DisplayName);		
 	});
 	endpoints.mobileHandler.getInbox($scope.apiKey, $scope.userId, 20, null, function(msg){
 		if(msg.result.result.Conversations){
 			$rootScope.msgCount=msg.result.result.Conversations.length;
 			$scope.$apply();
-		}
-	
+		}	
 	});
 	endpoints.mobileHandler.getDashboard($scope.apiKey,$scope.userId,7,null,null, function(result){
-		debugger;
+
 	});
 	endpoints.mobileHandler.getAssignments($scope.apiKey, $scope.userId, $scope.panelistId, function(result){
 		if (result.result.success){
@@ -169,18 +161,21 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 			$scope.$apply();
 		}
 		endpoints.mobileHandler.getDashboard($scope.apiKey,$scope.userId,3,null,null, function(response){
-			debugger;
 			endpoints.mobileHandler.getDashboard($scope.apiKey,$scope.userId,4,null,null, function(res){
-				debugger;
 			});
 		});
 		endpoints.mobileHandler.getDashboard($scope.apiKey, $scope.userId, 5, null, null, function(result){
 			if(result.result.success){
-				for(var i=0; i< result.result.result.Entries.length; i++){
+				$scope.latestPoll = result.result.result.Entries[0];
+				for(var i=1; i< result.result.result.Entries.length; i++){
 					$scope.allPolls.push(result.result.result.Entries[i]);
 				}
 			}
 			$scope.$apply();
+		});
+		
+		endpoints.mobileHandler.getPollVotes($scope.apiKey, $scope.userId, 100, function(result){
+			
 		});
 	});
 	
@@ -193,6 +188,7 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 			}, 3000);
 		}
 	};
+	
 	
 });
 
@@ -210,10 +206,13 @@ myApp.controller('assignmentCtrl', function($scope, $location, $localStorage){
 		$location.path('/');
 	}
 	$scope.initializeSlider = function() {
-		$('.bxslider').bxSlider({
-		  auto: true,
-		  autoHover: true
-		});
+		setTimeout(function(){
+			$scope.showAssignments = true;
+			$('.bxslider').bxSlider({
+			  auto: true,
+			  autoHover: true
+			});
+		}, 1500);
 	}
 	$scope.allAssignments = [];
 	var loginDetails = $localStorage.loginDetails;
@@ -227,13 +226,10 @@ myApp.controller('assignmentCtrl', function($scope, $location, $localStorage){
 	// Creating new handler for APIs
 	endpoints.mobileHandler = new MobileHandler();
 	//Querying APi for response using endpoints
-	debugger;
 		endpoints.mobileHandler.getAssignments($scope.apiKey, $scope.userId, $scope.panelistId, function(result){
-			debugger;
 			if (result.result.success){
 				for (var i=0; i< result.result.result.length; i++) {
 					$scope.allAssignments.push(result.result.result[i]);
-					//$scope.allAssignments[i].options.instructions = html(result.result.result[i].options.instructions);
 				}
 			}
 			$scope.$apply();
@@ -253,7 +249,6 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
 	var endpoints = {};
 	endpoints.apiKey = $scope.apiKey;
 	endpoints.mobileHandler = new MobileHandler();
-	debugger;
 	//endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(result){
 		if($rootScope.allForums) {
 			for(var i=0; i<$rootScope.allForums.length; i++){			
@@ -269,10 +264,8 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
 						$scope.activeThreads.push($rootScope.allForums[i]);
 					}
 				}
-				debugger;
 			});
 		}
-		debugger;
 		
 		$scope.$apply();
 		//alert($scope.activeThreads[0].Author.DisplayName);	
@@ -391,11 +384,15 @@ myApp.controller('profileCtrl', function($scope, $localStorage, $location){
 	});
 	
 	$scope.updateProfile = function() {
-		$scope.fname;
-		$scope.lname;
-		
-		
+		$scope.bdate = $scope.selectedMonth + '/' + $scope.selectedDate + '/' + $scope.selectedYear;
 		debugger;
+		$scope.attributes = [{"name": "fname1", "value": $scope.fname}, {"name": "lname1", "value": $scope.lname}, {"name": "email", "value": $scope.email}, {"name": "bdate", "value": $scope.bdate}, {"name": "gend", "value": $scope.gender}, {"name": "zipc", "value": $scope.zipcode}];
+		$scope.skipAddressVerify = false;
+		endpoints.mobileHandler.updatePanelistAttributes($scope.apiKey, $scope.userId, $scope.panelistId, $scope.attributes, $scope.skipAddressVerify, function(response){
+			if(response.result.success){
+				alert('Profile successfully updated');
+			}
+		});
 	};
 });
 

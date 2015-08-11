@@ -13,27 +13,26 @@
                         <div class="card-section">
                             <!--slider content-->
                             <ul class="bxslider" ng-init="initializeSlider()">
-                                <li>
+                                <li ng-repeat="assignment in allAssignments" ng-if="assignment.options.featured">
+                                    <h3 class="boxTitle">Featured Assignments</h3>
+                                    <h4 class="name">Sunblock Brands</h4>
+                                    <p class="assgnTitle"><strong>{{assignment.moduleTitle}}</strong></p>
+                                    <p dynamic="{{assignment.options.instructions}}"></p>
+                                </li>
+                                <!--<li>
                                     <h3 class="boxTitle">Featured Assignments</h3>
                                     <h4 class="name">Sunblock Brands</h4>
                                     <p class="assgnTitle"><strong>What to Watch On Netflix</strong></p>
                                     <p>Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
                                     </p>
                                 </li>
-                                <li>
+                                <!--<li>
                                     <h3 class="boxTitle">Featured Assignments</h3>
                                     <h4 class="name">Sunblock Brands</h4>
                                     <p class="assgnTitle"><strong>What to Watch On Netflix</strong></p>
                                     <p>Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
                                     </p>
-                                </li>
-                                <li>
-                                    <h3 class="boxTitle">Featured Assignments</h3>
-                                    <h4 class="name">Sunblock Brands</h4>
-                                    <p class="assgnTitle"><strong>What to Watch On Netflix</strong></p>
-                                    <p>Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Ut in nulla enim. Phasellus molestie magna.
-                                    </p>
-                                </li>
+                                </li>-->
                             </ul>
                             <!--end slider content-->
                         </div>
@@ -43,8 +42,11 @@
                 <div class="grid-block small-up-1 medium-up-2 large-up-2">                    
                     <div class="grid-content" ng-repeat="assignment in allAssignments">
                         <article class="card card-margin">
+							<div class="card-divider color-code-2">
+								<h6 class="boxTitle">New Assignment |<span class="assignment-type" ng-if="assignment.moduleType == 1"> Discussion(s)</span><span class="assignment-type" ng-if="assignment.moduleType == 2"> Quiz</span><span class="assignment-type" ng-if="assignment.moduleType == 3"> Diary</span><span class="assignment-type" ng-if="assignment.moduleType == 4"> Sponsored Quiz</span></h6>
+							</div>
                             <div class="card-section">
-                                <h6 class="boxTitle">New Assignment |<span class="assignment-type"> Quiz</span></h6>
+                                <!--<h6 class="boxTitle">New Assignment |<span class="assignment-type"> Quiz</span></h6>-->
                                 <h3 class="quizTitle">{{assignment.moduleTitle}}</h3>
                                 <p dynamic="{{assignment.options.instructions}}"></p>
                             </div>
