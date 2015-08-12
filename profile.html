@@ -1,4 +1,3 @@
-
     <h1 class="hidden">Profile Settings Page</h1>
     <!--slideout sidebar left-->
 	<!--<div data-ng-include data-ng-src="getHtml()"></div>-->
@@ -176,7 +175,7 @@
                                     <label for="userMobile" class="settingLabel">
                                         Mobile Number
                                     </label>
-                                    <input type="text" class="mobile bottom-border" name="mobile" id="userMobile" ng-model="mobileNumber" />
+									<input name="phonenumber" ui-mask="(999) 999-9999" ng-blur="y='(999) 999-9999'" ng-model="mobileNumber" class="mobile bottom-border" numbers-only="numbers-only" maxlength="28" name="mobile" id="userMobile" />
 
                                 <input type="submit" class="button submit-changes" value="Submit" id="submit" />
                             </div>

@@ -1,4 +1,4 @@
-var myApp = angular.module("mavyApp", ['ngRoute', 'ngCookies', 'ngStorage', 'ngFacebook']);
+var myApp = angular.module("mavyApp", ['ngRoute', 'ngCookies', 'ngStorage', 'ngFacebook', 'ui.mask']);
 myApp.config(function($routeProvider, $httpProvider, $facebookProvider) {
     $routeProvider
         .when('/', {
@@ -80,7 +80,6 @@ myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieSt
 		if($scope.uname && $scope.password){
 			endpoints.mobileHandler.login($scope.uname, $scope.password, $scope.userSysteminfo, function(result){
 				if(result){
-					debugger;
 					$scope.uname = '';
 					$scope.password = '';
 					$localStorage.loggedIn = true;
@@ -99,10 +98,16 @@ myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieSt
 				$scope.accessToken = result.authResponse.accessToken;
 				$scope.userName = 'Synapse';
 				endpoints.mobileHandler.loginFb($scope.userName, $scope.accessToken, $scope.userSysteminfo, function(response){
-					$localStorage.loggedIn = true;
-					$localStorage.loginDetails = response.result.result;
-					$location.path('/dashboard');
-					$scope.$apply();
+					if(response.result.success){
+						$localStorage.loggedIn = true;
+						$localStorage.loginDetails = response.result.result;
+						$location.path('/dashboard');
+						$scope.$apply();
+					}
+					else{
+						alert(response.result.message);
+						$location.path('/');
+					}
 				});
 			}
 		});
@@ -128,20 +133,7 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 	var endpoints = {};
 	endpoints.apiKey = $scope.apiKey;
 	endpoints.mobileHandler = new MobileHandler();
-
-	endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
-		if(forums.result.result.Threads) {
-			$rootScope.forumsCount=forums.result.result.Threads.length;
-			$rootScope.allForums=forums.result.result.Threads;			
-			$scope.$apply();
-		}
-	});
-	endpoints.mobileHandler.getInbox($scope.apiKey, $scope.userId, 20, null, function(msg){
-		if(msg.result.result.Conversations){
-			$rootScope.msgCount=msg.result.result.Conversations.length;
-			$scope.$apply();
-		}	
-	});
+	
 	endpoints.mobileHandler.getDashboard($scope.apiKey,$scope.userId,7,null,null, function(result){
 
 	});
@@ -157,7 +149,6 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 		$scope.replyPosts = result.result.result;
 		for(var i=0; i< $scope.replyPosts.Entries.length; i++){
 			$scope.tempArray.push($scope.replyPosts.Entries[i]);
-			// debugger;
 			$scope.$apply();
 		}
 		endpoints.mobileHandler.getDashboard($scope.apiKey,$scope.userId,3,null,null, function(response){
@@ -192,7 +183,7 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 	
 });
 
-myApp.controller('navCtrl', function($scope, $cookieStore, $location, $localStorage){
+myApp.controller('navCtrl', function($scope, $cookieStore, $rootScope, $location, $localStorage){
 	if(!$localStorage.loginDetails){
 		delete $localStorage.loggedIn;
 		$location.path('/');
@@ -207,6 +198,22 @@ myApp.controller('navCtrl', function($scope, $cookieStore, $location, $localStor
 	var endpoints = {};
 	endpoints.apiKey = $scope.apiKey;
 	endpoints.mobileHandler = new MobileHandler();
+	
+	if(!$rootScope.forumsCount) {
+		endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
+			if(forums.result.result.Threads) {
+				$rootScope.forumsCount = forums.result.result.Threads.length;
+				$rootScope.allForums=forums.result.result.Threads;			
+				$scope.$apply();
+			}
+		});
+		endpoints.mobileHandler.getInbox($scope.apiKey, $scope.userId, 20, null, function(msg){
+			if(msg.result.result.Conversations){
+				$rootScope.msgCount = msg.result.result.Conversations.length;
+				$scope.$apply();
+			}	
+		});
+	}
 	
 	endpoints.mobileHandler.getPanelistAttributes($scope.apiKey, $scope.userId, $scope.panelistId, function(callback){
 		if(callback.result.success){
@@ -258,14 +265,15 @@ myApp.controller('assignmentCtrl', function($scope, $location, $localStorage){
 	// Creating new handler for APIs
 	endpoints.mobileHandler = new MobileHandler();
 	//Querying APi for response using endpoints
-		endpoints.mobileHandler.getAssignments($scope.apiKey, $scope.userId, $scope.panelistId, function(result){
-			if (result.result.success){
-				for (var i=0; i< result.result.result.length; i++) {
-					$scope.allAssignments.push(result.result.result[i]);
-				}
+	
+	endpoints.mobileHandler.getAssignments($scope.apiKey, $scope.userId, $scope.panelistId, function(result){
+		if (result.result.success){
+			for (var i=0; i< result.result.result.length; i++) {
+				$scope.allAssignments.push(result.result.result[i]);
 			}
-			$scope.$apply();
-		});
+		}
+		$scope.$apply();
+	});
 });
 
 myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
@@ -296,13 +304,13 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
 						$scope.activeThreads.push($rootScope.allForums[i]);
 					}
 				}
+				$scope.$apply();
 			});
 		}
-		
-		$scope.$apply();
 		//alert($scope.activeThreads[0].Author.DisplayName);	
 	
 	$scope.getChilds=function(id){
+		$rootScope.currentId = id;
 		if($scope.childThreads.length > 0) {
 			$scope.childThreads = [];
 		} 
@@ -315,18 +323,25 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
 			}
 			$scope.$apply();
 			$('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
-			//debugger;
+		
 		});
 	}
 	
 	$scope.showCommentbox = function(id) {
-	debugger;
-		for(var i=0; i<$scope.childThreads.length; i++){
-			if(id==$scope.childThreads[0].ThreadId){
-				return true;
+		if($scope.childThreads.length>0){
+			for(var i=0; i<$scope.childThreads.length; i++){
+				if(id==$scope.childThreads[0].ThreadId){
+					return true;
+				}
+
+				else{
+					return false;
+				}
 			}
-			else{
-				return false;
+		}
+		else{	
+			if(id==$rootScope.currentId){	
+				return true;
 			}
 		}
 		
@@ -335,12 +350,9 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
 	$scope.submitPost = function(){
 		$scope.threadInfo=[{"name":"Subject","value":$scope.postTitle},{"name":"Body","value":$scope.postBody}];
 		endpoints.mobileHandler.createThread($scope.apiKey,$scope.userId,3,$scope.threadInfo,function(response){
-			alert(response);
-			debugger;
 			if(response.result.success){
 				endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
 					if(forums.result.result.Threads) {
-						alert('here');
 						$rootScope.forumsCount=forums.result.result.Threads.length;
 						$rootScope.allForums=forums.result.result.Threads;
 						for(var i=0; i<$rootScope.allForums.length; i++){			
@@ -350,10 +362,13 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
 						$scope.postBody="";
 						$scope.$apply();
 					}
-					debugger;
 				});
 			}
 		});		
+	};
+
+	$scope.gotoReplyBox = function(){
+		$('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
 	}
 	
 });
@@ -379,7 +394,7 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 	// Creating new handler for APIs
 	endpoints.mobileHandler = new MobileHandler();
 	//Querying APi for response using endpoints
-	debugger;
+	
 	endpoints.mobileHandler.getInbox($scope.apiKey, $scope.userId, 20, null, function(result){
 		if(result.result.result.Conversations){
 			for(var i=0; i<result.result.result.Conversations.length; i++){
@@ -434,14 +449,12 @@ myApp.controller('profileCtrl', function($scope, $localStorage, $location){
 		}
 	});
 	
-	endpoints.mobileHandler.getPanelistBadges($scope.apikey, $scope.userId, $scope.panelistId, function(result){
-		alert(result);
-		debugger;
+	endpoints.mobileHandler.getPanelistBadges($scope.apiKey, $scope.userId, $scope.panelistId, function(result){
+		
 	});
 	
 	$scope.updateProfile = function() {
 		$scope.bdate = $scope.selectedMonth + '/' + $scope.selectedDate + '/' + $scope.selectedYear;
-		debugger;
 		$scope.attributes = [{"name": "fname1", "value": $scope.fname}, {"name": "lname1", "value": $scope.lname}, {"name": "email", "value": $scope.email}, {"name": "bdate", "value": $scope.bdate}, {"name": "gend", "value": $scope.gender}, {"name": "zipc", "value": $scope.zipcode}];
 		$scope.skipAddressVerify = false;
 		endpoints.mobileHandler.updatePanelistAttributes($scope.apiKey, $scope.userId, $scope.panelistId, $scope.attributes, $scope.skipAddressVerify, function(response){
@@ -484,7 +497,6 @@ myApp.controller('resetpasswordCtrl', function($scope, $localStorage, $location)
 			endpoints.mobileHandler.changePassword($scope.apiKey, $scope.userId, $scope.currentPass, $scope.newPass, function(result){
 				if(result.result.success){
 					alert('Password Changed');
-					debugger;
 					$scope.cpass = '';
 					$scope.npass = '';
 					$scope.vnpass = '';
@@ -494,7 +506,6 @@ myApp.controller('resetpasswordCtrl', function($scope, $localStorage, $location)
 					$scope.$apply();
 				}
 				else{
-					debugger;
 					alert(result.result.message);
 				}
 			});
@@ -505,8 +516,7 @@ myApp.controller('resetpasswordCtrl', function($scope, $localStorage, $location)
 			$scope.vnpass = '';
 			return;
 		}
-	};
-	
+	};	
 }).directive('dynamic', function ($compile) {
   return {
     restrict: 'A',
