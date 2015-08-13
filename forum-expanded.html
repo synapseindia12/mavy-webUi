@@ -1,44 +1,14 @@
-    <h1 class="hidden">Forum Page</h1>
+<h1 class="hidden">Forum Expanded Page</h1>
     <!--slideout sidebar left-->
 	<div ng-include="'navigation.html'"></div>
     <!--end header logo & menu-->
-    <!--main content-->
+     <!--main content-->
     <div id="sb-site"><!--wrapper so content moves when slide out menus are clicked-->
         <div class="grid-block wrap">
-            <section class="grid-block small-12 medium-8 vertical">
+        	<section class="grid-block small-12 medium-8 vertical">
                 <h1 class="hidden">Forum</h1>
-
-                <!--forum topic collapsed-->
-				<div class="grid-content">
-					<!--container jquery expander-->
-                    <article class="card replyToPost">
-                        <div class="card-divider color-code-3">
-                            <h6 class="boxTitle">Create New Post</h6>
-                        </div>
-						<form class="card-section" method="post">
-							<div class="grid-block">
-								<div class="small-12 medium-12 grid-content">
-									<label for="post-input" class="settingLabel hidden">
-										Post Title
-									</label>
-									<input type="text" class="post-input" name="post-input" id="post-input" placeholder="Post Title" value="" ng-model="postTitle">
-									
-									<label class="post-label hidden">
-										Create new post
-									</label>
-										<textarea cols="40" rows="8" name="comment" placeholder="Create new post" id="comment" ng-model="postBody"></textarea>
-									
-									<div id="post-content">
-										<input type="submit" value="Submit Post" class="button fa float-right" id="new-post" ng-Click="submitPost()">
-									</div>
-								</div>
-							</div>
-						</form><!--end form-->
-                    </article><!--end expand container card-->
-				</div><!--end grid content-->
-			 
-			   <!--forum post expanded with sample comments-->
-                <div class="grid-content" ng-repeat="items in activeThreads">
+                <!--forum post expanded with sample comments-->
+                <div class="grid-content">
                     <article class="card replyToPost">
                         <div class="card-divider reply">
                             <!--post message counter and nav-->
@@ -52,7 +22,7 @@
                         <!--avatar container-->
                         <div class="postContent card-section">
                             <div class="posterAvatar">
-                                <a class="avatarContainer" ng-href="#/forum-expanded/{{items.Id}}">
+                                <a class="avatarContainer" href="javascript:void(0)">
                                     <img alt="profile image" class="profile" src="{{items.Content.CreatedByUser.AvatarUrl}}">
                                 </a>
                             </div>
@@ -64,14 +34,14 @@
                                 <p class="set-width" dynamic="{{items.Body}}"></p>
                                 <p class="date"><strong>{{items.Date | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
                                 <p class="reply-to-posts-count">
-                                    <a ng-click='getChilds(items.Id)'>Reply</a>
-                                    <a href="javascript:void(0)" class="expand-collapse-toggle" ng-if="showCommentbox(items.Id)">
+                                    <a ng-click="gotoReplyBox()">Reply</a>
+                                    <a href="javascript:void(0)" class="expand-collapse-toggle">
                                     Replies ( <span class="replies-count">{{items.ReplyCount}}</span> ) 
                                     </a>
                                 </p>
                             </div>
                             <!--example comments to post-->
-                            <div class="card" ng-repeat="reply in childThreads" ng-if="items.Id == reply.ThreadId">
+                            <div class="card" ng-repeat="reply in childThreads">
 								<div>
                                 <div class="card-divider reply">
                                 </div>
@@ -99,7 +69,7 @@
                             
 
                             <!--reply form-->
-                            <div class="card comment-form" ng-if="showCommentbox(items.Id)">
+                            <div class="card comment-form">
                                 <form id="replyForm" class="card-section" action="#" method="post">
                                     <div class="grid-block" id="reply-box">
                                         <div class="small-12 medium-12 grid-content">
@@ -121,18 +91,10 @@
                         </div>
                     </article>
                 </div>
-			  
-			  
-			  
-			  
-			  
-
-             
-
-              
             </section>
 
-            <!--start right sidebar content-->
+
+             <!--start right sidebar content-->
             <div class="grid-content small-12 medium-4 message-side-bar">
                 <aside class="card">
                     <h2 class="hidden">Sidebar Content</h2>
@@ -207,9 +169,10 @@
                     </div>
                 </aside><!--end poll result box-->
             </div>
+
         </div>
-    </div><!--end sb-site container-->
-    
+
+    </div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>
     window.jQuery || document.write('<script src="js/jquery-1.11.2.min.js"><\/script>')
@@ -218,4 +181,3 @@
     <script src="js/jquery.simple-expand.min.js"></script>
     <script src="js/slidebars.js"></script>
     <script src="js/main.js"></script>
-	

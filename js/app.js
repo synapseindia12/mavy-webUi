@@ -1,4 +1,4 @@
-var myApp = angular.module("mavyApp", ['ngRoute', 'ngCookies', 'ngStorage', 'ngFacebook', 'ui.mask']);
+var myApp = angular.module("mavyApp", ['ngRoute', 'ngCookies', 'ngStorage', 'ngFacebook', 'ui.mask', 'ui.bootstrap']);
 myApp.config(function($routeProvider, $httpProvider, $facebookProvider) {
     $routeProvider
         .when('/', {
@@ -17,9 +17,17 @@ myApp.config(function($routeProvider, $httpProvider, $facebookProvider) {
             templateUrl: 'forum.html',
 			controller: 'forumCtrl'
         })
+		.when('/forum-expanded/:forumId', {
+            templateUrl: 'forum-expanded.html',
+			controller: 'forumExpandedCtrl'
+        })
 		.when('/messages', {
             templateUrl: 'messages.html',
 			controller: 'messagesCtrl'
+        })
+		.when('/message/:conversationId', {
+            templateUrl: 'messageConversation.html',
+			controller: 'messageconversationCtrl'
         })
 		.when('/profile', {
             templateUrl: 'profile.html',
@@ -65,7 +73,7 @@ myApp.controller('fbCtrl', function ($scope) {
 
 }); 
 
-myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieStore, $localStorage, $window, $facebook){
+myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieStore, $localStorage, $window, $facebook, $modal){
 
 	if ($localStorage.loggedIn) {
 		$location.path('/dashboard');
@@ -92,26 +100,63 @@ myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieSt
 	};
 	
 	$scope.fbLogin = function() {
+		$modal.open({
+		  templateUrl: 'signupModal.html',
+		  controller: 'signupModalctrl',
+		  resolve: {}
+		});
 		$scope.userSysteminfo = [];
-		$facebook.login().then(function(result) {
-			if(result.status){
-				$scope.accessToken = result.authResponse.accessToken;
-				$scope.userName = 'Synapse';
-				endpoints.mobileHandler.loginFb($scope.userName, $scope.accessToken, $scope.userSysteminfo, function(response){
-					if(response.result.success){
-						$localStorage.loggedIn = true;
-						$localStorage.loginDetails = response.result.result;
-						$location.path('/dashboard');
-						$scope.$apply();
-					}
-					else{
-						alert(response.result.message);
-						$location.path('/');
-					}
-				});
+	};	
+});
+
+myApp.controller('signupModalctrl', function($scope, $modalInstance, $facebook){
+	 $scope.ok = function () {
+		var endpoints = {};
+		$scope.newArray = [];
+		endpoints.mobileHandler = new MobileHandler();
+		$scope.username = $scope.displayname;
+		$scope.token = "CAAWkTEZAW1ZA8BACX8GQvBYqqw4OZCTkbnZCzr2B2hQSxZCf4UCjS59ErPHZBD9DC8tXmPWt1ldLZBn2EQH7d8U25zmkRh5hQ2uChWsLdoTsJrf4nak9H5ocBgO03hfKkNkhOpothPhcnUd96sW7R11ZBCFgWEqa1XtZAU6myVpZC5I2azyZA2OEvZCHTNgOBm4D8uky4qO00ZCkuVYBHZAf645xIrr4SlJXrqGTkZD";
+		$scope.userSystemInfo = [];
+		endpoints.mobileHandler.loginFb($scope.username, $scope.token, $scope.userSystemInfo, function(response){
+			alert('Got the response');
+			debugger;
+			if(response.result.success){
+				debugger;
+				$localStorage.loggedIn = true;
+				$localStorage.loginDetails = response.result.result;
+				$location.path('/dashboard');
+				$scope.$apply();
+			}
+			else{
+				debugger;
+				alert(response.result.message);
+				$location.path('/');
 			}
 		});
-	};	
+		// $facebook.login().then(function(result) {
+			// if(result.status){
+				// $scope.accessToken = result.authResponse.accessToken;
+				// $scope.attributes = [{"username": $scope.displayname, "accessToken": $scope.accessToken, "userSystemInfo": []}];
+				// endpoints.mobileHandler.loginFb($scope.attributes, function(response){
+					// if(response.result.success){
+						// $localStorage.loggedIn = true;
+						// $localStorage.loginDetails = response.result.result;
+						// $location.path('/dashboard');
+						// $scope.$apply();
+					// }
+					// else{
+						// alert(response.result.message);
+						// $location.path('/');
+					// }
+				// });
+			// }
+		// });
+		//$modalInstance.close($scope.selected.item);
+	  };
+
+	  $scope.cancel = function () {
+		$modalInstance.dismiss('cancel');
+	  };
 });
 
 myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localStorage, $location){
@@ -295,7 +340,7 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
 				$scope.activeThreads.push($rootScope.allForums[i]);
 			}
 		}
-		else{
+		else {
 			endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
 				if(forums.result.result.Threads) {
 					$rootScope.forumsCount=forums.result.result.Threads.length;
@@ -373,6 +418,49 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
 	
 });
 
+myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$routeParams){
+	
+	$scope.childThreads = [];
+	if(!$localStorage.loginDetails){
+		delete $localStorage.loggedIn;
+		$location.path('/');
+	}
+	var loginDetails = $localStorage.loginDetails;
+	$scope.apiKey = loginDetails[0].value;
+	$scope.userId = loginDetails[1].value;
+	var endpoints = {};
+	endpoints.apiKey = $scope.apiKey;
+	endpoints.mobileHandler = new MobileHandler();
+	endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
+				if(forums.result.result.Threads) {
+					debugger;
+					
+					for(var i=0; i<forums.result.result.Threads.length; i++){			
+						if($routeParams.forumId==forums.result.result.Threads[i].Id){
+							$scope.items=forums.result.result.Threads[i];
+						}
+					}
+				}
+				$scope.$apply();
+			});
+	endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,$routeParams.forumId,null,null,function(child){
+			if(child.result.result[1].Replies) {
+				for(var j=0; j<child.result.result[1].Replies.length; j++){				
+					if($routeParams.forumId == child.result.result[1].Replies[j].ThreadId)
+						$scope.childThreads.push(child.result.result[1].Replies[j]);
+				}
+			}
+			$scope.$apply();
+			//$('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
+		
+		});
+
+	$scope.gotoReplyBox = function(){
+		$('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
+	};
+	//$scope.forumExpandedPage = 'setting-page-active';
+});
+
 myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $localStorage){
 	if(!$localStorage.loginDetails){
 		delete $localStorage.loggedIn;
@@ -380,7 +468,7 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 	}
 	$scope.messages = [];
 	$scope.tempArr = [];
-	
+	$scope.displayConversations = true;
 	/* Getting all local Storage data for User Authentication */
 	var loginDetails = $localStorage.loginDetails;
 	$scope.apiKey = loginDetails[0].value;
@@ -404,9 +492,50 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 		$scope.$apply();
 	});
 	
+	$scope.showMessage = function(conversationId) {
+		$scope.internalMessages = [];
+		endpoints.mobileHandler.getInboxMessages($scope.apiKey, $scope.userId, conversationId, null, null, function(result){
+			for(var i=0; i<result.result.result.Messages.length; i++){
+					$scope.internalMessages.push(result.result.result.Messages[i]);
+			}
+			
+			// for(var i=0; i< $scope.messages.length; i++){
+				// if($scope.messages[i].LastMessage.ConversationId == conversationId){
+					// $scope.displayConversations = true;
+				// }
+				// else{
+					// $scope.displayConversations = false;
+				// }
+			// }
+			
+			$scope.$apply();
+		});
+	}
 	// endpoints.mobileHandler.getInboxMessages($scope.apiKey, $scope.userId, "guid", null, null, function(callback){
 		// debugger;
 	// });
+});
+
+myApp.controller('messageconversationCtrl', function($scope, $routeParams, $localStorage){
+	/* Getting all local Storage data for User Authentication */
+	var loginDetails = $localStorage.loginDetails;
+	$scope.apiKey = loginDetails[0].value;
+	$scope.userId = loginDetails[1].value;
+	$scope.panelistId = loginDetails[2].value;
+	$scope.registrationId = loginDetails[3].value;
+	var sectionId = 2;
+	$scope.messages = [];
+	var endpoints = {};
+	$scope.newArray = [];
+	endpoints.apiKey = "835mzggn289l9wxnjxjr323kny6q";
+	endpoints.mobileHandler = new MobileHandler();
+	
+	endpoints.mobileHandler.getInboxMessages($scope.apiKey, $scope.userId, $routeParams.conversationId, null, null, function(result){
+		for(var i=0; i<result.result.result.Messages.length; i++){
+				$scope.messages.push(result.result.result.Messages[i]);
+		}
+		$scope.$apply();
+	});
 });
 
 myApp.controller('profileCtrl', function($scope, $localStorage, $location){
