@@ -1,0 +1,177 @@
+    <h1 class="hidden">Assignment Page</h1>
+    <!--slideout sidebar left-->
+	<div ng-include="'navigation.html'"></div>
+    <!--end header logo & menu-->
+
+    <div id="sb-site"><!--wrapper so content moves when slide out menus are clicked-->
+        <div class="grid-block wrap">
+            <section class="grid-block small-12 medium-8 vertical">
+                <h2 class="hidden">Assignments</h2>
+                <div class="grid-content">
+                    <!--featured content-->
+                    <article class="card featuredAssignment">
+                        <div class="card-section">
+                           <h3 class="boxTitle">{{assignment.projectTitle}}</h3>
+                           <p class="assgnTitle" dynamic="{{assignment.modules[0].options.instructions}}"></p>
+                        </div>
+                         
+               
+                        
+                    </article>
+                </div>
+                <div class="grid-content" ng-repeat="task in tasks">
+                    <article class="card replyToPost">
+                        
+                        <!--avatar container-->
+                        <div class="postContent card-section">
+                            
+                            
+                           
+                                <div>
+                                <div class="card-divider reply">
+                                </div>
+                                <!--example comment one-->
+                                <div class="post-comment-reply card-section">
+                                    
+                                    <!--metadata for example comment one-->
+                                    <div class="postMeta">
+                                        <p class="name">{{task.Subject}}</p>
+                                        <p class="userName">{{task.Title}}</p>
+                                        <p class="set-width" dynamic="{{task.QuestionText}}"></p>
+                                        <p class="date"><strong>{{task.ActivationDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
+                                        <p class="reply-to-post">
+                                            <a href="javascript:void(0);">Comment</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                </div>
+                          <!--reply form-->
+                            <div class="card comment-form assignm"  style="display:none;">
+                                <form id="replyForm" class="card-section" action="#" method="post">
+                                    <div class="grid-block" id="reply-box">
+                                        <div class="small-12 medium-12 grid-content">
+                                            <label class="forum-label">
+                                                Mark Complete
+                                                <textarea cols="40" rows="8" name="comment" id="reply" ng-model="reply"></textarea>
+                                            </label>
+                                            <div id="comment-button">
+                                                
+                                                <input type="submit" value="Submit Comment" class="button fa" id="add-comment" ng-click="markCompleted(task)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div><!--end reply form container-->
+                        </div>
+                    </article>
+                </div>
+                <!--article card content under slider-->
+                <div class="grid-block small-up-1 medium-up-2 large-up-2">                    
+                    <div class="grid-content" ng-repeat="assignment in allAssignments">
+                        <article class="card card-margin">
+							<div class="card-divider color-code-2">
+								<h6 class="boxTitle">New Assignment |<span class="assignment-type" ng-if="assignment.moduleType == 1"> Discussion(s)</span><span class="assignment-type" ng-if="assignment.moduleType == 2"> Quiz</span><span class="assignment-type" ng-if="assignment.moduleType == 3"> Diary</span><span class="assignment-type" ng-if="assignment.moduleType == 4"> Sponsored Quiz</span></h6>
+							</div>
+                            <div class="card-section">
+                                <!--<h6 class="boxTitle">New Assignment |<span class="assignment-type"> Quiz</span></h6>-->
+                                <h3 class="quizTitle">{{assignment.moduleTitle}}</h3>
+                                <p dynamic="{{assignment.options.instructions}}"></p>
+                            </div>
+
+
+                        </article>
+                    </div>
+                    
+                </div><!--end assignment content-->
+
+
+                
+            </section><!--end main content-->
+
+            <!--start right sidebar content-->
+            <div class="grid-content small-12 medium-4 message-side-bar">
+                <!--notification box-->
+                <aside class="card">
+                    <div class="card-section updateWidget">
+                        <h6 class="boxTitle">Updates</h6>
+                        <div id="updateContent">
+                            <span class="messageWaiting"></span>
+                            <p class="updates">You have<span id="messageCount"> two </span>messages waiting</p>
+                            <span class="forumReply"></span>
+                            <p class="updates">Somebody replied to your forum post</p>
+                        </div>
+                    </div>
+                </aside>
+
+                <!--start daily poll radio form-->
+                <form class="card dailyPoll" action="" method="post">
+                    <div class="card-section">
+                        <h6 class="boxTitle">Daily Poll</h6>
+                        <div id="pollContent">
+                            <h5 class="pollQuestion" id="currentUpdaQuestion">What is your favorite Robin Williams movie?</h5>
+                            <p>
+                                <input type="radio" name="poll-radio" value="" id="poll-radio-1">
+                                <label for="poll-radio-1" id="label-1" class="inline-label">
+                                    Choice One
+                                </label>
+                            </p>
+                            <p>
+                                <input type="radio" name="poll-radio" value="" id="poll-radio-2">
+                                <label for="poll-radio-2" id="label-2" class="inline-label">
+                                    Choice Two
+                                </label>
+                            </p>
+                            <p>
+                                <input type="radio" name="poll-radio" value="" id="poll-radio-3">
+                                <label for="poll-radio-3" id="label-3" class="inline-label">
+                                    Choice Three
+                                </label>
+                            </p>
+                            <p>
+                                <input type="radio" name="poll-radio" value="" id="poll-radio-4">
+                                <label for="poll-radio-4" id="label-4" class="inline-label">
+                                    Choice Four
+                                </label>
+                            </p>
+                            <p>
+                                <input type="radio" name="poll-radio" value="" id="poll-radio-5">
+                                <label for="poll-radio-5" id="label-5" class="inline-label">
+                                    Choice Five
+                                </label>
+                            </p>
+                            <button type="submit" name="poll-submit" class="button" id="pollSubmit">Submit Vote</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!--start poll result box-->
+                <aside class="card pollResults">
+                    <div class="card-section">
+                        <h6 class="boxTitle">Results To Yesterday's Poll</h6>
+                        <div id="pollResults">
+                            <h5 class="pollQuestion" id="pastQuestion">What is your favorite Beatle's song?</h5>
+                            <div class="results">
+                                <p class="percents"><span id="result-poll-1">22%</span>Choice One</p>
+                                <p class="percents"><span id="result-poll-2">12%</span>Choice Two</p>
+                                <p class="percents"><span id="result-poll-3" class="highValue">45%</span>Choice Three
+                                    <p>
+                                        <p class="percents"><span id="result-poll-4">10%</span>Choice Four</p>
+                                        <p class="percents"><span id="result-poll-5">11%</span>Choice Five</p>
+                            </div>
+                            <br>
+                            <a class="button" id="more-polls-link" href="results.html">See More Polls</a>
+                        </div>
+                    </div>
+                </aside>
+                <!--end poll result box-->
+            </div>
+        </div>
+    </div><!--end sb-site container-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+    window.jQuery || document.write('<script src="js/jquery-1.11.2.min.js"><\/script>')
+    </script>
+	<script src="js/jquery.tooltipster.min.js"></script>
+    <script src="js/slidebars.js"></script>
+    <script src="js/main.js"></script>
+  

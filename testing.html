@@ -1,101 +1,16 @@
-<div class="sb-slidebar sb-right">
-		<div class="grid-content small-12 gradient-right">
-			<!--heading for sidebar-->
-			<nav class="block-list profile-links">
-				<div class="fa fa-times fa-2x sb-close right-close"></div>
-				<header id="slide-right">
-					<div class="posterAvatar" id="slide-menu-profile">
-						<a class="avatarContainer" href="#">
-							<img alt="profile image" class="profile" src="images/avatar.svg">
-						</a>
-					</div>
-					
-					<div class="user-wrapper">
-						<p id="profile-name" class="name user">
-							<a class="profile-link" href="profile.html">
-							Cady Heron
-							</a>
-						</p>
-						<p class="user rewards">
-							<a class="profile-link" href="rewards.html">
-								<strong>
-									Rewards Balance: 
-								</strong>
-								<span id="reward-amount">$25.00</span>
-							</a>
-						</p>
-					</div>
-				
-				</header>
-				<!--links for settings slideout menu right-->
-				<header class="profile-header">Settings</header>
-				
-				<ul class="slide-right-links">
-					<li class="with-chevron block-list-label">
-						<a ng-href="#/profile">
-							Profile Information
-						</a>
-					</li>
-					<li class="with-chevron block-list-label">
-						<a ng-href="#/notification">
-							Notification Settings
-						</a>
-					</li>
-					<li class="with-chevron block-list-label">
-						<a ng-href="#/resetpassword">
-							Change Password
-						</a>
-					</li>
-					<li class="with-chevron block-list-label">
-						<a href="#/" class="log-out">
-							Log Out
-						</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
-	</div>
+<!DOCTYPE html>
+<html>
+<body>
 
-		<!--logo and main menu in header-->
-	<header id="main-header" class="navbar sb-slide">
-		
-		<div class="logo">
-			<a class="glow" href="index.html">
-				<img src="images/mavylogo.svg" class="mavy-logo" alt="Mavy logo">
-				<img src="images/mavytext.svg" class="mavy-name" alt="Mavy name">
-			</a>
-		</div>
-		
-		<nav id="desktop-menu">
-			<ul class="desktop-menu">
-				<span id="hide"><!--hides just text links & notifications on mobile-->
-					<li id="feed">
-						<a ng-href="#/" class="tooltip glow active" title="Home">
-							<img class="link-icon" src="images/feedactive.svg" alt="feed page link">
-						</a>
-					</li>
-					<li id="assignment" class="tooltip" title="Assignments">
-						<a ng-href="#/assignment" class="glow">
-							<img class="link-icon" src="images/assignment.svg" alt="assignment page link">
-						</a>
-					</li>
-					<li>
-						<span class="secondary badge forum-count nav-notification-forum">1</span>
-						<a ng-href="#/forum" class="tooltip glow" title="Forum">
-							<img class="link-icon" src="images/forum.svg" alt="forum page link">
-						</a>
-					</li>
-					<li>
-						<span class="secondary badge message-count nav-notification-messages">8</span>
-						<a ng-href="#/messages" class="tooltip glow" title="Messages">
-							<img class="link-icon" src="images/messages.svg" alt="message page link">
-						</a>
-					</li>
-				</span>
-				<li class="sb-toggle-right">
-					<img src="images/profile.svg" class="link-icon tooltip" title="Settings" alt="profile icon" />
-				</li>
-			</ul>
-		</nav>
-		<div class="fa fa-bars fa-2x sb-toggle-left"></div>
-	</header>
+<p>Click the button to open an about:blank page in a new browser window that is 200px wide and 100px tall.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<script>
+function myFunction() {
+    var myWindow = window.open("http://google.com", "", "toolbar=yes, scrollbars=yes, resizable=yes, top=50%, left=50%, width=400, height=400");
+}
+</script>
+
+</body>
+</html>

@@ -12,6 +12,9 @@ myApp.config(function($routeProvider, $httpProvider, $facebookProvider) {
 		.when('/assignment', {
             templateUrl: 'assignments.html',
 			controller: 'assignmentCtrl'
+        }).when('/assignments/showAssignment', {
+            templateUrl: 'showassignments.html',
+			controller: 'showassignmentCtrl'
         })
 		.when('/forum', {
             templateUrl: 'forum.html',
@@ -182,10 +185,10 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 	endpoints.mobileHandler.getDashboard($scope.apiKey,$scope.userId,7,null,null, function(result){
 
 	});
-	endpoints.mobileHandler.getAssignments($scope.apiKey, $scope.userId, $scope.panelistId, function(result){
+	endpoints.mobileHandler.getDashboard($scope.apiKey, $scope.userId, 1, null, null, function(result){
 		if (result.result.success){
-			for (var i=0; i< result.result.result.length; i++) {
-				$scope.allAssignments.push(result.result.result[i]);
+			for (var i=0; i< result.result.result.Entries.length; i++) {
+				$scope.allAssignments.push(result.result.result.Entries[i]);
 			}
 		}
 		$scope.$apply();
@@ -196,24 +199,12 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 			$scope.tempArray.push($scope.replyPosts.Entries[i]);
 			$scope.$apply();
 		}
-		endpoints.mobileHandler.getDashboard($scope.apiKey,$scope.userId,3,null,null, function(response){
-			endpoints.mobileHandler.getDashboard($scope.apiKey,$scope.userId,4,null,null, function(res){
-			});
-		});
-		endpoints.mobileHandler.getDashboard($scope.apiKey, $scope.userId, 5, null, null, function(result){
-			if(result.result.success){
-				$scope.latestPoll = result.result.result.Entries[0];
-				for(var i=1; i< result.result.result.Entries.length; i++){
-					$scope.allPolls.push(result.result.result.Entries[i]);
-				}
-			}
-			$scope.$apply();
-		});
-		
-		endpoints.mobileHandler.getPollVotes($scope.apiKey, $scope.userId, 100, function(result){
-			
-		});
 	});
+	
+	// endpoints.mobileHandler.getDashboard($scope.apiKey, $scope.userId, 3, null, null, function(result){
+		// alert('Hello In there');
+		// debugger;
+	// });
 	
 	$scope.submitPoll = function(poll) {
 		var index = $scope.allPolls.indexOf(poll);
@@ -226,6 +217,68 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 	};
 	
 	
+	$scope.showAssignmentTasks = function(assignment){
+		$rootScope.assignment = assignment;
+		$location.path('/assignments/showAssignment');
+	}
+	
+});
+
+myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStorage){
+	
+	if(!$localStorage.loginDetails){
+		delete $localStorage.loggedIn;
+		$location.path('/');
+	}
+	
+	var loginDetails = $localStorage.loginDetails;
+	$scope.apiKey = loginDetails[0].value;
+	$scope.userId = loginDetails[1].value;
+	$scope.panelistId = loginDetails[2].value;
+	$scope.registrationId = loginDetails[3].value;
+	var sectionId = 2;
+	$scope.tempArray = [];
+	$scope.allPolls = []; 
+	
+	var endpoints = {};
+	endpoints.apiKey = $scope.apiKey;
+	endpoints.mobileHandler = new MobileHandler();
+	
+	endpoints.mobileHandler.getDashboard($scope.apiKey, $scope.userId, 5, null, null, function(result){
+		if(result.result.success){
+			$scope.latestPoll = result.result.result.Entries[0];
+			$scope.latestPollFilter = [];
+			for(var i=0; i< result.result.result.Entries[0].options.categories.length; i++){
+				$scope.latestPollFilter.push(result.result.result.Entries[0].options.categories[i]);
+			}
+			for(var i=1; i< result.result.result.Entries.length; i++){
+				$scope.allPolls.push(result.result.result.Entries[i]);
+			}
+		}
+		$scope.$apply();
+	});
+	
+	$scope.submitPoll = function(pollDetails){
+		$scope.notes = [];
+		$scope.value = [];
+		$scope.value.push($('input[name=poll]:checked', '#myForm').val());
+		var response = {"projectId": $scope.allPolls[0].projectId, "moduleId": $scope.allPolls[0].moduleId, "taskId": $scope.allPolls[0].taskId, "itemId": $scope.allPolls[0].itemId, "isTestData": false, "notes": $scope.notes, "values": $scope.value};
+		endpoints.mobileHandler.savePollResponse($scope.apiKey, $scope.userId, $scope.panelistId, response, function(result){
+			if(result.result.success){
+				alert('Thanks for your voting.');
+				endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, $scope.allPolls[0].projectId, $scope.allPolls[0].moduleId, function(response){
+					$scope.totalResponseCounts = response.result.result[0].responseCount;
+				});
+				endpoints.mobileHandler.getPanelistPollResponses($scope.apiKey, $scope.userId, $scope.panelistId, $scope.allPolls[0].projectId, $scope.allPolls[0].moduleId, function(res){
+					$scope.votedFor = res.result.result[0].responses[0].values;
+				});
+			}
+			$scope.$apply();
+		});
+	}
+		
+	// endpoints.mobileHandler.getPollVotes($scope.apiKey, $scope.userId, 100, function(result){
+	// });	
 });
 
 myApp.controller('navCtrl', function($scope, $cookieStore, $rootScope, $location, $localStorage){
@@ -272,6 +325,10 @@ myApp.controller('navCtrl', function($scope, $cookieStore, $rootScope, $location
 			// $scope.gender = callback.result.result.gend;
 			// $scope.zipcode = callback.result.result.zipc;
 			// $scope.mobileNumber = callback.result.result.cell_phone;
+			// endpoints.mobileHandler.getIncentives($scope.apiKey, $scope.userId, $scope.panelistId, null, null, function(result){
+				// alert('Got incentives');
+				// debugger;
+			// });
 			$scope.$apply();			
 		}
 	});
@@ -319,6 +376,59 @@ myApp.controller('assignmentCtrl', function($scope, $location, $localStorage){
 		}
 		$scope.$apply();
 	});
+});
+
+ myApp.controller('showassignmentCtrl', function($scope, $cookieStore, $rootScope, $location, $localStorage){
+	if(!$localStorage.loginDetails){
+		delete $localStorage.loggedIn;
+		$location.path('/');
+	}
+	
+	var loginDetails = $localStorage.loginDetails;
+	$scope.apiKey = loginDetails[0].value;
+	$scope.userId = loginDetails[1].value;
+	$scope.panelistId = loginDetails[2].value;
+	$scope.registrationId = loginDetails[3].value;
+	var sectionId = 2;
+	$scope.tempArray = [];
+	$scope.allPolls = [];
+	$scope.tasks = []; 
+	
+	var endpoints = {};
+	endpoints.apiKey = $scope.apiKey;
+	endpoints.mobileHandler = new MobileHandler();
+	
+	$scope.assignment = $rootScope.assignment;
+	$scope.projectId = $scope.assignment.projectId;
+	$scope.moduleId = $scope.assignment.modules[0].moduleId;
+	endpoints.mobileHandler.getPanelistModuleTasks($scope.apiKey, $scope.userId, $scope.projectId, $scope.moduleId, $scope.panelistId, 20, 0, function(result){
+		
+		if(result.result.result.AvailableTasks.length > 0){
+			for(var i=0;i<result.result.result.AvailableTasks.length;i++){
+				$scope.tasks.push(result.result.result.AvailableTasks[i]);
+			}
+
+		}
+		
+	});
+
+	$scope.markCompleted = function(task) {
+		alert("Currently in working mode");
+		//var reply = $('#reply').val();
+		//$scope.apiKey = parseInt($scope.apiKey);
+		//$scope.userId = parseInt($scope.userId);
+		// debugger;
+		// endpoints.mobileHandler.saveTaskReply($scope.apiKey,$scope.userId,$scope.projectId,$scope.moduleId,task.TaskId,reply,function(response){
+			// alert('Executed');
+			// debugger;
+		// });
+	};
+	
+	$scope.gotoReplyBox = function(){
+		debugger;
+		$('.comment-form').show();
+		$(this).parents('.grid-content').find('.comment-form').show();
+	};
 });
 
 myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
@@ -579,7 +689,11 @@ myApp.controller('profileCtrl', function($scope, $localStorage, $location){
 	});
 	
 	endpoints.mobileHandler.getPanelistBadges($scope.apiKey, $scope.userId, $scope.panelistId, function(result){
-		
+		$scope.allBadges = [];
+		for(var i=0; i< result.result.result.length; i++){
+			$scope.allBadges.push(result.result.result[i]);
+		}
+		$scope.$apply();
 	});
 	
 	$scope.updateProfile = function() {
@@ -594,8 +708,134 @@ myApp.controller('profileCtrl', function($scope, $localStorage, $location){
 	};
 });
 
-myApp.controller('notificationCtrl', function($scope){
+myApp.controller('badgesCtrl', function($scope, $localStorage, $location){
+
+	if(!$localStorage.loginDetails){
+		delete $localStorage.loggedIn;
+		$location.path('/');
+	}
+	
+	var loginDetails = $localStorage.loginDetails;
+	$scope.apiKey = loginDetails[0].value;
+	$scope.userId = loginDetails[1].value;
+	$scope.panelistId = loginDetails[2].value;
+	$scope.registrationId = loginDetails[3].value;
+	var sectionId = 2;
+	
+	var endpoints = {};
+	endpoints.apiKey = $scope.apiKey;
+	// Creating new handler for APIs
+	endpoints.mobileHandler = new MobileHandler();
+	
+	endpoints.mobileHandler.getPanelistAttributes($scope.apiKey, $scope.userId, $scope.panelistId, function(callback){
+		if(callback.result.success){
+			$scope.avatarUrl = callback.result.result.AvatarUrl;
+			$scope.fname = callback.result.result.fname1;
+			$scope.lname = callback.result.result.lname1;
+			$scope.$apply();
+			
+		}
+	});
+	
+	endpoints.mobileHandler.getPanelistBadges($scope.apiKey, $scope.userId, $scope.panelistId, function(result){
+		$scope.allBadges = [];
+		for(var i=0; i< result.result.result.length; i++){
+			$scope.allBadges.push(result.result.result[i]);
+		}
+		$scope.$apply();
+	});
+});
+
+myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
+
+	if(!$localStorage.loginDetails){
+		delete $localStorage.loggedIn;
+		$location.path('/');
+	}
+	
+	var loginDetails = $localStorage.loginDetails;
+	$scope.apiKey = loginDetails[0].value;
+	$scope.userId = loginDetails[1].value;
+	$scope.panelistId = loginDetails[2].value;
+	$scope.registrationId = loginDetails[3].value;
+	var sectionId = 2;
+	$scope.preferences = [];
+	var endpoints = {};
+	endpoints.apiKey = $scope.apiKey;
+	// Creating new handler for APIs
+	endpoints.mobileHandler = new MobileHandler();
+	
 	$scope.notificationPage = 'setting-page-active';
+	endpoints.mobileHandler.getNotifications($scope.apiKey, $scope.userId, $scope.panelistId, function(result){
+		if(result.result.success){
+			var resultArray = result.result.result;
+			for(var i=0; i<resultArray.length; i++){
+				switch(resultArray[i]){
+					case '3a': 
+						$scope.emailCheck = true;
+					break;
+					case '3b': 
+						$scope.smsCheck = true;
+					break;
+					case '3c': 
+						$scope.pushCheck = true;
+					break;
+					case '3d': 
+						$scope.forumEmail = true;
+					break;
+					case '3e': 
+						$scope.forumSMS = true;
+					break;
+					case '3f': 
+						$scope.forumPush = true;
+					break;
+					case '3g': 
+						$scope.messagesEmail = true;
+					break;
+					case '3h': 
+						$scope.messagesSMS = true;
+					break;
+					case '3i': 
+						$scope.messagesPush = true;
+					break;
+				}
+			}
+			$scope.$apply();
+		}
+	});
+	
+	$scope.updateNotification = function() {
+			if($scope.emailCheck){
+				$scope.preferences.push('3a');
+			}
+			if($scope.smsCheck){
+				$scope.preferences.push('3b');
+			}
+			if($scope.pushCheck){
+				$scope.preferences.push('3c');
+			}
+			if($scope.forumEmail){
+				$scope.preferences.push('3d');
+			}
+			if($scope.forumSMS){
+				$scope.preferences.push('3e');
+			}
+			if($scope.forumPush){
+				$scope.preferences.push('3f');
+			}
+			if($scope.messagesEmail){
+				$scope.preferences.push('3g');
+			}
+			if($scope.messagesSMS){
+				$scope.preferences.push('3h');
+			}
+			if($scope.messagesPush){
+				$scope.preferences.push('3i');
+			}
+			
+			endpoints.mobileHandler.updateNotifications($scope.apiKey, $scope.userId, $scope.panelistId, $scope.preferences, function(result){
+			});
+	}
 });
 
 myApp.controller('resetpasswordCtrl', function($scope, $localStorage, $location){
@@ -656,3 +896,13 @@ myApp.controller('resetpasswordCtrl', function($scope, $localStorage, $location)
     }
   };
 });
+
+$(function(){
+	
+             $(document).on('click','.reply-to-post a',function(){
+                if($(this).closest('.grid-content').find('.comment-form.assignm').css('display')=='none'){
+	                $('.comment-form.assignm').hide();
+	                $(this).closest('.grid-content').find('.comment-form.assignm').slideDown();
+            	}
+            })
+ })

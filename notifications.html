@@ -9,25 +9,8 @@
  
             <!--start user image, meta & badges-->
             <div class="grid-content small-12 medium-3 medium-order-1 small-order-3">
-                <div class="settingAvatar">
-                    <a class="avatarContainer" href="#">
-                        <img alt="profile image" class="profile" src="images/avatar.svg">
-                    </a>
-                </div>
-                <div class="settingMeta">
-                    <p>Cady Heron</p>
-                </div>
-
-                <aside class="card badges">
-                    <h6 class="boxTitle card-section">Badges</h6>
-                    <img src="images/placeholder-badge.svg" alt="badge">
-                    <img src="images/placeholder-badge.svg" alt="badge">
-                    <img src="images/placeholder-badge.svg" alt="badge">
-                    <img src="images/placeholder-badge.svg" alt="badge">
-                    <img src="images/placeholder-badge.svg" alt="badge">
-                    <img src="images/placeholder-badge.svg" alt="badge">
-                </aside>
-            </div>
+				<div ng-include="'badges.html'" ng-controller="badgesCtrl"></div>
+			</div>
 
 
             <section class="grid-content small-12 medium-6 small-order-2 medium-order-2">
@@ -46,35 +29,34 @@
                                     <h5 class="header-label">
                                             Assignments
                                     </h5>
-                                        <div class="button-wrapper">
-                                            <div class="switch-wrapper">
-                                                <div class="switch">
-                                                    <input type="checkbox" id="assignment-switch-email">
-                                                    <label for="assignment-switch-email"></label>
-                                                </div>
-                                                <p>Email</p>
-                                            </div>
-                                        
-                                            <div class="switch-wrapper">
-                                                <div class="switch">
-                                                    <input type="checkbox" id="assignment-switch-sms">
-                                                    <label for="assignment-switch-sms"></label>
-                                                </div>
-                                                <p>SMS</p>
-                                            </div>
-                                        
+									<div class="button-wrapper">
+										<div class="switch-wrapper">
+											<div class="switch">
+												<input type="checkbox" id="assignment-switch-email" ng-model="emailCheck" ng-change="updateNotification()" />
+												<label for="assignment-switch-email"></label>
+											</div>
+											<p>Email</p>
+										</div>
+									
+										<div class="switch-wrapper">
+											<div class="switch">
+												<input type="checkbox" id="assignment-switch-sms" ng-model="smsCheck" ng-change="updateNotification()" />
+												<label for="assignment-switch-sms"></label>
+											</div>
+											<p>SMS</p>
+										</div>                                        
 
-                                            <div class="switch-wrapper">
-                                                <div class="switch">
-                                                    <input type="checkbox" id="assignment-switch-push">
-                                                    <label for="assignment-switch-push"></label>
-                                                </div>
-                                                <p>Push</p>
-                                            </div>
-                            </div><!--end button wrapper-->
-                        </section>
-                        </div>
-                    </form><!--end assignment switches-->
+										<div class="switch-wrapper">
+											<div class="switch">
+												<input type="checkbox" id="assignment-switch-push" ng-model="pushCheck" ng-change="updateNotification()" />
+												<label for="assignment-switch-push"></label>
+											</div>
+											<p>Push</p>
+										</div>
+									</div><!--end button wrapper-->
+								</section>
+							</div>
+						</form><!--end assignment switches-->
 
                         <!--start forum switches-->
                         <form id="forum-switch" action="#" class="card-section notifications" method="post">
@@ -86,14 +68,14 @@
                                     <div class="button-wrapper">
                                         <div class="switch-wrapper">
                                             <div class="switch">
-                                                <input type="checkbox" id="forum-switch-email">
+                                                <input type="checkbox" id="forum-switch-email" ng-model="forumEmail" ng-change="updateNotification()" />
                                                 <label for="forum-switch-email"></label>
                                             </div>
                                             <p>Email</p>
                                         </div>
                                         <div class="switch-wrapper">
                                             <div class="switch">
-                                                <input type="checkbox" id="forum-switch-sms">
+                                                <input type="checkbox" id="forum-switch-sms" ng-model="forumSMS" ng-change="updateNotification()" />
                                                 <label for="forum-switch-sms"></label>
                                             </div>
                                             <p>SMS</p>
@@ -101,7 +83,7 @@
 
                                         <div class="switch-wrapper">
                                             <div class="switch">
-                                                <input type="checkbox" id="forum-switch-push">
+                                                <input type="checkbox" id="forum-switch-push" ng-model="forumPush" ng-change="updateNotification()" />
                                                 <label for="forum-switch-push"></label>
                                             </div>
                                             <p>Push</p>
@@ -121,7 +103,7 @@
                                         <div class="button-wrapper">
                                             <div class="switch-wrapper">
                                                 <div class="switch">
-                                                    <input type="checkbox" id="message-switch-email">
+                                                    <input type="checkbox" id="message-switch-email" ng-model="messagesEmail" ng-change="updateNotification()" />
                                                     <label for="message-switch-email"></label>
                                                 </div>
                                                 <p>Email</p>
@@ -129,7 +111,7 @@
 
                                             <div class="switch-wrapper">
                                                 <div class="switch">
-                                                    <input type="checkbox" id="message-switch-sms">
+                                                    <input type="checkbox" id="message-switch-sms" ng-model="messagesSMS" ng-change="updateNotification()" />
                                                     <label for="message-switch-sms"></label>
                                                 </div>
                                                 <p>SMS</p>
@@ -137,7 +119,7 @@
 
                                             <div class="switch-wrapper">
                                                 <div class="switch">
-                                                    <input type="checkbox" id="message-switch-push">
+                                                    <input type="checkbox" id="message-switch-push" ng-model="messagesPush" ng-change="updateNotification()" />
                                                     <label for="message-switch-push"></label>
                                                 </div>
                                                 <p>Push</p>

@@ -1,45 +1,21 @@
-<form class="card dailyPoll" action="" method="post">
+<form class="card dailyPoll" name="pollForm" id="myForm" ng-submit="submitPoll()"> 
 	<div class="card-section">
 		<h6 class="boxTitle">Daily Poll</h6>
 		<div id="pollContent">
 			<h5 class="pollQuestion" id="currentUpdaQuestion">{{latestPoll.label}}</h5>
-			<p ng-repeat="option in latestPoll.options.categories track by $index">
-				<input type="radio" name="poll-radio" value="{{option.values}}" id="poll-radio-{{$index}}">
+			<p ng-repeat="option in latestPollFilter">
+				<input type="radio" name="poll" value="{{option.values}}" />
 				<label for="poll-radio-{{$index}}" id="label-{{$index}}" class="inline-label">
 					{{option.description}}
 				</label>
 			</p>
-			<!--<p>
-				<input type="radio" name="poll-radio" value="" id="poll-radio-2">
-				<label for="poll-radio-2" id="label-2" class="inline-label">
-					Choice Two
-				</label>
-			</p>
-			<p>
-				<input type="radio" name="poll-radio" value="" id="poll-radio-3">
-				<label for="poll-radio-3" id="label-3" class="inline-label">
-					Choice Three
-				</label>
-			</p>
-			<p>
-				<input type="radio" name="poll-radio" value="" id="poll-radio-4">
-				<label for="poll-radio-4" id="label-4" class="inline-label">
-					Choice Four
-				</label>
-			</p>
-			<p>
-				<input type="radio" name="poll-radio" value="" id="poll-radio-5">
-				<label for="poll-radio-5" id="label-5" class="inline-label">
-					Choice Five
-				</label>
-			</p>-->
-			<button class="button" id="pollSubmit" ng-click="submitPoll(poll)">Submit Vote</button>
+			<button type="submit" class="button" id="pollSubmit">Submit Vote</button>
 		</div>
 	</div>
 </form>
 <div ng-if="allPolls.length <= 0" class="votingDone card dailyPoll" style="">Thanks For your voting. Polls have been finished.</div>
 
-<aside class="card pollResults">
+<!--<aside class="card pollResults">
 	<div class="card-section">
 		<h6 class="boxTitle">Results For Previous Polls</h6>
 		<div id="pollResults">
@@ -55,4 +31,4 @@
 			<a class="button" id="more-polls-link" href="results.html">See More Polls</a>
 		</div>
 	</div>
-</aside>
+</aside>-->

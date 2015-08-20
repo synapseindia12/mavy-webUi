@@ -1,0 +1,13 @@
+	<div class="settingAvatar">
+		<a class="avatarContainer" href="#">
+			<img alt="profile image" class="profile" src="{{avatarUrl}}">
+		</a>
+	</div>
+	<div class="settingMeta">
+		<p>{{fname}} {{lname}}</p>
+	</div>
+
+	<aside class="card badges">
+		<h6 class="boxTitle card-section">Badges</h6>
+		<img ng-repeat="badge in allBadges" src="{{badge.url}}" alt="{{badge.badge}}" />
+	</aside>
