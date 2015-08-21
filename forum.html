@@ -65,9 +65,9 @@
                                 <p class="date"><strong>{{items.Date | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
                                 <p class="reply-to-posts-count">
                                     <a ng-click='getChilds(items.Id)'>Reply</a>
-                                    <a href="javascript:void(0)" class="expand-collapse-toggle" ng-if="showCommentbox(items.Id)">
+                                   <!-- <a href="javascript:void(0)" class="expand-collapse-toggle" ng-if="showCommentbox(items.Id)">
                                     Replies ( <span class="replies-count">{{items.ReplyCount}}</span> ) 
-                                    </a>
+                                    </a>-->
                                 </p>
                             </div>
                             <!--example comments to post-->
@@ -88,9 +88,9 @@
                                         <p class="userName">{{reply.Author.Username}}</p>
                                         <p class="set-width" dynamic="{{reply.Subject}}"></p>
                                         <p class="date"><strong>{{reply.Date | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
-                                        <p class="reply-to-post">
+                                       <!-- <p class="reply-to-post">
                                             <a ng-click="gotoReplyBox()">Reply</a>
-                                        </p>
+                                        </p>-->
                                     </div>
                                 </div>
 								</div>
@@ -100,19 +100,20 @@
 
                             <!--reply form-->
                             <div class="card comment-form" ng-if="showCommentbox(items.Id)">
-                                <form id="replyForm" class="card-section" action="#" method="post">
+                                <form id="replyForm" class="card-section" method="post" ng-submit="saveThreadReply(replyText)">
                                     <div class="grid-block" id="reply-box">
                                         <div class="small-12 medium-12 grid-content">
                                             <label class="forum-label">
                                                 Reply to Post
-                                                <textarea cols="40" rows="8" name="comment" id="reply"></textarea>
+                                                <textarea cols="40" rows="8" name="comment" id="reply" ng-model="replyText"></textarea>
                                             </label>
+                                         
                                             <div id="comment-button">
                                                 <a href="#" class="button" id="add-media">
                                                     <span class="fa fa-camera"></span>
                                                     Upload Media
                                                 </a>
-                                                <input type="submit" value="Submit Reply" class="button fa" id="add-comment">
+                                                <input type="submit" value="Submit Reply" class="button fa" id="add-comment"  >
                                             </div>
                                         </div>
                                     </div>
@@ -134,7 +135,7 @@
 
             <!--start right sidebar content-->
             <div class="grid-content small-12 medium-4 message-side-bar">
-                <aside class="card">
+                <!--<aside class="card">
                     <h2 class="hidden">Sidebar Content</h2>
                     <div class="card-section updateWidget">
                         <h6 class="boxTitle">Updates</h6>
@@ -147,7 +148,7 @@
                     </div>
                 </aside>
 
-                <!--start daily poll radio form-->
+                <!--start daily poll radio form
                 <form class="card dailyPoll" action="" method="post">
                     <div class="card-section">
                         <h6 class="boxTitle">Daily Poll</h6>
@@ -188,7 +189,7 @@
                     </div>
                 </form>
 
-                <!--start poll result box-->
+                <!--start poll result box
                 <aside class="card pollResults">
                     <div class="card-section">
                         <h6 class="boxTitle">Results To Yesterday's Poll</h6>
@@ -206,6 +207,7 @@
                         </div>
                     </div>
                 </aside><!--end poll result box-->
+				<div ng-include="'polls.html'" ng-controller="pollsCtrl"></div>
             </div>
         </div>
     </div><!--end sb-site container-->

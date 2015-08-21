@@ -11,26 +11,28 @@
                         </div>
                         <!--avatar container-->
                         <div class="postContent card-section" ng-repeat="post in tempArray">
-                            <div class="posterAvatar">
-                                <a class="avatarContainer" href="#">
-                                    <img alt="profile image" class="profile" src="{{post.AvatarUrl}}" />
-                                </a>
-                            </div>
-                            <!--metadata for post reply-->
-                            <div class="postMeta">
-                                <!--post message counter and nav-->
-                                <div class="message-counter">
-                                    <span class="fa fa-sort-asc scroll-up su1"></span>
-                                <div class="reply-count">{{post.NumberOfPosts}}</div>
-                                    <span class="fa fa-sort-desc scroll-dwn sd1"></span>
-                                </div>
-                                <p class="name">{{post.UserName}}</p>
-                                <p class="userName">User Name</p>
-                                <h5 class="postTitle">{{post.Subject}}</h5>
-                                <p class="set-width">{{post.MostRecentMessage}}</p>
-                                <p class="date"><strong>{{post.ThreadReplyDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
-                            </div>
-                        </div>
+							<div ng-click="showThread(post.ThreadId)">
+								<div class="posterAvatar">
+									<a class="avatarContainer">
+										<img alt="profile image" class="profile" src="{{post.AvatarUrl}}" />
+									</a>
+								</div>
+								<!--metadata for post reply-->
+								<div class="postMeta">
+									<!--post message counter and nav-->
+									<div class="message-counter">
+										<span class="fa fa-sort-asc scroll-up su1"></span>
+									<div class="reply-count">{{post.NumberOfPosts}}</div>
+										<span class="fa fa-sort-desc scroll-dwn sd1"></span>
+									</div>
+									<p class="name">{{post.UserName}}</p>
+									<p class="userName">User Name</p>
+									<h5 class="postTitle">{{post.Subject}}</h5>
+									<p class="set-width">{{post.MostRecentMessage}}</p>
+									<p class="date"><strong>{{post.ThreadReplyDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
+								</div>
+							</div>
+						</div>
                     </article>
                     <!--end of post box-->
 

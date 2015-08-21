@@ -28,7 +28,7 @@ myApp.config(function($routeProvider, $httpProvider, $facebookProvider) {
             templateUrl: 'messages.html',
 			controller: 'messagesCtrl'
         })
-		.when('/message/:conversationId', {
+		.when('/messages/:conversationId', {
             templateUrl: 'messageConversation.html',
 			controller: 'messageconversationCtrl'
         })
@@ -434,6 +434,8 @@ myApp.controller('assignmentCtrl', function($scope, $location, $localStorage){
 myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
 	$scope.activeThreads = [];
 	$scope.childThreads = [];
+	var parentId =null;
+	var threadId =null;
 	if(!$localStorage.loginDetails){
 		delete $localStorage.loggedIn;
 		$location.path('/');
@@ -449,6 +451,7 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
 			for(var i=0; i<$rootScope.allForums.length; i++){			
 				$scope.activeThreads.push($rootScope.allForums[i]);
 			}
+			debugger;
 		}
 		else {
 			endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
@@ -475,11 +478,16 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
 					if(id == child.result.result[1].Replies[j].ThreadId)
 						$scope.childThreads.push(child.result.result[1].Replies[j]);
 				}
-			}
+				$scope.parentId = $scope.childThreads[0].ParentId;
+				$scope.threadId = $scope.childThreads[0].ThreadId;
+			} 
+			
 			$scope.$apply();
+			debugger;
 			$('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
 		
 		});
+		
 	}
 	
 	$scope.showCommentbox = function(id) {
@@ -524,6 +532,26 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope){
 
 	$scope.gotoReplyBox = function(){
 		$('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
+	};
+
+	$scope.saveThreadReply=function(replyText){
+		alert('I will save the replies...I swear!!! '+$scope.parentId+' '+$scope.threadId+replyText);
+		if(replyText){
+			endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,$scope.threadId,$scope.parentId,replyText,function(response){
+				debugger;
+				if(response.result.success){
+					alert('success');
+					$scope.parentId=null;
+					$scope.threadId=null;
+				}
+				else{
+					alert('Bhai chutiya kat gya');
+				}
+			});
+		}
+		else{
+			alert('blank data');
+		}
 	}
 	
 });
@@ -571,12 +599,13 @@ myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$
 	//$scope.forumExpandedPage = 'setting-page-active';
 });
 
-myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $localStorage){
+myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $localStorage, $location){
 	if(!$localStorage.loginDetails){
 		delete $localStorage.loggedIn;
 		$location.path('/');
 	}
 	$scope.messages = [];
+	$rootScope.messages = [];
 	$scope.tempArr = [];
 	$scope.displayConversations = true;
 	/* Getting all local Storage data for User Authentication */
@@ -597,36 +626,22 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 		if(result.result.result.Conversations){
 			for(var i=0; i<result.result.result.Conversations.length; i++){
 				$scope.messages.push(result.result.result.Conversations[i]);
+				$rootScope.messages.push(result.result.result.Conversations[i]);
 			}
 		}
 		$scope.$apply();
 	});
 	
-	$scope.showMessage = function(conversationId) {
-		$scope.internalMessages = [];
-		endpoints.mobileHandler.getInboxMessages($scope.apiKey, $scope.userId, conversationId, null, null, function(result){
-			for(var i=0; i<result.result.result.Messages.length; i++){
-					$scope.internalMessages.push(result.result.result.Messages[i]);
-			}
-			
-			// for(var i=0; i< $scope.messages.length; i++){
-				// if($scope.messages[i].LastMessage.ConversationId == conversationId){
-					// $scope.displayConversations = true;
-				// }
-				// else{
-					// $scope.displayConversations = false;
-				// }
-			// }
-			
-			$scope.$apply();
-		});
+	$scope.showMessage = function(message) {
+		debugger;
+		$rootScope.message = message;
+		$location.path('/messages/'+message.LastMessage.ConversationId);
 	}
-	// endpoints.mobileHandler.getInboxMessages($scope.apiKey, $scope.userId, "guid", null, null, function(callback){
-		// debugger;
-	// });
 });
 
-myApp.controller('messageconversationCtrl', function($scope, $routeParams, $localStorage){
+myApp.controller('messageconversationCtrl', function($scope,$localStorage,$cookieStore,$routeParams,$rootScope){
+	
+	$scope.messages = [];
 	/* Getting all local Storage data for User Authentication */
 	var loginDetails = $localStorage.loginDetails;
 	$scope.apiKey = loginDetails[0].value;
@@ -639,13 +654,60 @@ myApp.controller('messageconversationCtrl', function($scope, $routeParams, $loca
 	$scope.newArray = [];
 	endpoints.apiKey = "835mzggn289l9wxnjxjr323kny6q";
 	endpoints.mobileHandler = new MobileHandler();
+
+	if($rootScope.messages){
+		for(var i=0;i<$rootScope.messages.length;i++){
+			if($routeParams.conversationId==$rootScope.messages[i].Id){
+				$scope.messages.push($rootScope.messages[i]);
+			}
+		}
+	}
+	else{
+		endpoints.mobileHandler.getInbox($scope.apiKey, $scope.userId, null, null, function(result){
+			if(result.result.result.Conversations){
+				for(var i=0; i<result.result.result.Conversations.length; i++){
+					$scope.messages.push(result.result.result.Conversations[i]);
+					$rootScope.messages.push(result.result.result.Conversations[i]);
+				}
+			}
+			$scope.$apply();
+		});
+	}
 	
+	
+	
+	$scope.internalMessages = [];
 	endpoints.mobileHandler.getInboxMessages($scope.apiKey, $scope.userId, $routeParams.conversationId, null, null, function(result){
 		for(var i=0; i<result.result.result.Messages.length; i++){
-				$scope.messages.push(result.result.result.Messages[i]);
+				$scope.internalMessages.push(result.result.result.Messages[i]);
 		}
+		
+		debugger;
+		
 		$scope.$apply();
-	});
+	});	
+	
+	$scope.submitMessageReply = function() {
+		if($scope.messageReplyText){
+			debugger;
+			endpoints.mobileHandler.sendMessageReply($scope.apiKey, $scope.userId, $routeParams.conversationId, $scope.messageReplyText, function(result){
+				if(result.result.success){
+					alert('Successfully Updated');
+					$scope.messageReplyText = '';
+					endpoints.mobileHandler.getInboxMessages($scope.apiKey, $scope.userId, $routeParams.conversationId, null, null, function(result){
+						for(var i=0; i<result.result.result.Messages.length; i++){
+								$scope.internalMessages.push(result.result.result.Messages[i]);
+						}						
+						$scope.$apply();
+					});	
+				}
+				else{
+					alert('Error');
+					debugger;
+				}
+			});
+		}
+	}
 });
 
 myApp.controller('profileCtrl', function($scope, $localStorage, $location){
@@ -759,7 +821,6 @@ myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
 	$scope.panelistId = loginDetails[2].value;
 	$scope.registrationId = loginDetails[3].value;
 	var sectionId = 2;
-	$scope.preferences = [];
 	var endpoints = {};
 	endpoints.apiKey = $scope.apiKey;
 	// Creating new handler for APIs
@@ -769,6 +830,7 @@ myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
 	endpoints.mobileHandler.getNotifications($scope.apiKey, $scope.userId, $scope.panelistId, function(result){
 		if(result.result.success){
 			var resultArray = result.result.result;
+			$scope.preferences = resultArray;
 			for(var i=0; i<resultArray.length; i++){
 				switch(resultArray[i]){
 					case '3a': 
@@ -805,34 +867,89 @@ myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
 	});
 	
 	$scope.updateNotification = function() {
+		debugger;
 			if($scope.emailCheck){
-				$scope.preferences.push('3a');
+				if($scope.preferences.indexOf('3a') == -1)
+					$scope.preferences.push('3a');
+			}
+			else{
+				var index = $scope.preferences.indexOf('3a');
+				if(index !== -1)
+					$scope.preferences.splice(index, 1);
 			}
 			if($scope.smsCheck){
-				$scope.preferences.push('3b');
+				if($scope.preferences.indexOf('3b') == -1)
+					$scope.preferences.push('3b');
+			}
+			else{
+				var index = $scope.preferences.indexOf('3b');
+				if(index !== -1)
+					$scope.preferences.splice(index, 1);
 			}
 			if($scope.pushCheck){
-				$scope.preferences.push('3c');
+				if($scope.preferences.indexOf('3c') == -1)
+					$scope.preferences.push('3c');
+			}
+			else{
+				var index = $scope.preferences.indexOf('3c');
+				if(index !== -1)
+					$scope.preferences.splice(index, 1);
 			}
 			if($scope.forumEmail){
-				$scope.preferences.push('3d');
+				if($scope.preferences.indexOf('3d') == -1)
+					$scope.preferences.push('3d');
+			}
+			else{
+				var index = $scope.preferences.indexOf('3d');
+				if(index !== -1)
+					$scope.preferences.splice(index, 1);
 			}
 			if($scope.forumSMS){
-				$scope.preferences.push('3e');
+				if($scope.preferences.indexOf('3e') == -1)
+					$scope.preferences.push('3e');
+			}
+			else{
+				var index = $scope.preferences.indexOf('3e');
+				if(index !== -1)
+					$scope.preferences.splice(index, 1);
 			}
 			if($scope.forumPush){
-				$scope.preferences.push('3f');
+				if($scope.preferences.indexOf('3f') == -1)
+					$scope.preferences.push('3f');
+			}
+			else{
+				var index = $scope.preferences.indexOf('3f');
+				if(index !== -1)
+					$scope.preferences.splice(index, 1);
 			}
 			if($scope.messagesEmail){
-				$scope.preferences.push('3g');
+				if($scope.preferences.indexOf('3g') == -1)
+					$scope.preferences.push('3g');
+			}
+			else{
+				var index = $scope.preferences.indexOf('3g');
+				if(index !== -1)
+					$scope.preferences.splice(index, 1);
 			}
 			if($scope.messagesSMS){
-				$scope.preferences.push('3h');
+				if($scope.preferences.indexOf('3h') == -1)
+					$scope.preferences.push('3h');
+			}
+			else{
+				var index = $scope.preferences.indexOf('3h');
+				if(index !== -1)
+					$scope.preferences.splice(index, 1);
 			}
 			if($scope.messagesPush){
-				$scope.preferences.push('3i');
+				if($scope.preferences.indexOf('3i') == -1)
+					$scope.preferences.push('3i');
 			}
-			
+			else{
+				var index = $scope.preferences.indexOf('3i');
+				if(index !== -1)
+					$scope.preferences.splice(index, 1);
+			}
+			debugger;
 			endpoints.mobileHandler.updateNotifications($scope.apiKey, $scope.userId, $scope.panelistId, $scope.preferences, function(result){
 			});
 	}
