@@ -5,9 +5,17 @@ myApp.config(function($routeProvider, $httpProvider, $facebookProvider) {
             templateUrl: 'signup.html',
 			controller: 'signupCtrl'
         })
+		.when('/signup', {
+            templateUrl: 'createUser.html',
+			controller: 'createUserCtrl'
+        })
 		.when('/dashboard', {
             templateUrl: 'home.html',
 			controller: 'indexCtrl'
+        })
+		.when('/pollresults', {
+            templateUrl: 'results.html',
+			controller: 'pollResultCtrl'
         })
 		.when('/assignment', {
             templateUrl: 'assignments.html',
@@ -49,17 +57,6 @@ myApp.config(function($routeProvider, $httpProvider, $facebookProvider) {
         });
 		
 		$facebookProvider.setAppId('1588022388118943');
-		// $httpProvider.interceptors.push(function($q, $location) { 
-			// return {
-				// response: function(response) {
-					//do something on success return response; 
-				// }, responseError: function(response) {
-					// if (response.status === 401) 
-						// $location.url('/login'); 
-					// return $q.reject(response);
-				// }
-			// }; 
-		// });
 	})
 	.run(function($rootScope){
 		(function(){
@@ -72,9 +69,28 @@ myApp.config(function($routeProvider, $httpProvider, $facebookProvider) {
 		}());
 	});
 	
-myApp.controller('fbCtrl', function ($scope) {
-
-}); 
+myApp.controller('createUserCtrl', function($scope, $location){	
+	var endpoints = {};
+	endpoints.mobileHandler = new MobileHandler();
+	
+	$scope.signUp = function(){
+		if($scope.password !== $scope.cpassword){
+			alert("Passwords Do not match");
+		}
+		else{
+			var attributes = [{'name': 'email', 'value': $scope.uemail}, {'name': 'username', 'value': $scope.uname}, {'name': 'password', 'value': $scope.password}];
+			endpoints.mobileHandler.createUser(attributes, function(result){
+				alert(result.result.message);
+				$scope.password = '';
+				$scope.cpassword = '';
+				$scope.uemail = '';
+				$scope.uname = '';
+				$location.path('/');
+				$scope.$apply();
+			});
+		}
+	}
+});
 
 myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieStore, $localStorage, $window, $facebook, $modal){
 
@@ -86,7 +102,7 @@ myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieSt
 	endpoints.apiKey = "835mzggn289l9wxnjxjr323kny6q";
 	endpoints.mobileHandler = new MobileHandler();
 	
-	$scope.signUp = function() {
+	$scope.login = function() {
 		$scope.userSysteminfo = [];
 		if($scope.uname && $scope.password){
 			endpoints.mobileHandler.login($scope.uname, $scope.password, $scope.userSysteminfo, function(result){
@@ -201,11 +217,6 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 		}
 	});
 	
-	// endpoints.mobileHandler.getDashboard($scope.apiKey, $scope.userId, 3, null, null, function(result){
-		// alert('Hello In there');
-		// debugger;
-	// });
-	
 	$scope.submitPoll = function(poll) {
 		var index = $scope.allPolls.indexOf(poll);
 		$scope.allPolls.splice(index, 1);
@@ -220,6 +231,10 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 	$scope.showAssignmentTasks = function(assignment){
 		$rootScope.assignment = assignment;
 		$location.path('/assignments/showAssignment');
+	}
+	
+	$scope.showThread = function(forumId){
+		$location.path('/forum-expanded/'+forumId);
 	}
 	
 });
@@ -237,48 +252,160 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 	$scope.panelistId = loginDetails[2].value;
 	$scope.registrationId = loginDetails[3].value;
 	var sectionId = 2;
+	$scope.incrementedVal=0;
+	$scope.stopRecursiveCall = false;
 	$scope.tempArray = [];
 	$scope.allPolls = []; 
+	$rootScope.polesForResults= [];
+	$rootScope.dataforResults = [];
 	
 	var endpoints = {};
 	endpoints.apiKey = $scope.apiKey;
 	endpoints.mobileHandler = new MobileHandler();
 	
 	endpoints.mobileHandler.getDashboard($scope.apiKey, $scope.userId, 5, null, null, function(result){
+		debugger;
 		if(result.result.success){
-			$scope.latestPoll = result.result.result.Entries[0];
-			$scope.latestPollFilter = [];
-			for(var i=0; i< result.result.result.Entries[0].options.categories.length; i++){
-				$scope.latestPollFilter.push(result.result.result.Entries[0].options.categories[i]);
+			for(var i=0; i<result.result.result.Entries.length; i++){
+				$rootScope.polesForResults.push(result.result.result.Entries[i]);
 			}
-			for(var i=1; i< result.result.result.Entries.length; i++){
-				$scope.allPolls.push(result.result.result.Entries[i]);
-			}
+			$scope.recursiveCall(result);
 		}
 		$scope.$apply();
 	});
 	
-	$scope.submitPoll = function(pollDetails){
-		$scope.notes = [];
-		$scope.value = [];
-		$scope.value.push($('input[name=poll]:checked', '#myForm').val());
-		var response = {"projectId": $scope.allPolls[0].projectId, "moduleId": $scope.allPolls[0].moduleId, "taskId": $scope.allPolls[0].taskId, "itemId": $scope.allPolls[0].itemId, "isTestData": false, "notes": $scope.notes, "values": $scope.value};
-		endpoints.mobileHandler.savePollResponse($scope.apiKey, $scope.userId, $scope.panelistId, response, function(result){
-			if(result.result.success){
-				alert('Thanks for your voting.');
-				endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, $scope.allPolls[0].projectId, $scope.allPolls[0].moduleId, function(response){
-					$scope.totalResponseCounts = response.result.result[0].responseCount;
-				});
-				endpoints.mobileHandler.getPanelistPollResponses($scope.apiKey, $scope.userId, $scope.panelistId, $scope.allPolls[0].projectId, $scope.allPolls[0].moduleId, function(res){
-					$scope.votedFor = res.result.result[0].responses[0].values;
-				});
+	$scope.recursiveCall = function(result){
+		$scope.results = result.result.result.Entries;
+		if($scope.results.length > 0){
+			if($scope.incrementedVal < $scope.results.length){
+				$scope.checkPolls(result);
+			}
+			else{
+				return;
+			}
+		}
+	};
+	
+	$scope.newrecursiveCall = function(result){
+		$scope.results = result.result.result.Entries;
+		if($scope.results.length > 0){
+			if($rootScope.incrementedVal < $scope.results.length){
+				$scope.checkPolls(result);
+			}
+			else{
+				return;
+			}
+		}
+	};
+	
+	$scope.checkPolls = function(result) {
+		$rootScope.incrementedVal = $scope.incrementedVal;
+		endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, result.result.result.Entries[$scope.incrementedVal].projectId,result.result.result.Entries[$scope.incrementedVal].moduleId, function(response){
+			debugger;
+			for(var i=0; i<result.result.result.Entries.length; i++){
+				if(result.result.result.Entries[i].itemId == response.result.result[0].itemId){
+					for(var j=0; j<response.result.result[0].values.length; j++){
+						response.result.result[0].values[j].count = (response.result.result[0].values[j].count * 100)/response.result.result[0].responseCount;
+						if(result.result.result.Entries[i].options.categories[j])
+						result.result.result.Entries[i].options.categories[j].values = response.result.result[0].values[j].count;
+					}
+					
+					$rootScope.dataforResults.push(result.result.result.Entries[i]);
+					debugger;
+				}
+			}
+		});
+		endpoints.mobileHandler.getPanelistPollResponses($scope.apiKey, $scope.userId,$scope.panelistId,result.result.result.Entries[$scope.incrementedVal].projectId,result.result.result.Entries[$scope.incrementedVal].moduleId, function(response){
+			var ItemId = result.result.result.Entries[$scope.incrementedVal].itemId;
+			if(response.result.success){
+				if(response.result.result.length > 0){
+					for(var j=0; j<response.result.result[0].responses.length; j++){
+						if(result.result.result.Entries[$scope.incrementedVal].itemId != response.result.result[0].responses[j].itemId){
+							$scope.allPolls.push(result.result.result.Entries[$scope.incrementedVal]);
+						}
+						else{
+							$scope.allPolls = [];
+						}
+					}
+				}
+				else{
+					$scope.allPolls.push(result.result.result.Entries[$scope.incrementedVal]);
+				}
 			}
 			$scope.$apply();
+			$scope.incrementedVal = $scope.incrementedVal + 1;
+			$scope.recursiveCall(result);
 		});
-	}
+	};
+	
+	$scope.submitPoll = function(pollDetails, pollvote){
+		$scope.notes = [];
+		$scope.value = [];
+		$scope.allVotes = [];
+		var value = parseInt($('input[name="poll"]:checked').val());
+		$scope.value.push(value);
+		debugger;
+		var response = {"projectId": $scope.allPolls[0].projectId, "moduleId": $scope.allPolls[0].moduleId, "taskId": $scope.allPolls[0].taskId, "itemId": $scope.allPolls[0].itemId, "isTestData": false, "notes": $scope.notes, "values": $scope.value};
 		
-	// endpoints.mobileHandler.getPollVotes($scope.apiKey, $scope.userId, 100, function(result){
-	// });	
+		endpoints.mobileHandler.savePollResponse($scope.apiKey, $scope.userId, $scope.panelistId, response, function(result){
+			if(result.result.success){
+				alert('Thanks for your vote.');
+				
+				endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, $scope.allPolls[0].projectId, $scope.allPolls[0].moduleId, function(response){
+					alert("response Achieved");
+					debugger;
+					$rootScope.totalResponseCounts = response.result.result[0].responseCount;
+				});
+				
+				endpoints.mobileHandler.getPanelistPollResponses($scope.apiKey, $scope.userId, $scope.panelistId, $scope.allPolls[0].projectId, $scope.allPolls[0].moduleId, function(res){
+					for(var i=0; i< res.result.result[0].responses.length; i++){
+						$scope.allVotes.push(res.result.result[0].responses[i]);
+					}
+					$rootScope.allVotes = $scope.allVotes;
+					$rootScope.allPolls = $scope.allPolls;
+					alert('Rootscope Updated');
+					debugger;
+					$location.path('/pollresults');
+					$scope.$apply();
+				});
+			}
+		});
+	}	
+});
+
+myApp.controller('pollResultCtrl', function($scope, $location, $rootScope, $localStorage){
+	if(!$localStorage.loginDetails){
+		delete $localStorage.loggedIn;
+		$location.path('/');
+	}
+	
+	$scope.resultPolls = [];
+	$scope.panelistResults = $rootScope.allVotes;
+	$scope.displayPollresults = $rootScope.dataforResults;
+
+	// for(var i=0; i<$rootScope.polesForResults.length; i++){
+		// if($scope.panelistResults)
+		// {
+			// debugger;
+			// for(var j=0; j<$scope.panelistResults.length; j++){
+				// if($scope.panelistResults[j].itemId == $rootScope.polesForResults[i].itemId){
+					// debugger;
+					// for(var k=0; k<$rootScope.polesForResults[i].options.categories.length; k++){
+						// debugger;
+						// if($rootScope.polesForResults[i].options.categories[k].pollvote){
+							// var percentage = ($rootScope.polesForResults[i].options.categories[k].pollvote * 100)/$rootScope.totalResponseCounts;
+							// if(percentage){
+								// alert(percentage);
+								// $rootScope.polesForResults[i].options.categories[k].pollvote = percentage;
+							// }
+						// }
+					// }
+					// $scope.resultPolls.push($rootScope.polesForResults[i]);
+				// }
+			// }
+		// }
+	// }
+	
 });
 
 myApp.controller('navCtrl', function($scope, $cookieStore, $rootScope, $location, $localStorage){
@@ -604,6 +731,8 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 		delete $localStorage.loggedIn;
 		$location.path('/');
 	}
+	$scope.showExpandMessage = false;
+	var conversationId = '';
 	$scope.messages = [];
 	$rootScope.messages = [];
 	$scope.tempArr = [];
@@ -623,6 +752,7 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 	//Querying APi for response using endpoints
 	
 	endpoints.mobileHandler.getInbox($scope.apiKey, $scope.userId, 20, null, function(result){
+		
 		if(result.result.result.Conversations){
 			for(var i=0; i<result.result.result.Conversations.length; i++){
 				$scope.messages.push(result.result.result.Conversations[i]);
@@ -636,6 +766,42 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 		debugger;
 		$rootScope.message = message;
 		$location.path('/messages/'+message.LastMessage.ConversationId);
+	}
+	
+	$scope.expandMessage = function(message){
+		$scope.internalMessages = [];
+		$scope.showExpandMessage = true;
+		$scope.message = message;
+		conversationId = message.LastMessage.ConversationId;
+		endpoints.mobileHandler.getInboxMessages($scope.apiKey, $scope.userId, conversationId, null, null, function(result){
+			for(var i=0; i<result.result.result.Messages.length; i++){
+				$scope.internalMessages.push(result.result.result.Messages[i]);
+			}			
+			$scope.$apply();
+		});	
+	}
+	
+	$scope.submitMessageReply = function(items) {
+		debugger;
+		if(items.messageReplyText){
+			endpoints.mobileHandler.sendMessageReply($scope.apiKey, $scope.userId, conversationId, items.messageReplyText, function(result){
+				if(result.result.success){
+					alert('Successfully sent');
+					debugger;
+					items.messageReplyText = '';
+					endpoints.mobileHandler.getInboxMessages($scope.apiKey, $scope.userId, conversationId, null, null, function(result){
+						for(var i=0; i<result.result.result.Messages.length; i++){
+								$scope.internalMessages.push(result.result.result.Messages[i]);
+						}						
+						$scope.$apply();
+					});	
+				}
+				else{
+					alert('Error');
+					debugger;
+				}
+			});
+		}
 	}
 });
 

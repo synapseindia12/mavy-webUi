@@ -31,7 +31,7 @@
                                         <p class="date">{{messages[0].CreatedDate | date:"MM/dd/yyyy 'at' h:mma"}}</p>
                                     </div>
                                 </div>
-                                <div class="card" ng-repeat="items in internalMessages | filter: ConversationId">
+                                <div class="card internalCards" ng-repeat="items in internalMessages | filter: ConversationId">
                                     <div class="card-divider reply">
                                     </div>
                                 <!--example comment one-->
@@ -62,7 +62,7 @@
                                                 <textarea cols="40" rows="8" name="comment" id="reply" ng-model="messageReplyText"></textarea>
                                             </label>
                                             <div id="comment-button">                                                
-                                                <button type="submit" class="button fa" id="add-comment">Submit Reply</button>
+                                                <button type="submit" class="button fa" id="add-comment">Send</button>
                                             </div>
                                         </div>
                                     </div>

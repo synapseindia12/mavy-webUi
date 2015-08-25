@@ -938,3 +938,5 @@ button:hover {
 	height: 100px; 
 	padding:10px;
 }
+.chat{display: block;margin-top: 5px;}
+.chat img{width: auto !important;}

@@ -1,10 +1,10 @@
-<form class="card dailyPoll" name="pollForm" id="myForm" ng-submit="submitPoll()"> 
-	<div class="card-section">
+<form class="card dailyPoll" name="pollForm" ng-submit="submitPoll(item, option)"> 
+	<div class="card-section" ng-repeat="item in allPolls | limitTo: 1">
 		<h6 class="boxTitle">Daily Poll</h6>
 		<div id="pollContent">
-			<h5 class="pollQuestion" id="currentUpdaQuestion">{{latestPoll.label}}</h5>
-			<p ng-repeat="option in latestPollFilter">
-				<input type="radio" name="poll" value="{{option.values}}" />
+			<h5 class="pollQuestion" id="currentUpdaQuestion">{{item.label}}</h5>
+			<p ng-repeat="option in item.options.categories">
+				<input type="radio" name="poll" value="{{option.values}}" ng-model="option.pollvote" />
 				<label for="poll-radio-{{$index}}" id="label-{{$index}}" class="inline-label">
 					{{option.description}}
 				</label>

@@ -12,27 +12,67 @@
                 <!--main content grid-->
 					<div class="grid-content">
 						<article>
-							<div class="card replyToPost" ng-repeat="message in messages track by $index" ng-if="displayConversations" ng-click="showMessage(message)">
+							<div class="card replyToPost" ng-repeat="message in messages track by $index">
 								<div class="card-divider">
 									<h6 class="boxTitle post-recipient">{{message.CreatedUser.DisplayName}}</h6>
 									<span class="unread-notification-circle"></span>
 								</div>
 								<div class="postContent card-section">
-									<div class="posterAvatar">
+									<div class="posterAvatar" ng-click="showMessage(message)">
 										<a class="avatarContainer">
 											<img alt="profile image" class="profile" src="{{message.CreatedUser.AvatarUrl}}" />
 										</a>
 									</div>
 									<div class="forumMeta">
+										<div ng-click="showMessage(message)">
 										<h5 class="postTitle">
 											{{message.LastMessage.Subject}}
 										</h5>
 										<p ng-bind="message.LastMessage.Body"></p>
-										<p class="date">{{message.CreatedDate | date:"MM/dd/yyyy 'at' h:mma"}}</p>
+										</div>
+										<p class="date"> {{message.CreatedDate | date:"MM/dd/yyyy 'at' h:mma"}} <span class="chat"ng-click="expandMessage(message)"><img src="images/chat.png" alt="" />&nbsp;&nbsp;{{message.MessageCount}}</span></p>
 									</div>
 								</div>
-								
+								<div class="card internalCards" ng-repeat="items in internalMessages" ng-show="items.ConversationId == message.LastMessage.ConversationId">
+									<div class="card-divider reply">
+									</div>
+									<!--example comment one-->
+									<div class="post-comment-reply card-section">
+										<div class="posterAvatar">
+											<a class="avatarContainer" href="javascript:void(0);">
+												<img alt="profile image" class="profile" src="{{items.Author.AvatarUrl}}">
+											</a>
+										</div>
+										<!--metadata for example comment one-->
+										<div class="postMeta">
+											<p class="name">{{items.Author.DisplayName}}</p>
+											<p class="userName">{{items.Author.Username}}</p>
+											<p class="set-width" dynamic="{{items.Subject}}"></p>
+											<p class="date"><strong>{{items.CreatedDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
+										   
+										</div>
+									</div>
+									<div class="card comment-form" ng-show="$last">
+										<form name="messageReply" class="card-section" method="post" ng-submit="submitMessageReply(items)">
+											<div class="grid-block" id="reply-box">
+												<div class="small-12 medium-12 grid-content">
+													<label class="forum-label">
+														Reply to Message
+														<textarea cols="40" rows="8" name="comment" id="reply" ng-model="items.messageReplyText"></textarea>
+													</label>
+													<div id="comment-button">                                                
+														<button type="submit" class="button fa" id="add-comment">Send</button>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
 							</div>
+						</article>
+						<!-- Displaying the internal Messages conversation -->
+						<article ng-show="expandMessage">
+							
 						</article>
                 </div>
             </section><!--end main content-->

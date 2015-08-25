@@ -1,23 +1,6 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Mavy poll results"/>
-    <title>Mavy | Poll Results</title>
-    <link href="css/app.css" rel="stylesheet" type="text/css">
-    <link href="css/main.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="css/slidebars.css">
-    <link rel="stylesheet" href="css/jquery.bxslider.css">
-    <link rel="stylesheet" href="css/tooltipster.css">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet' type='text/css'>
-</head>
-
-<body>
     <h1 class="hidden">Result Page</h1>
-    <!--slideout sidebar left-->
+	<div ng-include="'navigation.html'"></div>
+    <!--slideout sidebar left
     <div class="sb-slidebar sb-style-overlay sb-left sb-width-custom gradient-left" data-sb-width="35%">
         <div class="sb-close fa fa-times fa-2x left-close"></div>
         <ul class="sb-mobile-menu">
@@ -28,7 +11,7 @@
             </li>
             <li>
                 <a id="assignmentsLink" href="assignments.html" class="tooltip glow" title="Assignments">
-                    <img class="link-icon" src="images/assignment.svg" alt="assignment page link">
+                    <img class="link-icon" src="images/assignment.svg" alt="assignment page link" />
                 </a>
             </li>
             <li>
@@ -45,7 +28,7 @@
             </li>
         </ul>
     </div>
-    <!--slideout sidebar right-->
+    <!--slideout sidebar right
     <div class="sb-slidebar sb-right">
         <div class="grid-content small-12 gradient-right">
             <nav class="block-list profile-links">
@@ -70,9 +53,9 @@
                                 <span id="reward-amount">$25.00</span>
                             </a>
                         </p>
-                    </div><!--user info-->
+                    </div><!--user info
                 </header>
-                <!--links for settings slideout menu right-->
+                <!--links for settings slideout menu right
                 <header class="profile-header">Settings</header>
                 <ul class="slide-right-links">
                     <li class="with-chevron block-list-label">
@@ -99,7 +82,7 @@
             </nav>
         </div>
     </div>
-    <!--logo and main menu in header-->
+    <!--logo and main menu in header
     <header id="main-header" class="navbar sb-slide">
         <div class="logo">
             <a class="glow" href="index.html">
@@ -109,7 +92,7 @@
         </div>
         <nav id="desktop-menu">
             <ul class="desktop-menu">
-                <span id="hide"><!--hides just text links & notifications-->
+                <span id="hide"><!--hides just text links & notifications
                         <li id="feed">
                             <a href="index.html" class="tooltip glow" title="Home">
                                 <img class="link-icon" src="images/feed.svg" alt="feed page link">
@@ -133,7 +116,7 @@
                             </a>
                         </li>
                     </span>
-                <!--end hide class-->
+                <!--end hide class
                 <li class="sb-toggle-right">
                     <img src="images/profile.svg" class="link-icon tooltip" title="Settings" alt="profile icon">
                 </li>
@@ -144,56 +127,26 @@
     </header><!--end header logo & menu-->
 
     <div id="sb-site"><!--wrapper so content moves when slide out menus are clicked-->
-
         <!--start poll results content-->
         <div class="grid-block wrap">
             <section class="grid-block small-12 medium-8 vertical">
-                <h2 class="hidden">Poll Results</h2>
-                
-                <div class="grid-block small-up-1 medium-up-2 large-up-2">
-                   
+                <h2 class="hidden">Poll Results</h2>                
+                <div class="grid-block small-up-1 medium-up-2 large-up-2">                   
                     <!--pastquestion results box 1-->
-                    <div class="grid-content">
+					<pre>{{displayPollresults}}</pre>
+                    <div class="grid-content" ng-repeat="item in resultPolls">
                         <aside class="card pollResults">
                             <div class="card-section">
                                 <div id="pollResult1">
                                     <h5 class="pollQuestion" id="pastQuestion1">
-                                        What is your favorite Beatle's song?
+                                        {{item.label}}
                                     </h5>
                                     <div class="results">
-                                        <p class="percents">
+                                        <p class="percents" ng-repeat="option in item.options.categories">
                                             <span class="result-text" id="result-poll-11">
-                                                22%
+                                                {{option.pollvote}}
                                             </span>
-                                            Choice One
-                                        </p>
-
-                                        <p class="percents">
-                                            <span class="result-text" id="result-poll-12">
-                                                12%
-                                            </span>
-                                                Choice Two
-                                        </p>
-
-                                        <p class="percents">
-                                            <span id="result-poll-13" class="highValue result-text">
-                                                45%
-                                            </span>
-                                            Choice Three
-                                        </p>
-
-                                        <p class="percents">
-                                            <span class="result-text" id="result-poll-14">
-                                                10%
-                                            </span>
-                                            Choice Four
-                                        </p>
-
-                                        <p class="percents">
-                                            <span class="result-text" id="result-poll-15">
-                                                11%
-                                            </span>
-                                            Choice Five
+                                            {{option.description}}
                                         </p>
                                     </div>
                                 </div>
@@ -201,7 +154,7 @@
                         </aside>
                     </div><!--end pastquestion results box 1-->
 
-                    <!--pastquestion results box 2-->
+                    <!--pastquestion results box 2
                     <div class="grid-content">
                         <aside class="card pollResults">
                             <div class="card-section">
@@ -248,10 +201,10 @@
                                 </div>
                             </div>
                         </aside>
-                    </div><!--end pastquestion results box 2-->
+                    </div><!--end pastquestion results box 2
                 </div><!--end row-->
                 
-                <!--pastquestion results box 3-->
+                <!--pastquestion results box 3
                 <div class="grid-block small-up-1 medium-up-2 large-up-2">
                     <div class="grid-content">
                         <aside class="card pollResults">
@@ -299,9 +252,9 @@
                                 </div>
                             </div>
                         </aside>
-                    </div><!--end pastquestion results box 3-->
+                    </div><!--end pastquestion results box 3
 
-                    <!--pastquestion results box 4-->
+                    <!--pastquestion results box 4
                     <div class="grid-content">
                         <aside class="card pollResults">
                             <div class="card-section">
@@ -348,10 +301,10 @@
                                 </div>
                             </div>
                         </aside>
-                    </div><!--end pastquestion results box 4-->
-                </div><!--end row-->
+                    </div><!--end pastquestion results box 4
+                </div><!--end row
 
-                <!--pastquestion results box 5-->
+                <!--pastquestion results box 5
                 <div class="grid-block small-up-1 medium-up-2 large-up-2">
                     <div class="grid-content">
                         <aside class="card pollResults">
@@ -399,9 +352,9 @@
                                 </div>
                             </div>
                         </aside>
-                    </div><!--end pastquestion results box 5-->
+                    </div><!--end pastquestion results box 5
 
-                    <!--pastquestion results box 6-->
+                    <!--pastquestion results box 6
                     <div class="grid-content">
                         <aside class="card pollResults">
                             <div class="card-section">
@@ -448,102 +401,17 @@
                                 </div>
                             </div>
                         </aside>
-                    </div><!--end pastquestion results box 6-->
+                    </div><!--end pastquestion results box 6
                 </div><!--end row-->
 
             </section><!--end poll results content-->
 
             <!--sidebar content-->
             <div class="grid-content small-12 medium-4 message-side-bar">
-                <aside class="card">
-                    <!--notification box-->
-                    <div class="card-section updateWidget">
-                        <h6 class="boxTitle">Updates</h6>
-                        <div id="updateContent">
-                            <span class="messageWaiting"></span>
-                            <p class="updates">You have<span id="messageCount"> two </span>messages waiting</p>
-                            <span class="forumReply"></span>
-                            <p class="updates">Somebody replied to your forum post</p>
-                        </div>
-                    </div>
-                </aside>
-                <!--start daily poll radio form-->
-                <form class="card dailyPoll" action="" method="post">
-                    <div class="card-section">
-                        <h6 class="boxTitle">Daily Poll</h6>
-                        <div id="pollContent">
-                            <h5 class="pollQuestion" id="currentUpdaQuestion">What is your favorite Robin Williams movie?</h5>
-                            <p>
-                                <input type="radio" name="poll-radio" value="" id="poll-radio-1">
-                                <label for="poll-radio-1" id="label-1" class="inline-label">
-                                    Choice One
-                                </label>
-                            </p>
-                            <p>
-                                <input type="radio" name="poll-radio" value="" id="poll-radio-2">
-                                <label for="poll-radio-2" id="label-2" class="inline-label">
-                                    Choice Two
-                                </label>
-                            </p>
-                            <p>
-                                <input type="radio" name="poll-radio" value="" id="poll-radio-3">
-                                <label for="poll-radio-3" id="label-3" class="inline-label">
-                                    Choice Three
-                                </label>
-                            </p>
-                            <p>
-                                <input type="radio" name="poll-radio" value="" id="poll-radio-4">
-                                <label for="poll-radio-4" id="label-4" class="inline-label">
-                                    Choice Four
-                                </label>
-                            </p>
-                            <p>
-                                <input type="radio" name="poll-radio" value="" id="poll-radio-5">
-                                <label for="poll-radio-5" id="label-5" class="inline-label">
-                                    Choice Five
-                                </label>
-                            </p>
-                            <button type="submit" name="poll-submit" class="button" id="pollSubmit">Submit Vote</button>
-                        </div>
-                    </div>
-                </form>
-
-                <!--start poll result box-->
-                <aside class="card pollResults">
-                    <div class="card-section">
-                        <h6 class="boxTitle">Results To Yesterday's Poll</h6>
-                        <div id="pollResults">
-                            <h5 class="pollQuestion" id="pastQuestion">What is your favorite Beatle's song?</h5>
-                            <div class="results">
-                                <p class="percents"><span id="result-poll-1">22%</span>Choice One</p>
-                                <p class="percents"><span id="result-poll-2">12%</span>Choice Two</p>
-                                <p class="percents"><span id="result-poll-3" class="highValue">45%</span>Choice Three
-                                    <p>
-                                        <p class="percents"><span id="result-poll-4">10%</span>Choice Four</p>
-                                        <p class="percents"><span id="result-poll-5">11%</span>Choice Five</p>
-                            </div>
-                            <a class="button" id="more-polls-link" href="results.html">See More Polls</a>
-                        </div>
-                    </div>
-                </aside><!--end poll result box-->
-            </div>
-        </div>
-
+				<div ng-include="'polls.html'" ng-controller="pollsCtrl"></div>
+			</div>
+		</div>
         <!-- Start Footer -->
-        <footer class="footer-text">
-            <ul>
-                <li class="copyright">&#169; Mavy</li>
-                <li>
-                    <a href="#">Terms of Use</a>
-                </li>
-                <li>
-                    <a href="#">Feedback</a>
-                </li>
-                <li>
-                    <a href="#">Privacy</a>
-                </li>
-            </ul>
-        </footer>
     </div><!--end sb-site container-->
     
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
