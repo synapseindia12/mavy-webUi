@@ -10,7 +10,7 @@
                             <h6 class="boxTitle">Reply to your post</h6>
                         </div>
                         <!--avatar container-->
-                        <div class="postContent card-section" ng-repeat="post in tempArray">
+                        <div class="postContent card-section" ng-repeat="post in tempArray | limitTo: 3">
 							<div ng-click="showThread(post.ThreadId)">
 								<div class="posterAvatar">
 									<a class="avatarContainer">

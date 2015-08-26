@@ -133,8 +133,7 @@
                 <h2 class="hidden">Poll Results</h2>                
                 <div class="grid-block small-up-1 medium-up-2 large-up-2">                   
                     <!--pastquestion results box 1-->
-					<pre>{{displayPollresults}}</pre>
-                    <div class="grid-content" ng-repeat="item in resultPolls">
+                    <div class="grid-content" ng-repeat="item in displayPollresults">
                         <aside class="card pollResults">
                             <div class="card-section">
                                 <div id="pollResult1">
@@ -144,7 +143,7 @@
                                     <div class="results">
                                         <p class="percents" ng-repeat="option in item.options.categories">
                                             <span class="result-text" id="result-poll-11">
-                                                {{option.pollvote}}
+                                                {{option.values}}%
                                             </span>
                                             {{option.description}}
                                         </p>

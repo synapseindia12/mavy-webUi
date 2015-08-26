@@ -1,5 +1,5 @@
-<form class="card dailyPoll" name="pollForm" ng-submit="submitPoll(item, option)"> 
-	<div class="card-section" ng-repeat="item in allPolls | limitTo: 1">
+<form class="dailyPoll" name="pollForm" ng-submit="submitPoll(item, option)"> 
+	<div class="card card-section" ng-repeat="item in allPolls | limitTo: 1">
 		<h6 class="boxTitle">Daily Poll</h6>
 		<div id="pollContent">
 			<h5 class="pollQuestion" id="currentUpdaQuestion">{{item.label}}</h5>
@@ -13,22 +13,22 @@
 		</div>
 	</div>
 </form>
-<div ng-if="allPolls.length <= 0" class="votingDone card dailyPoll" style="">Thanks For your voting. Polls have been finished.</div>
+<!--<div ng-if="allPolls.length <= 0" class="votingDone card dailyPoll" style="">Thanks For your voting. Polls have been finished.</div>-->
 
-<!--<aside class="card pollResults">
+<aside class="card pollResults">
 	<div class="card-section">
 		<h6 class="boxTitle">Results For Previous Polls</h6>
-		<div id="pollResults">
-			<h5 class="pollQuestion" id="pastQuestion">What is your favorite Beatle's song?</h5>
+		<div id="pollResults" ng-repeat="item in displayPollresults | limitTo: 1">
+			<h5 class="pollQuestion" id="pastQuestion">{{item.label}}</h5>
 			<div class="results">
-				<p class="percents"><span id="result-poll-1">22%</span>Choice One</p>
-				<p class="percents"><span id="result-poll-2">12%</span>Choice Two</p>
-				<p class="percents"><span id="result-poll-3" class="highValue">45%</span>Choice Three
-					<p>
-				<p class="percents"><span id="result-poll-4">10%</span>Choice Four</p>
-				<p class="percents"><span id="result-poll-5">11%</span>Choice Five</p>
+				<p class="percents" ng-repeat="option in item.options.categories">
+					<span class="result-text" id="result-poll-11">
+						{{option.values}}%
+					</span>
+					{{option.description}}
+				</p>
 			</div>
-			<a class="button" id="more-polls-link" href="results.html">See More Polls</a>
+			<!--<a class="button" id="more-polls-link" href="results.html">See More Polls</a>-->
 		</div>
 	</div>
-</aside>-->
+</aside>

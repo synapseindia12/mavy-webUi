@@ -47,7 +47,7 @@
 										<div class="postMeta">
 											<p class="name">{{items.Author.DisplayName}}</p>
 											<p class="userName">{{items.Author.Username}}</p>
-											<p class="set-width" dynamic="{{items.Subject}}"></p>
+											<p class="set-width" dynamic="{{items.Body}}"></p>
 											<p class="date"><strong>{{items.CreatedDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
 										   
 										</div>
@@ -78,31 +78,31 @@
             </section><!--end main content-->
 
             <!--start right sidebar content message box-->
-            <!--<div class="grid-content small-12 medium-4 small-order-1 medium-order-2 message-side-bar">
+            <div class="grid-content small-12 medium-4 small-order-1 medium-order-2 message-side-bar">
                 <aside class="card messageFilter">
-                    <div class="card-section">
+                    <div class="card-section" ng-click="expandCreateMessage = true" style="cursor: pointer">
                         <h6 class="boxTitle">
-                            By Recipient
+                            Create New Message
                         </h6>
-                        <ul class="fa-ul by-recipient">
-                            <li>
-                                <a href="#">
-                                    <span class="fa fa-users"></span>
-                                Community Managers ( 
-                                    <span id="community-count"> 3</span>
-                                 )</a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <span class="fa fa-certificate"></span> 
-                                Moderator ( 
-                                    <span id="moderator-count"> 1</span>
-                                 )</a>
-                            </li>
-                        </ul>
                     </div>
+					<div class="card-section-form" ng-class="{createMessageContainer: expandCreateMessage}" style="height:0">
+						<form ng-submit="createNewMessage()" method="post" class="form-container">
+							<div class="center">
+								<p>
+									<input class="inputBox" type="text" id="name" name="name" ng-model="subject" placeholder="Subject" required />
+								</p>
+								<p>
+									<!--<input class="inputBox" type="password" id="password" name="password" ng-model="password" placeholder="Password">-->
+									<textarea ng-model="messageBody" required></textarea>
+								</p>
+								<button class="inputButton" type="submit" >Create</button>
+
+							</div>
+							<!--center-->
+						</form>
+					</div>
                 </aside>
-            </div>-->
+            </div>
         </div>
     </div><!--end sb-site container-->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

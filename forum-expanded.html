@@ -56,11 +56,11 @@
                                     <div class="postMeta">
                                         <p class="name">{{reply.Author.DisplayName}}</p>
                                         <p class="userName">{{reply.Author.Username}}</p>
-                                        <p class="set-width" dynamic="{{reply.Subject}}"></p>
+                                        <p class="set-width" dynamic="{{reply.FilteredBody}}"></p>
                                         <p class="date"><strong>{{reply.Date | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
-                                        <p class="reply-to-post">
+                                      <!--  <p class="reply-to-post">
                                             <a ng-click="gotoReplyBox()">Reply</a>
-                                        </p>
+                                        </p>-->
                                     </div>
                                 </div>
 								</div>
@@ -70,12 +70,12 @@
 
                             <!--reply form-->
                             <div class="card comment-form">
-                                <form id="replyForm" class="card-section" action="#" method="post">
+                                <form id="replyForm" class="card-section" method="post" ng-submit="saveThreadReply(replyText,items.Id)">
                                     <div class="grid-block" id="reply-box">
                                         <div class="small-12 medium-12 grid-content">
                                             <label class="forum-label">
                                                 Reply to Post
-                                                <textarea cols="40" rows="8" name="comment" id="reply"></textarea>
+                                                <textarea cols="40" rows="8" name="comment" id="reply" ng-model="replyText"></textarea>
                                             </label>
                                             <div id="comment-button">
                                                 <a href="#" class="button" id="add-media">
