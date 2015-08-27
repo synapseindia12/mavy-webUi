@@ -5,7 +5,8 @@
 			<ul class="sb-mobile-menu">
 				<li class="active">
 					<a id="feedLink" ng-href="/" class="tooltip glow" title="Home">
-						<img class="link-icon" src="images/feedactive.svg" alt="feed page link">
+						<img class="link-icon" src="images/feedactive.svg" alt="feed page link" ng-show="feedactive">
+						<img class="link-icon" src="images/feed.svg" alt="feed page link" ng-hide="feedactive">
 					</a>
 				</li>
 				<li>
@@ -53,7 +54,7 @@
 								<strong>
 									Rewards Balance: 
 								</strong>
-								<span id="reward-amount">$25.00</span>
+								<span id="reward-amount">${{redeemable}}</span>
 							</a>
 						</p>
 					</div>

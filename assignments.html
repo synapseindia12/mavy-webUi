@@ -54,3 +54,14 @@
 	<script src="js/jquery.tooltipster.min.js"></script>
     <script src="js/slidebars.js"></script>
     <script src="js/main.js"></script>
+	<script>
+		$(document).ready(function(){
+			setTimeout(function(){
+				$scope.showAssignments = true;
+				$('.bxslider').bxSlider({
+				  auto: true,
+				  autoHover: true
+				});
+			}, 1000);
+		});
+	</script>

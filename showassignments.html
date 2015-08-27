@@ -21,35 +21,31 @@
                         
                     </article>
                 </div>
-                <div class="grid-content" ng-repeat="task in tasks">
-                    <article class="card replyToPost">
-                        
+                <div class="grid-content" ng-repeat="task in tasks" ng-if="task.TaskStatus != 'Completed'">
+                    <article class="card replyToPost">                        
                         <!--avatar container-->
                         <div class="postContent card-section">
-                            
-                            
-                           
-                                <div>
-                                <div class="card-divider reply">
-                                </div>
-                                <!--example comment one-->
-                                <div class="post-comment-reply card-section">
-                                    
-                                    <!--metadata for example comment one-->
-                                    <div class="postMeta">
-                                        <p class="name">{{task.Subject}}</p>
-                                        <p class="userName">{{task.Title}}</p>
-                                        <p class="set-width" dynamic="{{task.QuestionText}}"></p>
-                                        <p class="date"><strong>{{task.ActivationDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
-                                        <p class="reply-to-post">
-                                            <a href="javascript:void(0);">Comment</a>
-                                        </p>
-                                    </div>
-                                </div>
-                                </div>
+							<div>
+								<div class="card-divider reply">
+								</div>
+								<!--example comment one-->
+								<div class="post-comment-reply card-section">
+									
+									<!--metadata for example comment one-->
+									<div class="postMeta">
+										<p class="name">{{task.Subject}}</p>
+										<p class="userName">{{task.Title}}</p>
+										<p class="set-width" dynamic="{{task.QuestionText}}"></p>
+										<p class="date"><strong>{{task.ActivationDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
+										<p class="reply-to-post">
+											<a href="javascript:void(0);">Comment</a>
+										</p>
+									</div>
+								</div>
+							</div>
                           <!--reply form-->
                             <div class="card comment-form assignm"  style="display:none;">
-                                <form id="replyForm" class="card-section" action="#" method="post">
+                                <form id="replyForm" class="card-section" method="post" ng-submit="markCompleted(task)">
                                     <div class="grid-block" id="reply-box">
                                         <div class="small-12 medium-12 grid-content">
                                             <label class="forum-label">
@@ -58,7 +54,7 @@
                                             </label>
                                             <div id="comment-button">
                                                 
-                                                <input type="submit" value="Submit Comment" class="button fa" id="add-comment" ng-click="markCompleted(task)">
+                                                <input type="submit" value="Submit Comment" class="button fa" id="add-comment" />
                                             </div>
                                         </div>
                                     </div>

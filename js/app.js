@@ -264,7 +264,6 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 	endpoints.mobileHandler = new MobileHandler();
 	
 	endpoints.mobileHandler.getDashboard($scope.apiKey, $scope.userId, 5, null, null, function(result){
-		debugger;
 		if(result.result.success){
 			for(var i=0; i<result.result.result.Entries.length; i++){
 				$rootScope.polesForResults.push(result.result.result.Entries[i]);
@@ -301,17 +300,16 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 	$scope.checkPolls = function(result) {
 		$rootScope.incrementedVal = $scope.incrementedVal;
 		endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, result.result.result.Entries[$scope.incrementedVal].projectId,result.result.result.Entries[$scope.incrementedVal].moduleId, function(response){
-			debugger;
 			for(var i=0; i<result.result.result.Entries.length; i++){
 				if(result.result.result.Entries[i].itemId == response.result.result[0].itemId){
 					for(var j=0; j<response.result.result[0].values.length; j++){
+						debugger;
 						response.result.result[0].values[j].count = (response.result.result[0].values[j].count * 100)/response.result.result[0].responseCount;
 						if(result.result.result.Entries[i].options.categories[j])
 						result.result.result.Entries[i].options.categories[j].values = Math.round(response.result.result[0].values[j].count);
 					}
 					
 					$rootScope.dataforResults.push(result.result.result.Entries[i]);
-					debugger;
 				}
 			}
 			$scope.displayPollresults = $rootScope.dataforResults;
@@ -346,7 +344,6 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 		$scope.allVotes = [];
 		var value = parseInt($('input[name="poll"]:checked').val());
 		$scope.value.push(value);
-		debugger;
 		var response = {"projectId": $scope.allPolls[0].projectId, "moduleId": $scope.allPolls[0].moduleId, "taskId": $scope.allPolls[0].taskId, "itemId": $scope.allPolls[0].itemId, "isTestData": false, "notes": $scope.notes, "values": $scope.value};
 		
 		endpoints.mobileHandler.savePollResponse($scope.apiKey, $scope.userId, $scope.panelistId, response, function(result){
@@ -354,8 +351,6 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 				alert('Thanks for your vote.');
 				
 				endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, $scope.allPolls[0].projectId, $scope.allPolls[0].moduleId, function(response){
-					alert("response Achieved");
-					debugger;
 					$rootScope.totalResponseCounts = response.result.result[0].responseCount;
 				});
 				
@@ -365,8 +360,6 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 					}
 					$rootScope.allVotes = $scope.allVotes;
 					$rootScope.allPolls = $scope.allPolls;
-					alert('Rootscope Updated');
-					debugger;
 					$location.path('/pollresults');
 					$scope.$apply();
 				});
@@ -384,29 +377,6 @@ myApp.controller('pollResultCtrl', function($scope, $location, $rootScope, $loca
 	$scope.resultPolls = [];
 	$scope.panelistResults = $rootScope.allVotes;
 	$scope.displayPollresults = $rootScope.dataforResults;
-
-	// for(var i=0; i<$rootScope.polesForResults.length; i++){
-		// if($scope.panelistResults)
-		// {
-			// debugger;
-			// for(var j=0; j<$scope.panelistResults.length; j++){
-				// if($scope.panelistResults[j].itemId == $rootScope.polesForResults[i].itemId){
-					// debugger;
-					// for(var k=0; k<$rootScope.polesForResults[i].options.categories.length; k++){
-						// debugger;
-						// if($rootScope.polesForResults[i].options.categories[k].pollvote){
-							// var percentage = ($rootScope.polesForResults[i].options.categories[k].pollvote * 100)/$rootScope.totalResponseCounts;
-							// if(percentage){
-								// alert(percentage);
-								// $rootScope.polesForResults[i].options.categories[k].pollvote = percentage;
-							// }
-						// }
-					// }
-					// $scope.resultPolls.push($rootScope.polesForResults[i]);
-				// }
-			// }
-		// }
-	// }
 	
 });
 
@@ -421,6 +391,7 @@ myApp.controller('navCtrl', function($scope, $cookieStore, $rootScope, $location
 	$scope.userId = loginDetails[1].value;
 	$scope.panelistId = loginDetails[2].value;
 	$scope.registrationId = loginDetails[3].value;
+	$scope.redeemable = [];
 	
 	var endpoints = {};
 	endpoints.apiKey = $scope.apiKey;
@@ -462,6 +433,11 @@ myApp.controller('navCtrl', function($scope, $cookieStore, $rootScope, $location
 		}
 	});
 	
+	endpoints.mobileHandler.getIncentives($scope.apiKey, $scope.userId, $scope.panelistId, 20, null, function(result){
+		$scope.redeemable = result.result.result[result.result.result.length-1].redeemable;
+		$scope.$apply();
+	});
+	
 	$scope.logout = function() {
 		delete $localStorage.loggedIn;
 		delete $localStorage.loginDetails;
@@ -484,6 +460,7 @@ myApp.controller('assignmentCtrl', function($scope, $location, $localStorage, $r
 			});
 		}, 1500);
 	}
+	
 	$scope.allAssignments = [];
 	var loginDetails = $localStorage.loginDetails;
 	$scope.apiKey = loginDetails[0].value;
@@ -546,19 +523,20 @@ myApp.controller('assignmentCtrl', function($scope, $location, $localStorage, $r
 			for(var i=0;i<result.result.result.AvailableTasks.length;i++){
 				$scope.tasks.push(result.result.result.AvailableTasks[i]);
 			}
-		}		
+		}
 	});
 
 	$scope.markCompleted = function(task) {
-		alert("Currently in working mode");
-		//var reply = $('#reply').val();
-		//$scope.apiKey = parseInt($scope.apiKey);
-		//$scope.userId = parseInt($scope.userId);
-		// debugger;
-		// endpoints.mobileHandler.saveTaskReply($scope.apiKey,$scope.userId,$scope.projectId,$scope.moduleId,task.TaskId,reply,function(response){
-			// alert('Executed');
-			// debugger;
-		// });
+		var reply = $('#reply').val();		
+		endpoints.mobileHandler.saveTaskReply($scope.apiKey,$scope.userId,$scope.projectId,$scope.moduleId,task.TaskId,$scope.panelistId,task.ForumId,reply,null,null, function(response){
+			 endpoints.mobileHandler.getNextTask($scope.apiKey,$scope.userId,$scope.projectId,$scope.moduleId,task.TaskId,$scope.panelistId, function(response){
+				if(response.result.success){
+					$scope.tasks = [];
+					$scope.tasks.push(response.result.result);
+					$scope.$apply();
+				}
+			});
+		});
 	};
 	
 	$scope.gotoReplyBox = function(){
@@ -725,10 +703,66 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
    alert('blank data');
   }
  };
- $scope.mediaUpload= function(){
-  var hash = CryptoJS.HmacSHA1("Message", "akash");
-  alert(hash);
- }
+ // $scope.mediaUpload= function(){
+  // var hash = CryptoJS.HmacSHA1("Message", "akash");
+  // alert(hash);
+ // }
+ 
+	 $scope.uploadFile = function (input) {
+
+		$scope.data = {};
+		$scope.data.userUpload = '';
+		$scope.fileName="";
+		var x="",
+		Apikey="SXBzdW0gdml0YWUsIGV0IG5paGlsIGZyaW5naWxsYQ==",
+		secret="SXBzdW0gdml0YWUsIGV0IG5paGlsIGZyaW5naWxsYQ==",
+		bucketName = "cfsagency",
+		mediaType="",
+		sourceAppType = "Mavy";
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			//reader.readAsDataURL(input);
+			reader.onload = function (e) {	 
+				//Sets the Old Image to new New Image
+				//$('#photo-id').attr('src', e.target.result);	 
+				//Create a canvas and draw image on Client Side to get the byte[] equivalent
+				var mediaT = input.files[0].type.split('/');
+				mediaType = mediaT[0];
+				debugger;
+				x=e.target.result.split('base64,');
+				$scope.data.userUpload = x[1];
+				console.log($scope.data.userUpload.substring(0,64).length);
+				$scope.fileName = input.files[0].name;
+				$('#upload-content').show();
+				var txtHash = Apikey+bucketName+projectId+sourceAppType+$scope.data.userUpload.substring(0,64)+mediaType;
+				console.log(txtHash);
+				var signature = CryptoJS.HmacSHA1(txtHash, secret);
+				console.log(signature);
+
+				endpoints.mobileHandler.convertMedia($scope.apiKey,signature,bucketName,projectId,sourceAppType,mediaType,$scope.data.userUpload,null,function(response){
+					debugger;
+					if(response.result.success){
+						alert('success');
+					}
+					else{
+						alert('fail');
+					}
+
+				});
+				$scope.$apply();
+			}					
+			//Renders Image on Page
+			reader.readAsDataURL(input.files[0]);
+
+			
+
+		}
+	};
+	var projectId="";
+	$scope.setProjectId = function(id){
+		projectId = id;
+
+	};
 });
 
 myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$routeParams){
