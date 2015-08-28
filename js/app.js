@@ -444,6 +444,38 @@ myApp.controller('navCtrl', function($scope, $cookieStore, $rootScope, $location
 		$location.path('/');
 	}
 	
+	$scope.showHideimages = function(item){
+		debugger;
+		switch(item){
+			case 'Home':
+				$scope.feedActive = true;
+				$scope.assignmentActive = false;
+				$scope.forumActive = false;
+				$scope.messagesactive = false;
+				$location.path('/');
+				break;
+			case 'Assignment':
+				$scope.feedActive = false;
+				$scope.assignmentActive = true;
+				$scope.forumActive = false;
+				$scope.messagesactive = false;
+				$location.path('/assignment');
+				break;
+			case 'Forum':
+				$scope.feedActive = false;
+				$scope.assignmentActive = false;
+				$scope.forumActive = true;
+				$scope.messagesactive = false;
+				break;
+			case 'Messages':
+				$scope.feedActive = false;
+				$scope.assignmentActive = false;
+				$scope.forumActive = false;
+				$scope.messagesactive = true;
+				break;
+		}
+	}
+	
 });
 
 myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $localStorage, $rootScope){
@@ -460,7 +492,10 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 			// });
 		// }, 1500);
 	// }
-	
+	$rootScope.forumActive = false;
+	$rootScope.messagesactive = false;
+	$rootScope.feedActive = false;
+	$rootScope.assignmentActive = true;
 	$scope.allAssignments = [];
 	var loginDetails = $localStorage.loginDetails;
 	$scope.apiKey = loginDetails[0].value;
@@ -606,6 +641,10 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 });
 
 myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location){
+	$rootScope.forumActive = true;
+	$rootScope.messagesactive = false;
+	$rootScope.feedActive = false;
+	$rootScope.assignmentActive = false;
 	 $scope.activeThreads = [];
 	 $scope.childThreads = [];
 	 $scope.parentId =null;
@@ -641,13 +680,7 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 		});
 	}
  
-	$scope.getChilds=function(id, childId){
-	if(childId){
-		$rootScope.childId = childId;
-	}
-	else{
-		$rootScope.childId = '';
-	}
+	$scope.getChilds=function(id){
 	  $rootScope.currentId = id;
 	  if($scope.childThreads.length > 0) {
 	   $scope.childThreads = [];
@@ -774,7 +807,27 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 		alert("response Acheived");
 		debugger;
 	});
- }
+ };
+ 
+ $scope.showChildCommentbox = function(id) {
+  if($scope.childThreads.length>0){
+   for(var i=0; i<$scope.childThreads.length; i++){
+    if(id==$scope.childThreads[0].ThreadId){
+     return true;
+    }
+
+    else{
+     return false;
+    }
+   }
+  }
+  else{ 
+   if(id==$rootScope.currentId){ 
+    return true;
+   }
+  }
+  
+ };
  // $scope.mediaUpload= function(){
   // var hash = CryptoJS.HmacSHA1("Message", "akash");
   // alert(hash);
@@ -933,6 +986,12 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 		delete $localStorage.loggedIn;
 		$location.path('/');
 	}
+	
+	$rootScope.forumActive = false;
+	$rootScope.messagesactive = true;
+	$rootScope.feedActive = false;
+	$rootScope.assignmentActive = false;
+	
 	$scope.showExpandMessage = false;
 	var conversationId = '';
 	$scope.messages = [];

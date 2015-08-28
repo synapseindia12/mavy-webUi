@@ -4,26 +4,29 @@
 
 			<ul class="sb-mobile-menu">
 				<li class="active">
-					<a id="feedLink" ng-href="/" class="tooltip glow" title="Home">
-						<img class="link-icon" src="images/feedactive.svg" alt="feed page link" ng-show="feedactive">
-						<img class="link-icon" src="images/feed.svg" alt="feed page link" ng-hide="feedactive">
+					<a id="feedLink" ng-href="/" class="tooltip glow" title="Home" ng-click="showHideimages('Home')">
+						<img class="link-icon" src="images/feedactive.svg" alt="feed page link" ng-show="feedActive">
+						<img class="link-icon" src="images/feed.svg" alt="feed page link" ng-hide="feedActive">
 					</a>
 				</li>
 				<li>
-					<a id="assignmentsLink" ng-href="/assignment" class="tooltip glow" title="Assignments">
-						<img class="link-icon" src="images/assignment.svg" alt="assignment page link">
+					<a id="assignmentsLink" ng-href="/assignment" class="tooltip glow" title="Assignments" ng-click="showHideimages('Assignment')">
+						<img class="link-icon" src="images/assignmentactive.svg" alt="assignment page link" ng-show="assignmentActive">
+						<img class="link-icon" src="images/assignment.svg" alt="assignment page link" ng-hide="assignmentActive">
 					</a>
 				</li>
 				<li id="forum-mobile">
-					<a id="forumLink" href="forum.html" class="tooltip glow" title="Forum">
-						<img class="link-icon" src="images/forum.svg" alt="forum page link">
+					<a id="forumLink" href="forum.html" class="tooltip glow" title="Forum" ng-click="showHideimages('Forum')">
+						<img class="link-icon" src="images/forumactive.svg" alt="forum page link" ng-show="forumActive" />
+						<img class="link-icon" src="images/forum.svg" alt="forum page link" ng-hide="forumActive" />
 					</a>
 
 					<span id="forum-count" class="secondary badge forum-count slide-notification-forum" ng-bind="forumsCount"></span>
 				</li>
 				<li>
-					<a id="messagesLink" href="messages.html" class="tooltip glow" title="Messages">
-						<img class="link-icon" src="images/messages.svg" alt="message page link">
+					<a id="messagesLink" href="messages.html" class="tooltip glow" title="Messages" ng-click="showHideimages('Messages')">
+						<img class="link-icon" src="images/messagesactive.svg" alt="message page link" ng-show="messagesactive" />
+						<img class="link-icon" src="images/messages.svg" alt="message page link" ng-hide="messagesactive" />
 					</a>
 					
 					<span id="message-count" class="secondary badge message-count slide-notification-messages" ng-bind="msgCount"></span>
@@ -103,25 +106,29 @@
 			<ul class="desktop-menu">
 				<span id="hide"><!--hides just text links & notifications on mobile-->
 					<li id="feed">
-						<a ng-href="#/" class="tooltip glow active" title="Home">
-							<img class="link-icon" src="images/feedactive.svg" alt="feed page link">
+						<a ng-href="#/" class="tooltip glow active" title="Home" ng-click="showHideimages('Home')">
+							<img class="link-icon" src="images/feedactive.svg" alt="feed page link" ng-show="feedActive">
+							<img class="link-icon" src="images/feed.svg" alt="feed page link" ng-hide="feedActive">
 						</a>
 					</li>
 					<li id="assignment" class="tooltip" title="Assignments">
-						<a ng-href="#/assignment" class="glow">
-							<img class="link-icon" src="images/assignment.svg" alt="assignment page link">
+						<a ng-href="#/assignment" class="glow" ng-click="showHideimages('Assignment')">
+							<img class="link-icon" src="images/assignmentactive.svg" alt="assignment page link" ng-show="assignmentActive">
+							<img class="link-icon" src="images/assignment.svg" alt="assignment page link" ng-hide="assignmentActive">
 						</a>
 					</li>
 					<li>
 						<span class="secondary badge forum-count nav-notification-forum" ng-bind="forumsCount"></span>
-						<a ng-href="#/forum" class="tooltip glow" title="Forum">
-							<img class="link-icon" src="images/forum.svg" alt="forum page link">
+						<a ng-href="#/forum" class="tooltip glow" title="Forum" ng-click="showHideimages('Forum')">
+							<img class="link-icon" src="images/forumactive.svg" alt="forum page link" ng-show="forumActive" />
+							<img class="link-icon" src="images/forum.svg" alt="forum page link" ng-hide="forumActive" />
 						</a>
 					</li>
 					<li>
 						<span class="secondary badge message-count nav-notification-messages" ng-bind="msgCount"></span>
-						<a ng-href="#/messages" class="tooltip glow" title="Messages">
-							<img class="link-icon" src="images/messages.svg" alt="message page link">
+						<a ng-href="#/messages" class="tooltip glow" title="Messages" ng-click="showHideimages('Messages')">
+							<img class="link-icon" src="images/messagesactive.svg" alt="message page link" ng-show="messagesactive" />
+							<img class="link-icon" src="images/messages.svg" alt="message page link" ng-hide="messagesactive" />
 						</a>
 					</li>
 				</span>
