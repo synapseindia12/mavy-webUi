@@ -6176,8 +6176,10 @@ blockquote, blockquote p {
 .right-arrow {
     float: right;
     width: 50px !important;
+	cursor: pointer;
 }
 .left-arrow {
     float: left;
     width: 50px !important;
+	cursor: pointer;
 }
