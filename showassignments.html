@@ -11,6 +11,10 @@
                     <!--featured content-->
                     <article class="card featuredAssignment">
                         <div class="card-section">
+							<div class="arrow_slot" >
+								<img class="right-arrow" src="images/arrow-right-01.svg" ng-click="getNextTask(i)" />
+								<img class="left-arrow" src="images/arrow-left-01.svg" ng-click="getPreviousTasks(i)" ng-show="hideRightArrow" />
+							</div>
                            <h3 class="boxTitle" ng-if="assignment.projectTitle">{{assignment.projectTitle}}</h3>
 						   <h3 class="boxTitle" ng-if="assignment.moduleTitle">{{assignment.moduleTitle}}</h3>
                            <p class="assgnTitle" ng-if="assignment.modules" dynamic="{{assignment.modules[0].options.instructions}}"></p>
@@ -21,7 +25,7 @@
                         
                     </article>
                 </div>
-                <div class="grid-content" ng-repeat="task in tasks" ng-if="task.TaskStatus != 'Completed'">
+                <div class="grid-content">
                     <article class="card replyToPost">                        
                         <!--avatar container-->
                         <div class="postContent card-section">
@@ -33,10 +37,10 @@
 									
 									<!--metadata for example comment one-->
 									<div class="postMeta">
-										<p class="name">{{task.Subject}}</p>
-										<p class="userName">{{task.Title}}</p>
-										<p class="set-width" dynamic="{{task.QuestionText}}"></p>
-										<p class="date"><strong>{{task.ActivationDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
+										<p class="name">{{tasks[i].Subject}}</p>
+										<p class="userName">{{tasks[i].Title}}</p>
+										<p class="set-width" dynamic="{{tasks[i].QuestionText}}"></p>
+										<p class="date"><strong>{{tasks[i].ActivationDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
 										<p class="reply-to-post">
 											<a href="javascript:void(0);">Comment</a>
 										</p>

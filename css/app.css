@@ -6167,3 +6167,17 @@ blockquote, blockquote p {
 .card-section-form input {
     box-shadow: none !important;
 }
+.arrow_slot {
+    height: 50px;
+    position: absolute;
+    right: 35px;
+    top: 40px;
+}
+.right-arrow {
+    float: right;
+    width: 50px !important;
+}
+.left-arrow {
+    float: left;
+    width: 50px !important;
+}

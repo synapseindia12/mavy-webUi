@@ -31,7 +31,7 @@
 							<div class="card-divider color-code-2">
 								<h6 class="boxTitle">New Assignment |<span class="assignment-type" ng-if="assignment.moduleType == 1"> Discussion(s)</span><span class="assignment-type" ng-if="assignment.moduleType == 2"> Quiz</span><span class="assignment-type" ng-if="assignment.moduleType == 3"> Diary</span><span class="assignment-type" ng-if="assignment.moduleType == 4"> Sponsored Quiz</span></h6>
 							</div>
-                            <div class="card-section">
+                            <div class="card-section" style="cursor: pointer">
                                 <!--<h6 class="boxTitle">New Assignment |<span class="assignment-type"> Quiz</span></h6>-->
                                 <h3 class="quizTitle">{{assignment.moduleTitle}}</h3>
                                 <p dynamic="{{assignment.options.instructions}}"></p>
@@ -47,17 +47,11 @@
             </div>
         </div>
     </div><!--end sb-site container-->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script>
-    window.jQuery || document.write('<script src="js/jquery-1.11.2.min.js"><\/script>')
-    </script>
-	<script src="js/jquery.tooltipster.min.js"></script>
     <script src="js/slidebars.js"></script>
     <script src="js/main.js"></script>
 	<script>
 		$(document).ready(function(){
 			setTimeout(function(){
-				$scope.showAssignments = true;
 				$('.bxslider').bxSlider({
 				  auto: true,
 				  autoHover: true
