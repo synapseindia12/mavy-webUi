@@ -184,6 +184,10 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 		delete $localStorage.loggedIn;
 		$location.path('/');
 	}
+	$scope.feedActive = true;
+	$scope.assignmentActive = false;
+	$scope.forumActive = false;
+	$scope.messagesactive = false;
 	$scope.allAssignments = [];
 	var loginDetails = $localStorage.loginDetails;
 	$scope.apiKey = loginDetails[0].value;
@@ -386,6 +390,10 @@ myApp.controller('navCtrl', function($scope, $cookieStore, $rootScope, $location
 		$location.path('/');
 	};
 	
+	// $scope.showHideImages = function() {
+		// $scope.Active = false;
+		// $scope.Assignments = false;
+	// }
 	var loginDetails = $localStorage.loginDetails;
 	$scope.apiKey = loginDetails[0].value;
 	$scope.userId = loginDetails[1].value;
@@ -483,6 +491,11 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 		delete $localStorage.loggedIn;
 		$location.path('/');
 	}
+	
+	$scope.feedActive = false;
+	$scope.assignmentActive = true;
+	$scope.forumActive = false;
+	$scope.messagesactive = false;
 	// $scope.initializeSlider = function() {
 		// setTimeout(function(){
 			// $scope.showAssignments = true;
@@ -531,6 +544,12 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 		delete $localStorage.loggedIn;
 		$location.path('/');
 	}
+	
+	$scope.feedActive = false;
+	$scope.assignmentActive = true;
+	$scope.forumActive = false;
+	$scope.messagesactive = false;
+	
 	$scope.i = 0;
 	var loginDetails = $localStorage.loginDetails;
 	$scope.apiKey = loginDetails[0].value;
@@ -641,10 +660,11 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 });
 
 myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location){
-	$rootScope.forumActive = true;
-	$rootScope.messagesactive = false;
-	$rootScope.feedActive = false;
-	$rootScope.assignmentActive = false;
+	
+	$scope.feedActive = false;
+	$scope.assignmentActive = false;
+	$scope.forumActive = true;
+	$scope.messagesactive = false;
 	 $scope.activeThreads = [];
 	 $scope.childThreads = [];
 	 $scope.parentId =null;
@@ -809,25 +829,12 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 	});
  };
  
- $scope.showChildCommentbox = function(id) {
-  if($scope.childThreads.length>0){
-   for(var i=0; i<$scope.childThreads.length; i++){
-    if(id==$scope.childThreads[0].ThreadId){
-     return true;
-    }
-
-    else{
-     return false;
-    }
-   }
-  }
-  else{ 
-   if(id==$rootScope.currentId){ 
-    return true;
-   }
-  }
-  
- };
+ $scope.showChildCommentBox = function(id) {
+	debugger;
+	$('.childCommentBox').hide();
+	//var displayId = document.getElementById('displayReplyBox' + id);
+	$('#displayReplyBox' + id).show();
+ }
  // $scope.mediaUpload= function(){
   // var hash = CryptoJS.HmacSHA1("Message", "akash");
   // alert(hash);
@@ -892,6 +899,10 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 
 myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$routeParams){
  
+	$scope.feedActive = false;
+	$scope.assignmentActive = false;
+	$scope.forumActive = true;
+	$scope.messagesactive = false;
  $scope.childThreads = [];
  $scope.parentId =null;
  $scope.threadId =null;
@@ -987,6 +998,11 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 		$location.path('/');
 	}
 	
+	$scope.feedActive = false;
+	$scope.assignmentActive = false;
+	$scope.forumActive = false;
+	$scope.messagesactive = true;
+	
 	$rootScope.forumActive = false;
 	$rootScope.messagesactive = true;
 	$rootScope.feedActive = false;
@@ -1076,6 +1092,10 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 
 myApp.controller('messageconversationCtrl', function($scope,$localStorage,$cookieStore,$routeParams,$rootScope){
 	
+	$scope.feedActive = false;
+	$scope.assignmentActive = false;
+	$scope.forumActive = false;
+	$scope.messagesactive = true;
 	$scope.messages = [];
 	/* Getting all local Storage data for User Authentication */
 	var loginDetails = $localStorage.loginDetails;
@@ -1150,6 +1170,12 @@ myApp.controller('profileCtrl', function($scope, $localStorage, $location){
 		delete $localStorage.loggedIn;
 		$location.path('/');
 	}
+	
+	$scope.feedActive = false;
+	$scope.assignmentActive = false;
+	$scope.forumActive = false;
+	$scope.messagesactive = false;
+	
 	$scope.messages = [];
 	$scope.tempArr = [];
 	
@@ -1249,6 +1275,11 @@ myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
 		delete $localStorage.loggedIn;
 		$location.path('/');
 	}
+	
+	$scope.feedActive = false;
+	$scope.assignmentActive = false;
+	$scope.forumActive = false;
+	$scope.messagesactive = false;
 	
 	var loginDetails = $localStorage.loginDetails;
 	$scope.apiKey = loginDetails[0].value;
@@ -1397,6 +1428,11 @@ myApp.controller('resetpasswordCtrl', function($scope, $localStorage, $location)
 		$location.path('/');
 	}
 	
+	$scope.feedActive = false;
+	$scope.assignmentActive = false;
+	$scope.forumActive = false;
+	$scope.messagesactive = false;
+	
 	/* Getting all local Storage data for User Authentication */
 	var loginDetails = $localStorage.loginDetails;
 	$scope.apiKey = loginDetails[0].value;
@@ -1447,14 +1483,54 @@ myApp.controller('resetpasswordCtrl', function($scope, $localStorage, $location)
         $compile(ele.contents())(scope);
     }
   };
-});
+}).directive('bxSlider', function () {
+        var BX_SLIDER_OPTIONS = {
+             auto: true,
+			autoHover: true
+        };
 
-$(function(){
+        return {
+            restrict: 'A',
+            require: 'bxSlider',
+            priority: 0,
+            controller: function() {},
+            link: function (scope, element, attrs, ctrl) {
+                var slider;
+                ctrl.update = function() {
+                    slider && slider.destroySlider();
+                    slider = element.bxSlider(BX_SLIDER_OPTIONS);
+                };
+            }
+        }
+    })
+    .directive('bxSliderItem', function($timeout) {
+        return {
+            require: '^bxSlider',
+            link: function(scope, elm, attr, bxSliderCtrl) {
+                if (scope.$last) {
+                    bxSliderCtrl.update();
+                }
+            }
+        }
+    })
+    .directive('docListWrapper', ['$timeout', function ($timeout) {
+        return {
+            restrict: 'C',
+            priority: 500,
+            replace: false,
+            templateUrl: 'tmpl-doc-list-wrapper',
+            scope: { docs: '=docs'},
+            link: function (scope, element, attrs) {
+            }
+        };
+    }]);
+
+// $(function(){
 	
-             $(document).on('click','.reply-to-post a',function(){
-                if($(this).closest('.grid-content').find('.comment-form.assignm').css('display')=='none'){
-	                $('.comment-form.assignm').hide();
-	                $(this).closest('.grid-content').find('.comment-form.assignm').slideDown();
-            	}
-            })
- })
+             // $(document).on('click','.reply-to-post a',function(){
+                // if($(this).closest('.grid-content').find('.comment-form.assignm').css('display')=='none'){
+	                // $('.comment-form.assignm').hide();
+	                // $(this).closest('.grid-content').find('.comment-form.assignm').slideDown();
+            	// }
+            // })
+ // })

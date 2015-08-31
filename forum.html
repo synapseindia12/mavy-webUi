@@ -82,6 +82,7 @@
 												<img alt="profile image" class="profile" src="{{reply.Content.CreatedByUser.AvatarUrl}}">
 											</a>
 										</div>
+										<pre>{{reply}}</pre>
 										<!--metadata for example comment one-->
 										<div class="postMeta">
 											<p class="name">{{reply.Author.DisplayName}}</p>
@@ -89,30 +90,31 @@
 											<p class="set-width" dynamic="{{reply.FilteredBody}}"></p>
 											<p class="date"><strong>{{reply.Date | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
 											<p class="reply-to-post">
-												<a ng-click="getChilds(items.Id, reply.Id)">Reply ( <span class="replies-count">{{reply.ReplyCount}}</span> )</a>
+												<a ng-click="showChildCommentBox(reply.Id)">Comment ( <span class="replies-count">{{reply.ReplyCount}}</span> )</a>
 											</p>
 										</div>
-									</div>
-									<div class="card comment-form" ng-if="showCommentbox(reply.ThreadId)">
-										<form id="replyForm" class="card-section" method="post" ng-submit="savechildThreadReply(reply.ParentId, replyChildText, reply.Id)">
-											<div class="grid-block">
-												<div class="small-12 medium-12 grid-content">
-													<label class="forum-label">
-														Reply to Post
-														<textarea cols="40" rows="8" name="comment" id="reply" ng-model="replyChildText"></textarea>
-													</label>
-												 
-													<div id="comment-button">
-														<input type="file" name="file_upload" style="height:42px;position:absolute;width:131px;opacity:0;">
-														<a class="button" id="add-media" ng-click="mediaUpload()">
-															<span class="fa fa-camera"></span>
-															Upload Media
-														</a>
-														<input type="submit" value="Submit Reply" class="button fa" id="add-comment"  >
+										<div class="card comment-form childCommentBox" id="displayReplyBox{{reply.Id}}" style="display: none">
+											<form class="card-section" method="post" ng-submit="">
+												<div class="grid-block">
+													<div class="small-12 medium-12 grid-content">
+														<label class="forum-label">
+															Reply to Post
+															<textarea cols="40" rows="8" name="comment" id="reply" ng-model="replyText"></textarea>
+														</label>
+													 
+														<div id="comment-button">
+															<input type="file" name="file_upload" style="height:42px;position:absolute;width:131px;opacity:0;">
+															<a class="button" id="add-media" ng-click="mediaUpload()">
+																<span class="fa fa-camera"></span>
+																Upload Media
+															</a>
+															{{fileName}}
+															<input type="submit" value="Submit Reply" class="button fa" id="add-comment"  >
+														</div>
 													</div>
 												</div>
-											</div>
-										</form>
+											</form>
+										</div>
 									</div>
 								</div>
                             </div><!--end comment one card-->
@@ -122,7 +124,7 @@
                             <!--reply form-->
                             <div class="card comment-form" ng-if="showCommentbox(items.Id)">
                                 <form id="replyForm" class="card-section" method="post" ng-submit="saveThreadReply(replyText,items.Id)">
-                                    <div class="grid-block" id="reply-box">
+                                    <div class="grid-block">
                                         <div class="small-12 medium-12 grid-content">
                                             <label class="forum-label">
                                                 Reply to Post

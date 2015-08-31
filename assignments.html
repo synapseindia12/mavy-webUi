@@ -12,8 +12,8 @@
                     <article class="card featuredAssignment">
                         <div class="card-section">
                             <!--slider content-->
-                            <ul class="bxslider" ng-init="initializeSlider()">
-                                <li ng-repeat="assignment in allAssignments" ng-if="assignment.options.featured">
+                            <ul class="bxslider" bx-slider>
+                                <li ng-repeat="assignment in allAssignments" ng-if="assignment.options.featured" bx-slider-item>
                                     <h3 class="boxTitle">Featured Assignments</h3>
                                     <!--<h4 class="name">Sunblock Brands</h4>-->
                                     <p class="assgnTitle"><strong>{{assignment.moduleTitle}}</strong></p>
@@ -52,9 +52,10 @@
     window.jQuery || document.write('<script src="js/jquery-1.11.2.min.js"><\/script>')
     </script>
     <script src="js/jquery.tooltipster.min.js"></script>
+	<script src="js/jquery.bxslider.min.js"></script>
     <script src="js/slidebars.js"></script>
     <script src="js/main.js"></script>
-	<script>
+	<!--<script>
 		$(document).ready(function(){
 			setTimeout(function(){
 				$('.bxslider').bxSlider({
@@ -63,4 +64,4 @@
 				});
 			}, 1000);
 		});
-	</script>
+	</script>-->

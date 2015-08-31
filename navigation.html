@@ -106,13 +106,13 @@
 			<ul class="desktop-menu">
 				<span id="hide"><!--hides just text links & notifications on mobile-->
 					<li id="feed">
-						<a ng-href="#/" class="tooltip glow active" title="Home" ng-click="showHideimages('Home')">
-							<img class="link-icon" src="images/feedactive.svg" alt="feed page link" ng-show="feedActive">
-							<img class="link-icon" src="images/feed.svg" alt="feed page link" ng-hide="feedActive">
+						<a ng-href="#/" class="tooltip glow active" title="Home">
+							<img class="link-icon" src="images/feedactive.svg" alt="feed page link" ng-show="feedActive" ng-click="showHideimages(this)">
+							<img class="link-icon" src="images/feed.svg" alt="feed page link" ng-hide="feedActive" ng-click="showHideimages(this)">
 						</a>
 					</li>
 					<li id="assignment" class="tooltip" title="Assignments">
-						<a ng-href="#/assignment" class="glow" ng-click="showHideimages('Assignment')">
+						<a ng-href="#/assignment" class="glow" ng-click="showHideimages(this)">
 							<img class="link-icon" src="images/assignmentactive.svg" alt="assignment page link" ng-show="assignmentActive">
 							<img class="link-icon" src="images/assignment.svg" alt="assignment page link" ng-hide="assignmentActive">
 						</a>
