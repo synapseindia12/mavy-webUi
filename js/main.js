@@ -12,9 +12,9 @@ $(document).ready(function(){
 
 /*--tooltipster plugin--*/
 $(document).ready(function() {
-    $('.tooltip').tooltipster({
-        maxWidth: 300
-    });
+    // $('.tooltip').tooltipster({
+        // maxWidth: 300
+    // });
 });
 
 //hides up/down votes upon clicking//

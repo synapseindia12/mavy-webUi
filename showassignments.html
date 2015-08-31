@@ -42,7 +42,7 @@
 										<p class="set-width" dynamic="{{tasks[i].QuestionText}}"></p>
 										<p class="date"><strong>{{tasks[i].ActivationDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
 										<p class="reply-to-post">
-											<a href="javascript:void(0);">Comment</a>
+											<a href="javascript:void(0);" ng-click="gotoReplyBox()">Comment</a>
 										</p>
 									</div>
 								</div>
