@@ -1,4 +1,4 @@
-var myApp = angular.module("mavyApp", ['ngRoute', 'ngCookies', 'ngStorage', 'ngFacebook', 'ui.mask', 'ui.bootstrap']);
+var myApp = angular.module("mavyApp", ['ngRoute', 'ngCookies', 'ngStorage', 'ngFacebook', 'ui.mask', 'ui.bootstrap', 'angular-bind-html-compile']);
 myApp.config(function($routeProvider, $httpProvider, $facebookProvider) {
     $routeProvider
         .when('/', {
@@ -233,7 +233,7 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 	
 	
 	$scope.showAssignmentTasks = function(assignment){
-		$rootScope.assignment = assignment;
+		$cookieStore.put('assignment', assignment);
 		$location.path('/assignments/showAssignment');
 	}
 	
@@ -389,6 +389,12 @@ myApp.controller('navCtrl', function($scope, $cookieStore, $rootScope, $location
 		delete $localStorage.loggedIn;
 		$location.path('/');
 	};
+	
+	$scope.initializeTooltip = function(){
+		$('.tooltip').tooltipster({
+			maxWidth: 300
+		});
+	}
 	
 	// $scope.showHideImages = function() {
 		// $scope.Active = false;
@@ -575,20 +581,24 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	endpoints.mobileHandler.getPanelistModuleTasks($scope.apiKey, $scope.userId, $scope.projectId, $scope.moduleId, $scope.panelistId, 20, 0, function(result){		
 		if(result.result.result.AvailableTasks.length > 0){
 			for(var i=0;i<result.result.result.AvailableTasks.length;i++){
-				$scope.tasks.push(result.result.result.AvailableTasks[i]);
+				if(result.result.result.AvailableTasks[i].RevealBehaviorId != 3){
+					$scope.tasks.push(result.result.result.AvailableTasks[i]);
+				}
 			}
 		}
 	});
 
 	$scope.markCompleted = function(task) {
+		debugger;
 		var reply = $('#reply').val();		
 		endpoints.mobileHandler.saveTaskReply($scope.apiKey,$scope.userId,$scope.projectId,$scope.moduleId,task.TaskId,$scope.panelistId,task.ForumId,reply,null,null, function(response){
 			 endpoints.mobileHandler.getNextTask($scope.apiKey,$scope.userId,$scope.projectId,$scope.moduleId,task.TaskId,$scope.panelistId, function(response){
+				debugger;
 				if(response.result.success){
 					if(response.result.result){
 						if($scope.tasks.length >0){
 							for(var i=0; i<$scope.tasks.length; i++){
-								if($scope.tasks[i].TaskId != response.result.result[0].TaskId){
+								if($scope.tasks[i].TaskId != response.result.result.TaskId){
 									$scope.tasks.push(response.result.result);
 								}
 							}
@@ -635,8 +645,9 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 				$scope.$apply();
 			});
 		}
-		else{
-			alert('Project is not yet marked completed. Please complete this task and then move forward');
+		else {
+			$scope.hideLeftArrow = true;
+			//alert('Project is not yet marked completed. Please complete this task and then move forward');
 		}
 	}
 	
@@ -659,7 +670,7 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	};
 });
 
-myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location){
+ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location){
 	
 	$scope.feedActive = false;
 	$scope.assignmentActive = false;
@@ -667,6 +678,7 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 	$scope.messagesactive = false;
 	 $scope.activeThreads = [];
 	 $scope.childThreads = [];
+	 $scope.nextLevelChild =[];
 	 $scope.parentId =null;
 	 $scope.threadId =null;
 	 if(!$localStorage.loginDetails){
@@ -679,6 +691,9 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 	 var endpoints = {};
 	 endpoints.apiKey = $scope.apiKey;
 	 endpoints.mobileHandler = new MobileHandler();
+	 
+	 endpoints.mediaHandler = new MediaHandler();
+	 
  //endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(result){
 	if($rootScope.allForums) {
 	   for(var i=0; i<$rootScope.allForums.length; i++){   
@@ -688,6 +703,7 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 	}
 	else {
 		endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
+			debugger;
 			if(forums.result.result.Threads) {
 			 $rootScope.forumsCount=forums.result.result.Threads.length;
 			 $rootScope.allForums=forums.result.result.Threads;
@@ -709,8 +725,11 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 	   $scope.parentId=null;
 	   $scope.threadId=null;
 	  }
-	  endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,id,null,null,function(child){
+	  endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,$rootScope.currentId,null,null,function(child){
+	  	debugger;
 		if(child.result.success){
+			//alert('Got it');
+			debugger;
 		   if(child.result.result[1].Replies) {
 			for(var j=0; j<child.result.result[1].Replies.length; j++){    
 			 if(id == child.result.result[1].Replies[j].ThreadId)
@@ -780,7 +799,7 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
  $scope.saveThreadReply=function(replyText,id){
   
   if(replyText){
-   endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,id,$scope.parentId,replyText,function(response){
+   endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,id,0,replyText,function(response){
     
     if(response.result.success){
      alert('success');
@@ -832,8 +851,16 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
  $scope.showChildCommentBox = function(id) {
 	debugger;
 	$('.childCommentBox').hide();
-	//var displayId = document.getElementById('displayReplyBox' + id);
+	
 	$('#displayReplyBox' + id).show();
+	$scope.nextLevelChild=[];
+	for(var i=0;i<$scope.childThreads.length;i++){
+		if($scope.childThreads[i].ParentId==id){
+			$scope.nextLevelChild.push($scope.childThreads[i]);
+		}
+	}
+	
+	debugger;
  }
  // $scope.mediaUpload= function(){
   // var hash = CryptoJS.HmacSHA1("Message", "akash");
@@ -871,7 +898,7 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 				var signature = CryptoJS.HmacSHA1(txtHash, secret);
 				console.log(signature);
 
-				endpoints.mobileHandler.convertMedia($scope.apiKey,signature,bucketName,projectId,sourceAppType,mediaType,$scope.data.userUpload,null,function(response){
+				endpoints.mediaHandler.convertMedia($scope.apiKey,signature.toString(),bucketName,projectId,sourceAppType,mediaType,$scope.data.userUpload,null,function(response){
 					debugger;
 					if(response.result.success){
 						alert('success');
@@ -892,7 +919,8 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 	};
 	var projectId="";
 	$scope.setProjectId = function(id){
-		projectId = id;
+	
+		projectId = 6318;
 
 	};
 });
@@ -1474,16 +1502,22 @@ myApp.controller('resetpasswordCtrl', function($scope, $localStorage, $location)
 			return;
 		}
 	};	
-}).directive('dynamic', function ($compile) {
+})
+
+.directive('dynamic', function ($compile) {
   return {
     restrict: 'A',
     replace: true,
     link: function (scope, ele, attrs) {
-		ele.html(attrs.dynamic);
-        $compile(ele.contents())(scope);
+		if(attrs.dynamic){
+			ele.html(attrs.dynamic);
+			$compile(ele.contents())(scope);
+		}
     }
   };
-}).directive('bxSlider', function () {
+})
+
+.directive('bxSlider', function () {
         var BX_SLIDER_OPTIONS = {
              auto: true,
 			autoHover: true
@@ -1524,6 +1558,34 @@ myApp.controller('resetpasswordCtrl', function($scope, $localStorage, $location)
             }
         };
     }]);
+	
+(function (angular) {
+    'use strict';
+
+    var module = angular.module('angular-bind-html-compile', []);
+
+    module.directive('bindHtmlCompile', ['$compile', function ($compile) {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                scope.$watch(function () {
+                    return scope.$eval(attrs.bindHtmlCompile);
+                }, function (value) {
+                    // Incase value is a TrustedValueHolderType, sometimes it
+                    // needs to be explicitly called into a string in order to
+                    // get the HTML string.
+                    element.html(value && value.toString());
+                    // If scope is provided use it, otherwise use parent scope
+                    var compileScope = scope;
+                    if (attrs.bindHtmlScope) {
+                        compileScope = scope.$eval(attrs.bindHtmlScope);
+                    }
+                    $compile(element.contents())(compileScope);
+                });
+            }
+        };
+    }]);
+}(window.angular));
 
 // $(function(){
 	

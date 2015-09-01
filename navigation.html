@@ -104,7 +104,7 @@
 		
 		<nav id="desktop-menu">
 			<ul class="desktop-menu">
-				<span id="hide"><!--hides just text links & notifications on mobile-->
+				<span id="hide" ng-init="initializeTooltip()"><!--hides just text links & notifications on mobile-->
 					<li id="feed">
 						<a ng-href="#/" class="tooltip glow active" title="Home">
 							<img class="link-icon" src="images/feedactive.svg" alt="feed page link" ng-show="feedActive" ng-click="showHideimages(this)">

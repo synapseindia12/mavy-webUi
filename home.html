@@ -43,7 +43,7 @@
 								<div class="card-divider color-code-2">
                                     <h6 class="boxTitle">New Assignment |<span class="assignment-type" ng-if="assignment.modules[0].moduleType == 1"> Discussion(s)</span><span class="assignment-type" ng-if="assignment.modules[0].moduleType == 2"> Quiz</span><span class="assignment-type" ng-if="assignment.modules[0].moduleType == 3"> Diary</span><span class="assignment-type" ng-if="assignment.modules[0].moduleType == 4"> Sponsored Quiz</span></h6>
                                 </div>
-								<div class="card-section">
+								<div class="card-section" style="cursor: pointer">
 									<!--<h6 class="boxTitle">New Assignment |<span class="assignment-type"> Quiz</span></h6>-->
 									<h3 class="quizTitle">{{assignment.projectTitle}}</h3>
 									<p dynamic="{{assignment.modules[0].options.instructions}}"></p>

@@ -12,7 +12,7 @@
                     <article class="card featuredAssignment">
                         <div class="card-section">
 							<div class="arrow_slot" >
-								<img class="right-arrow" src="images/arrow-right-01.svg" ng-click="getNextTask(i)" />
+								<img class="right-arrow" src="images/arrow-right-01.svg" ng-click="getNextTask(i)" ng-hide="hideLeftArrow" />
 								<img class="left-arrow" src="images/arrow-left-01.svg" ng-click="getPreviousTasks(i)" ng-show="hideRightArrow" />
 							</div>
                            <h3 class="boxTitle" ng-if="assignment.projectTitle">{{assignment.projectTitle}}</h3>
@@ -37,27 +37,26 @@
 									
 									<!--metadata for example comment one-->
 									<div class="postMeta">
-										<p class="name">{{tasks[i].Subject}}</p>
-										<p class="userName">{{tasks[i].Title}}</p>
-										<p class="set-width" dynamic="{{tasks[i].QuestionText}}"></p>
+										<p class="name" bind-html-compile="tasks[i].Subject"></p>
+										<p class="userName" bind-html-compile="tasks[i].Title"></p>
+										<p class="set-width" bind-html-compile="tasks[i].QuestionText"></p>
 										<p class="date"><strong>{{tasks[i].ActivationDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
 										<p class="reply-to-post">
-											<a href="javascript:void(0);" ng-click="gotoReplyBox()">Comment</a>
+											<a href="javascript:void(0);" ng-click="gotoReplyBox()">Reply</a>
 										</p>
 									</div>
 								</div>
 							</div>
                           <!--reply form-->
                             <div class="card comment-form assignm"  style="display:none;">
-                                <form id="replyForm" class="card-section" method="post" ng-submit="markCompleted(task)">
+                                <form id="replyForm" class="card-section" method="post" ng-submit="markCompleted(tasks[i])">
                                     <div class="grid-block" id="reply-box">
                                         <div class="small-12 medium-12 grid-content">
                                             <label class="forum-label">
                                                 Mark Complete
                                                 <textarea cols="40" rows="8" name="comment" id="reply" ng-model="reply"></textarea>
                                             </label>
-                                            <div id="comment-button">
-                                                
+                                            <div id="comment-button">                                                
                                                 <input type="submit" value="Submit Comment" class="button fa" id="add-comment" />
                                             </div>
                                         </div>
