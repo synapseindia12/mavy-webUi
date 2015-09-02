@@ -1,6 +1,3 @@
-    <style type="text/css">
-        .margin-bot-0{margin-bottom: 0 !important;}
-    </style>
     <h1 class="hidden">Forum Page</h1>
     <!--slideout sidebar left-->
 	<div ng-include="'navigation.html'"></div>
@@ -18,7 +15,7 @@
                         <div class="card-divider color-code-3">
                             <h6 class="boxTitle">Create New Post</h6>
                         </div>
-						<form class="card-section" method="post" style="display:none;">
+						<form class="card-section" method="post">
 							<div class="grid-block">
 								<div class="small-12 medium-12 grid-content">
 									<label for="post-input" class="settingLabel hidden">
@@ -122,13 +119,12 @@
                                         </div>
                                     </div>
 										<div class="card comment-form childCommentBox" id="displayReplyBox{{reply.Id}}" style="display: none">
-											<form class="card-section" method="post" ng-submit="savechildThreadReply(items.Id,reply.Id)">
+											<form class="card-section" method="post" ng-submit="">
 												<div class="grid-block">
 													<div class="small-12 medium-12 grid-content">
 														<label class="forum-label">
 															Reply to Post
-                                                            
-															<textarea cols="40" rows="8" name="comment"></textarea>
+															<textarea cols="40" rows="8" name="comment" id="reply" ng-model="replyText"></textarea>
 														</label>
 													 
 														<div id="comment-button">
@@ -137,7 +133,7 @@
 																<span class="fa fa-camera"></span>
 																Upload Media
 															</a>
-															
+															{{fileName}}
 															<input type="submit" value="Submit Reply" class="button fa" id="add-comment"  >
 														</div>
 													</div>
@@ -151,7 +147,7 @@
                             
 
                             <!--reply form-->
-                            <div id="reply-box" class="card comment-form" ng-if="showCommentbox(items.Id)">
+                            <div class="card comment-form" ng-if="showCommentbox(items.Id)">
                                 <form id="replyForm" class="card-section" method="post" ng-submit="saveThreadReply(replyText,items.Id)">
                                     <div class="grid-block">
                                         <div class="small-12 medium-12 grid-content">
@@ -159,11 +155,9 @@
                                                 Reply to Post
                                                 <textarea cols="40" rows="8" name="comment" id="reply" ng-model="replyText"></textarea>
                                             </label>
-                                            <div id="upload-content" style="display:none;">
-                                                <span style="display:inline-block;background:#e6ece1;padding:8px 15px; border-radius:3px; font-size:14px;">{{fileName}}</span>
-                                            </div>
+                                         
                                             <div id="comment-button">
-                                                <input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this)" ng-click="setProjectId(items.Id)" id="photo-upload" style="height:42px;position:absolute;width:131px;opacity:0;" />
+                                                <input type="file" name="file_upload" style="height:42px;position:absolute;width:131px;opacity:0;">
                                                 <a class="button" id="add-media" ng-click="mediaUpload()">
                                                     <span class="fa fa-camera"></span>
                                                     Upload Media
@@ -194,13 +188,4 @@
     <script src="js/jquery.simple-expand.min.js"></script>
     <script src="js/slidebars.js"></script>
     <script src="js/main.js"></script>
-	<script type="text/javascript">
-        $(function(){
-            $('h6.boxTitle').parent('div').addClass('margin-bot-0');
-            $('h6.boxTitle').on('click',function(){
-                 $(this).parent('div').toggleClass('margin-bot-0');
-                $(this).parent('div').siblings('form').slideToggle();
-               
-            })
-        })
-    </script>
+	

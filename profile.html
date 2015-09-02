@@ -49,7 +49,7 @@
                                     </div>
 
                                 <div class="dob-input">
-                                    <select name="months" class="dob bottom-border" ng-model="selectedMonth">
+                                    <select name="months" class="dob bottom-border" ng-model="selectedMonth" required>
                                         <option value=""></option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -64,7 +64,7 @@
                                         <option value="11">11</option>
                                         <option value="12">12</option>
                                     </select>
-                                    <select id="form_dob_day" class="dob bottom-border" name="dob_day" ng-model="selectedDate">
+                                    <select id="form_dob_day" class="dob bottom-border" name="dob_day" ng-model="selectedDate" required>
 										<option value=""></option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -98,7 +98,7 @@
                                         <option value="30">30</option>
                                         <option value="31">31</option>
                                     </select>
-                                    <select id="birthyear" name="birthyear" class="dob bottom-border" ng-model="selectedYear">
+                                    <select id="birthyear" name="birthyear" class="dob bottom-border" ng-model="selectedYear" required>
                                         <option value=""></option>
                                         <option value="2006">2006</option>
                                         <option value="2005">2005</option>

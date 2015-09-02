@@ -19,10 +19,7 @@
 						   <h3 class="boxTitle" ng-if="assignment.moduleTitle">{{assignment.moduleTitle}}</h3>
                            <p class="assgnTitle" ng-if="assignment.modules" dynamic="{{assignment.modules[0].options.instructions}}"></p>
 						   <p class="assgnTitle" ng-if="!assignment.modules" dynamic="{{assignment.options.instructions}}"></p>
-                        </div>
-                         
-               
-                        
+                        </div>                     
                     </article>
                 </div>
                 <div class="grid-content">
@@ -34,13 +31,12 @@
 								</div>
 								<!--example comment one-->
 								<div class="post-comment-reply card-section">
-									
 									<!--metadata for example comment one-->
 									<div class="postMeta">
-										<p class="name" bind-html-compile="tasks[i].Subject"></p>
-										<p class="userName" bind-html-compile="tasks[i].Title"></p>
-										<p class="set-width" bind-html-compile="tasks[i].QuestionText"></p>
-										<p class="date"><strong>{{tasks[i].ActivationDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
+										<p class="name" bind-html-compile="displayTasks[0].Subject"></p>
+										<p class="userName" bind-html-compile="displayTasks[0].Title"></p>
+										<p class="set-width" bind-html-compile="displayTasks[0].QuestionText"></p>
+										<p class="date"><strong>{{displayTasks[0].ActivationDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
 										<p class="reply-to-post">
 											<a href="javascript:void(0);" ng-click="gotoReplyBox()">Reply</a>
 										</p>
@@ -49,7 +45,7 @@
 							</div>
                           <!--reply form-->
                             <div class="card comment-form assignm"  style="display:none;">
-                                <form id="replyForm" class="card-section" method="post" ng-submit="markCompleted(tasks[i])">
+                                <form id="replyForm" class="card-section" method="post" ng-submit="markCompleted(displayTasks[0])">
                                     <div class="grid-block" id="reply-box">
                                         <div class="small-12 medium-12 grid-content">
                                             <label class="forum-label">
@@ -81,12 +77,8 @@
 
 
                         </article>
-                    </div>
-                    
-                </div><!--end assignment content-->
-
-
-                
+                    </div>                    
+                </div><!--end assignment content-->                
             </section><!--end main content-->
 
             <!--start right sidebar content-->

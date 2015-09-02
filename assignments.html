@@ -13,7 +13,7 @@
                         <div class="card-section">
                             <!--slider content-->
                             <ul class="bxslider" bx-slider>
-                                <li ng-repeat="assignment in allAssignments" ng-if="assignment.options.featured" bx-slider-item>
+                                <li ng-repeat="assignment in allAssignments" ng-if="assignment.options.featured" bx-slider-item ng-click="showAssignmentTasks(assignment)">
                                     <h3 class="boxTitle">Featured Assignments</h3>
                                     <!--<h4 class="name">Sunblock Brands</h4>-->
                                     <p class="assgnTitle"><strong>{{assignment.moduleTitle}}</strong></p>
@@ -29,7 +29,7 @@
                     <div class="grid-content" ng-repeat="assignment in allAssignments" ng-hide="assignment.options.featured">
                         <article class="card card-margin" ng-click="showAssignmentTasks(assignment)">
 							<div class="card-divider color-code-2">
-								<h6 class="boxTitle">New Assignment |<span class="assignment-type" ng-if="assignment.moduleType == 1"> Discussion(s)</span><span class="assignment-type" ng-if="assignment.moduleType == 2"> Quiz</span><span class="assignment-type" ng-if="assignment.moduleType == 3"> Diary</span><span class="assignment-type" ng-if="assignment.moduleType == 4"> Sponsored Quiz</span></h6>
+								<h6 class="boxTitle">New Assignment |<span style="text-transform: none;" ng-if="assignment.moduleType == 1"> Discussion(s)</span><span style="text-transform: none;" ng-if="assignment.moduleType == 2"> Quiz</span><span style="text-transform: none;" ng-if="assignment.moduleType == 3"> Diary</span><span style="text-transform: none;" ng-if="assignment.moduleType == 4"> Sponsored Quiz</span></h6>
 							</div>
                             <div class="card-section" style="cursor: pointer">
                                 <!--<h6 class="boxTitle">New Assignment |<span class="assignment-type"> Quiz</span></h6>-->

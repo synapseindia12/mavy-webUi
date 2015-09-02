@@ -17,20 +17,20 @@
 									<h6 class="boxTitle post-recipient">{{message.CreatedUser.DisplayName}}</h6>
 									<span class="unread-notification-circle"></span>
 								</div>
-								<div class="postContent card-section">
-									<div class="posterAvatar" ng-click="showMessage(message)">
+								<div class="postContent card-section" ng-click="expandMessage(message)">
+									<div class="posterAvatar">
 										<a class="avatarContainer">
 											<img alt="profile image" class="profile" src="{{message.CreatedUser.AvatarUrl}}" />
 										</a>
 									</div>
 									<div class="forumMeta">
-										<div ng-click="showMessage(message)">
+										<div>
 										<h5 class="postTitle">
 											{{message.LastMessage.Subject}}
 										</h5>
 										<p ng-bind="message.LastMessage.Body"></p>
 										</div>
-										<p class="date"> {{message.CreatedDate | date:"MM/dd/yyyy 'at' h:mma"}} <span class="chat"ng-click="expandMessage(message)"><img src="images/chat.png" alt="" />&nbsp;&nbsp;{{message.MessageCount}}</span></p>
+										<p class="date"> {{message.CreatedDate | date:"MM/dd/yyyy 'at' h:mma"}} <span class="chat"><img src="images/chat.png" alt="" />&nbsp;&nbsp;{{message.MessageCount}}</span></p>
 									</div>
 								</div>
 								<div class="card internalCards" ng-repeat="items in internalMessages" ng-show="items.ConversationId == message.LastMessage.ConversationId">
