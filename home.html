@@ -1,3 +1,33 @@
+    <style type="text/css">
+        .margin-bot-0{margin-bottom: 0 !important;}
+        p.name {
+            font-size: 1.3rem;
+            font-weight: 400;
+            text-transform: capitalize;
+            text-align: center;
+        }
+        .posterAvatar {
+            width: 5.125em;
+        }
+        .postMeta, .forumMeta, .authorMeta, .replyMeta {
+            margin-left: 7.938em;
+        }
+        .date {
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+        p.post-data{font-size: 1.2rem;}
+        .post-box{
+             border: 1px solid #ededed;
+             border-radius: 4px;
+             margin-top: 10px;
+             background: #fff;
+        }
+        .post-article{
+            background: none;
+          
+        }
+    </style>
 <div ng-include="'navigation.html'"></div>
 <div id="sb-site"><!--wrapper so content moves when slide out menus are clicked-->
         <div class="grid-block wrap">
@@ -5,17 +35,18 @@
                 <h1 class="hidden">Feed Content</h1>
                 <!--main content begins-->
                 <div class="grid-content">
-                    <article class="card replyToPost">
+                    <article class="card replyToPost post-article">
                         <div class="card-divider color-code-1">
                             <h6 class="boxTitle">Reply to your post</h6>
                         </div>
                         <!--avatar container-->
-                        <div class="postContent card-section" ng-repeat="post in tempArray | limitTo: 3">
+                        <div class="postContent card-section post-box" ng-repeat="post in tempArray | limitTo: 3">
 							<div ng-click="showThread(post.ThreadId)">
 								<div class="posterAvatar">
 									<a class="avatarContainer">
 										<img alt="profile image" class="profile" src="{{post.AvatarUrl}}" />
 									</a>
+                                    <p class="name">{{post.UserName}}</p>
 								</div>
 								<!--metadata for post reply-->
 								<div class="postMeta">
@@ -25,11 +56,11 @@
 									<div class="reply-count">{{post.NumberOfPosts}}</div>
 										<span class="fa fa-sort-desc scroll-dwn sd1"></span>
 									</div>
-									<p class="name">{{post.UserName}}</p>
-									<p class="userName">User Name</p>
+									
+									<!--<p class="userName">User Name</p>-->
 									<h5 class="postTitle">{{post.Subject}}</h5>
-									<p class="set-width">{{post.MostRecentMessage}}</p>
-									<p class="date"><strong>{{post.ThreadReplyDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
+									<p class="set-width post-data">{{post.MostRecentMessage}}</p>
+									<p class="date">{{post.ThreadReplyDate | date:"MM/dd/yyyy 'at' h:mma"}}</p>
 								</div>
 							</div>
 						</div>

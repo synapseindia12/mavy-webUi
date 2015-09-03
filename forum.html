@@ -1,5 +1,22 @@
     <style type="text/css">
         .margin-bot-0{margin-bottom: 0 !important;}
+        p.name {
+            font-size: 1.3rem;
+            font-weight: 400;
+            text-transform: capitalize;
+            text-align: center;
+        }
+        .posterAvatar {
+            width: 5.125em;
+        }
+        .postMeta, .forumMeta, .authorMeta, .replyMeta {
+            margin-left: 7.938em;
+        }
+        .date {
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+        p.post-data{font-size: 1.2rem;}
     </style>
     <h1 class="hidden">Forum Page</h1>
     <!--slideout sidebar left-->
@@ -58,16 +75,18 @@
                                 <a class="avatarContainer" ng-href="#/forum-expanded/{{items.Id}}">
                                     <img alt="profile image" class="profile" src="{{items.Content.CreatedByUser.AvatarUrl}}">
                                 </a>
+                                <p class="name" ng-click="expandForumPage(items.Id)">{{items.Author.DisplayName}}</p>
                             </div>
                             <!--metadata for post reply-->
                             <div class="postMeta">
-                                <p class="name" ng-click="expandForumPage(items.Id)">{{items.Author.DisplayName}}</p>
+                                
                                 <!--<p class="userName">User Name</p>-->
                                 <h5 class="postTitle" ng-click="expandForumPage(items.Id)">{{items.Subject}}</h5>
-                                <p class="set-width" dynamic="{{items.Body}}" ng-click="expandForumPage(items.Id)"></p>
-                                <p class="date" ng-click="expandForumPage(items.Id)"><strong>{{items.Date | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
+                                <p class="set-width post-data" dynamic="{{items.Body}}" ng-click="expandForumPage(items.Id)"></p>
+                                <p class="date" ng-click="expandForumPage(items.Id)">{{items.Date | date:"MM/dd/yyyy 'at' h:mma"}}</p>
                                 <p class="reply-to-posts-count">
-                                    <a ng-click='getChilds(items.Id)'>Replies ( <span class="replies-count">{{items.ReplyCount}}</span> )</a>
+                                    <a href="javascript:void(0)">Replies ( <span class="replies-count">{{items.ReplyCount}}</span> )</a>
+                                    <a ng-click='getChilds(items.Id)' style="float:right;margin-right:50px;">Reply</a>
                                    <!-- <a href="javascript:void(0)" class="expand-collapse-toggle" ng-if="showCommentbox(items.Id)">
                                     Replies ( <span class="replies-count">{{items.ReplyCount}}</span> ) 
                                     </a>-->
@@ -85,16 +104,19 @@
 											<a class="avatarContainer" href="#">
 												<img alt="profile image" class="profile" src="{{reply.Content.CreatedByUser.AvatarUrl}}">
 											</a>
+                                            <p class="name">{{reply.Author.DisplayName}}</p>
 										</div>
 									
 										<!--metadata for example comment one-->
 										<div class="postMeta">
-											<p class="name">{{reply.Author.DisplayName}}</p>
-											<p class="userName">{{reply.Author.Username}}</p>
-											<p class="set-width" dynamic="{{reply.FilteredBody}}"></p>
-											<p class="date"><strong>{{reply.Date | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
-											<p class="reply-to-post">
-												<a ng-click="showChildCommentBox(reply.Id)">Comment ( <span class="replies-count">{{reply.ReplyCount}}</span> )</a>
+											
+										<!--	<p class="userName">{{reply.Author.Username}}</p> -->
+											<p class="set-width post-data" dynamic="{{reply.FilteredBody}}"></p>
+											<p class="date">{{reply.Date | date:"MM/dd/yyyy 'at' h:mma"}}</p>
+                                            <p class="reply-to-post">
+                                                <a href="javascript:void(0)" style="float:left;">Comments ( <span class="replies-count">{{reply.ReplyCount}}</span> )</a>
+                                          
+												<a ng-click="showChildCommentBox(reply.Id)">Comment</a>
 											</p>
 										</div>
                                         <div class="card" ng-repeat="rep in nextLevelChild" ng-if="reply.Id == rep.ParentId">

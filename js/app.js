@@ -199,6 +199,7 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 			for (var i=0; i< result.result.result.Entries.length; i++) {
 				$scope.allAssignments.push(result.result.result.Entries[i]);
 			}
+			$cookieStore.put('assignments', $scope.allAssignments);
 		}
 		$scope.$apply();
 	});
@@ -512,17 +513,29 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	$scope.userId = loginDetails[1].value;
 	$scope.panelistId = loginDetails[2].value;
 	$scope.registrationId = loginDetails[3].value;
+	$scope.featuredAssignment = [];
 	
 	var endpoints = {};
 	endpoints.apiKey = $scope.apiKey;
 	// Creating new handler for APIs
 	endpoints.mobileHandler = new MobileHandler();
 	//Querying APi for response using endpoints
+	// endpoints.mobileHandler.getAssignments($scope.apiKey, $scope.userId, $scope.panelistId, function(result){
+		// if (result.result.success){
+			// for (var i=0; i< result.result.result.length; i++) {
+				// $scope.allAssignments.push(result.result.result[i]);
+			// }
+		// }
+		// $scope.$apply();
+	// });
 	
-	endpoints.mobileHandler.getAssignments($scope.apiKey, $scope.userId, $scope.panelistId, function(result){
+	endpoints.mobileHandler.getDashboard($scope.apiKey, $scope.userId, 1, null, null, function(result){
 		if (result.result.success){
-			for (var i=0; i< result.result.result.length; i++) {
-				$scope.allAssignments.push(result.result.result[i]);
+			for (var i=0; i< result.result.result.Entries.length; i++) {
+				$scope.allAssignments.push(result.result.result.Entries[i]);
+				if(result.result.result.Entries[i].modules[0].options.featured == 1){
+					$scope.featuredAssignment.push(result.result.result.Entries[i]);
+				}
 			}
 		}
 		$scope.$apply();
@@ -536,13 +549,13 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	
 });
 
- myApp.controller('showassignmentCtrl', function($scope, $cookieStore, $rootScope, $location, $localStorage){
+ myApp.controller('showassignmentCtrl', function($scope, $cookieStore, $rootScope, $location, $localStorage, $sce){
 	if(!$localStorage.loginDetails){
 		delete $localStorage.loggedIn;
 		$location.path('/');
 	}
 	$scope.displayName = $cookieStore.get('userName');
-	debugger;
+	$scope.showIframe = false;
 	$scope.feedActive = false;
 	$scope.assignmentActive = true;
 	$scope.forumActive = false;
@@ -566,43 +579,59 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	
 	$scope.assignment = $cookieStore.get('assignment');
 	$scope.projectId = $scope.assignment.projectId;
-	debugger;
-	if($scope.assignment.modules)
+	if($scope.assignment.modules){
 		$scope.moduleId = $scope.assignment.modules[0].moduleId;
-	else
+		$scope.moduleType = $scope.assignment.modules[0].moduleType;
+	}
+	else{
 		$scope.moduleId = $scope.assignment.moduleId;
-	endpoints.mobileHandler.getPanelistModuleTasks($scope.apiKey, $scope.userId, $scope.projectId, $scope.moduleId, $scope.panelistId, 20, 0, function(result){
-		if(result.result.result.AvailableTasks.length > 0){
-			for(var i=0;i<result.result.result.AvailableTasks.length;i++){
-				$scope.tasks.push(result.result.result.AvailableTasks[i]);
-			}
-		}
-		
-		if($scope.tasks.length > 0){
-			alert($scope.tasks[$scope.i].ForumThreadId);
-			endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,$scope.tasks[$scope.i].ForumThreadId,null,null,function(response){
-				alert(response);
-				debugger;
-				$scope.displayTasks = [];
-				if(response.result.result[0].Author.DisplayName == $scope.displayName){
-					$scope.displayTasks.push($scope.tasks[$scope.i]);
+		$scope.moduleType = $scope.assignment.moduleType;
+	}
+	
+	if($scope.moduleType == 1){
+		endpoints.mobileHandler.getPanelistModuleTasks($scope.apiKey, $scope.userId, $scope.projectId, $scope.moduleId, $scope.panelistId, 20, 0, function(result){
+			if(result.result.result.AvailableTasks.length > 0){
+				for(var i=0;i<result.result.result.AvailableTasks.length;i++){
+					$scope.tasks.push(result.result.result.AvailableTasks[i]);
 				}
-				else{
-					if($scope.tasks[$scope.i].RevealBehaviorId != 3){
+			}
+		
+			if($scope.tasks.length > 0){
+				endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,$scope.tasks[$scope.i].ForumThreadId,null,null,function(response){
+					$scope.userAvatarUrl = response.result.result[0].Content.CreatedByUser.AvatarUrl;
+					$scope.displayName = response.result.result[0].Author.DisplayName;
+					$scope.displayTasks = [];
+					if(response.result.result[0].Author.DisplayName == $scope.displayName){
 						$scope.displayTasks.push($scope.tasks[$scope.i]);
 					}
-				}
-				$scope.$apply();
-			});
+					else{
+						if($scope.tasks[$scope.i].RevealBehaviorId == 1){
+							$scope.displayTasks.push($scope.tasks[$scope.i]);
+						}
+						else if($scope.tasks[$scope.i].RevealBehaviorId == 2){
+							if(response.result.result[0].Thread.HasParticipated == true)
+								$scope.displayTasks.push($scope.tasks[$scope.i]);
+						}
+					}
+					$scope.$apply();
+				});
+			}
+		});
+	}
+	else {
+		$scope.showIframe = true;
+		if($scope.assignment.modules){
+			$scope.iframeSource = $scope.assignment.modules[0].options.baseSurveyLink + $scope.panelistId;
 		}
-	});
+		else{
+			$scope.iframeSource = $scope.assignment.options.baseSurveyLink + $scope.panelistId;
+		}
+	}
 
 	$scope.markCompleted = function(task) {
-		debugger;
 		var reply = $('#reply').val();		
 		endpoints.mobileHandler.saveTaskReply($scope.apiKey,$scope.userId,$scope.projectId,$scope.moduleId,task.TaskId,$scope.panelistId,task.ForumId,reply,null,null, function(response){
 			 endpoints.mobileHandler.getNextTask($scope.apiKey,$scope.userId,$scope.projectId,$scope.moduleId,task.TaskId,$scope.panelistId, function(response){
-				debugger;
 				if(response.result.success){
 					if(response.result.result){
 						if($scope.tasks.length >0){
@@ -622,7 +651,6 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	$scope.getNextTask = function(i) {
 		if($scope.tasks[i].TaskStatus == 'Completed'){
 			var taskId = $scope.tasks[i].TaskId;
-			debugger;
 			endpoints.mobileHandler.getNextTask($scope.apiKey,$scope.userId,$scope.projectId,$scope.moduleId,taskId,$scope.panelistId, function(response){
 				var isExists;
 				if(response.result.success){
@@ -642,17 +670,18 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 							
 							if($scope.i < $scope.tasks.length){
 								$scope.i = $scope.i + 1;
-								alert($scope.tasks[$scope.i].ForumThreadId);
 								endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,$scope.tasks[$scope.i].ForumThreadId,null,null,function(response){
-									alert(response);
-									debugger;
 									$scope.displayTasks = [];
 									if(response.result.result[0].Author.DisplayName == $scope.displayName){
 										$scope.displayTasks.push($scope.tasks[$scope.i]);
 									}
 									else{
-										if($scope.tasks[$scope.i].RevealBehaviorId != 3){
+										if($scope.tasks[$scope.i].RevealBehaviorId == 1){
 											$scope.displayTasks.push($scope.tasks[$scope.i]);
+										}
+										else if($scope.tasks[$scope.i].RevealBehaviorId == 2){
+											if(response.result.result[0].Thread.HasParticipated == true)
+												$scope.displayTasks.push($scope.tasks[$scope.i]);
 										}
 									}
 									$scope.$apply();
@@ -677,9 +706,26 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	
 	$scope.getPreviousTasks = function(i) {
 		var taskId = $scope.tasks[i].TaskId;
-		debugger;
 		if($scope.i > 0)
 			$scope.i = $scope.i - 1;
+			endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,$scope.tasks[$scope.i].ForumThreadId,null,null,function(response){
+				$scope.userAvatarUrl = response.result.result[0].Content.CreatedByUser.AvatarUrl;
+				$scope.displayName = response.result.result[0].Author.DisplayName;
+				$scope.displayTasks = [];
+				if(response.result.result[0].Author.DisplayName == $scope.displayName){
+					$scope.displayTasks.push($scope.tasks[$scope.i]);
+				}
+				else{
+					if($scope.tasks[$scope.i].RevealBehaviorId == 1){
+						$scope.displayTasks.push($scope.tasks[$scope.i]);
+					}
+					else if($scope.tasks[$scope.i].RevealBehaviorId == 2){
+						if(response.result.result[0].Thread.HasParticipated == true)
+							$scope.displayTasks.push($scope.tasks[$scope.i]);
+					}
+				}
+				$scope.$apply();
+			});
 			if($scope.i == 0){
 				$scope.hideRightArrow = false;
 				$scope.hideLeftArrow = false;
@@ -690,7 +736,6 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	}
 	
 	$scope.gotoReplyBox = function(){
-		debugger;
 		$('.comment-form').show();
 		$(this).parents('.grid-content').find('.comment-form').show();
 	};
@@ -1300,14 +1345,27 @@ myApp.controller('profileCtrl', function($scope, $localStorage, $location){
 			$scope.fname = callback.result.result.fname1;
 			$scope.lname = callback.result.result.lname1;
 			$scope.email = callback.result.result.email;
-			$scope.selectedMonth = callback.result.result.bdate.slice('/')[0];
-			$scope.selectedDate = callback.result.result.bdate.slice('/')[2];
-			$scope.selectedYear = callback.result.result.bdate.slice('/')[4]+callback.result.result.bdate.slice('/')[5]+callback.result.result.bdate.slice('/')[6]+callback.result.result.bdate.slice('/')[7];
+			if(callback.result.result.bdate.slice('/')[1] == '/')
+				$scope.selectedMonth = callback.result.result.bdate.slice('/')[0];
+			else
+				$scope.selectedMonth = callback.result.result.bdate.slice('/')[0] + callback.result.result.bdate.slice('/')[1];
+			if(callback.result.result.bdate.slice('/')[1] != '/')
+				$scope.selectedDate = callback.result.result.bdate.slice('/')[3] + callback.result.result.bdate.slice('/')[4];
+			else
+				if(callback.result.result.bdate.slice('/')[3] == '/')
+					$scope.selectedDate = callback.result.result.bdate.slice('/')[2];
+				else
+					$scope.selectedDate = callback.result.result.bdate.slice('/')[2] + callback.result.result.bdate.slice('/')[3];
+			if(callback.result.result.bdate.slice('/')[3] == '/')
+				$scope.selectedYear = callback.result.result.bdate.slice('/')[4]+callback.result.result.bdate.slice('/')[5]+callback.result.result.bdate.slice('/')[6]+callback.result.result.bdate.slice('/')[7];				
+			if(callback.result.result.bdate.slice('/')[4] == '/')
+				$scope.selectedYear = callback.result.result.bdate.slice('/')[5]+callback.result.result.bdate.slice('/')[6]+callback.result.result.bdate.slice('/')[7]+callback.result.result.bdate.slice('/')[8];
+			if(callback.result.result.bdate.slice('/')[5] == '/')
+				$scope.selectedYear = callback.result.result.bdate.slice('/')[6]+callback.result.result.bdate.slice('/')[7]+callback.result.result.bdate.slice('/')[8]+callback.result.result.bdate.slice('/')[9];
 			$scope.gender = callback.result.result.gend;
 			$scope.zipcode = callback.result.result.zipc;
 			$scope.mobileNumber = callback.result.result.cell_phone;
-			$scope.$apply();
-			
+			$scope.$apply();			
 		}
 	});
 	
@@ -1434,163 +1492,163 @@ myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
 	
 	$scope.updateNotification = function() {
 		debugger;
-			if($scope.emailCheck){
-				if($scope.preferences.indexOf("3a") == -1)
-					$scope.preferences.push("3a", "3e", "3h");
-			}
-			else{
-				var findIndexes = [];
-				if($scope.preferences.indexOf("3a") !== -1){
-					findIndexes.push($scope.preferences.indexOf("3a"));
-					findIndexes.push($scope.preferences.indexOf("3e"));
-					findIndexes.push($scope.preferences.indexOf("3h"));
-					if(findIndexes.length > 0){
-						for(var i=0; i< findIndexes.length; i++){
-							$scope.preferences.splice(findIndexes[i], 1);
-						}
+		if($scope.emailCheck){
+			if($scope.preferences.indexOf("3a") == -1)
+				$scope.preferences.push("3a", "3e", "3h");
+		}
+		else{
+			var findIndexes = [];
+			if($scope.preferences.indexOf("3a") !== -1){
+				findIndexes.push($scope.preferences.indexOf("3a"));
+				findIndexes.push($scope.preferences.indexOf("3e"));
+				findIndexes.push($scope.preferences.indexOf("3h"));
+				if(findIndexes.length > 0){
+					for(var i=0; i< findIndexes.length; i++){
+						$scope.preferences.splice(findIndexes[i], 1);
 					}
 				}
 			}
-			if($scope.smsCheck){
-				if($scope.preferences.indexOf("2a") == -1)
-					$scope.preferences.push("2a", "2e", "2h");
-			}
-			else{
-				var findIndexes = [];
-				if($scope.preferences.indexOf("2a") !== -1){
-					findIndexes.push($scope.preferences.indexOf("2a"));
-					findIndexes.push($scope.preferences.indexOf("2e"));
-					findIndexes.push($scope.preferences.indexOf("2h"));
-					if(findIndexes.length > 0){
-						for(var i=0; i< findIndexes.length; i++){
-							$scope.preferences.splice(findIndexes[i], 1);
-						}
+		}
+		if($scope.smsCheck){
+			if($scope.preferences.indexOf("2a") == -1)
+				$scope.preferences.push("2a", "2e", "2h");
+		}
+		else{
+			var findIndexes = [];
+			if($scope.preferences.indexOf("2a") !== -1){
+				findIndexes.push($scope.preferences.indexOf("2a"));
+				findIndexes.push($scope.preferences.indexOf("2e"));
+				findIndexes.push($scope.preferences.indexOf("2h"));
+				if(findIndexes.length > 0){
+					for(var i=0; i< findIndexes.length; i++){
+						$scope.preferences.splice(findIndexes[i], 1);
 					}
 				}
 			}
-			if($scope.pushCheck){
-				if($scope.preferences.indexOf("1a") == -1)
-					$scope.preferences.push("1a", "1e", "1h");
-			}
-			else {
-				var findIndexes = [];
-				if($scope.preferences.indexOf("1a") !== -1){
-					findIndexes.push($scope.preferences.indexOf("1a"));
-					findIndexes.push($scope.preferences.indexOf("1e"));
-					findIndexes.push($scope.preferences.indexOf("1h"));
-					if(findIndexes.length > 0){
-						for(var i=0; i< findIndexes.length; i++){
-							$scope.preferences.splice(findIndexes[i], 1);
-						}
+		}
+		if($scope.pushCheck){
+			if($scope.preferences.indexOf("1a") == -1)
+				$scope.preferences.push("1a", "1e", "1h");
+		}
+		else {
+			var findIndexes = [];
+			if($scope.preferences.indexOf("1a") !== -1){
+				findIndexes.push($scope.preferences.indexOf("1a"));
+				findIndexes.push($scope.preferences.indexOf("1e"));
+				findIndexes.push($scope.preferences.indexOf("1h"));
+				if(findIndexes.length > 0){
+					for(var i=0; i< findIndexes.length; i++){
+						$scope.preferences.splice(findIndexes[i], 1);
 					}
 				}
 			}
-			if($scope.forumEmail){
-				if($scope.preferences.indexOf("3b") == -1)
-					$scope.preferences.push("3b", "3c");
-			}
-			else {
-				var findIndexes = [];
-				if($scope.preferences.indexOf("3b") !== -1){
-					findIndexes.push($scope.preferences.indexOf("3b"));
-					findIndexes.push($scope.preferences.indexOf("3c"));
-					if(findIndexes.length > 0){
-						for(var i=0; i< findIndexes.length; i++){
-							$scope.preferences.splice(findIndexes[i], 1);
-						}
+		}
+		if($scope.forumEmail){
+			if($scope.preferences.indexOf("3b") == -1)
+				$scope.preferences.push("3b", "3c");
+		}
+		else {
+			var findIndexes = [];
+			if($scope.preferences.indexOf("3b") !== -1){
+				findIndexes.push($scope.preferences.indexOf("3b"));
+				findIndexes.push($scope.preferences.indexOf("3c"));
+				if(findIndexes.length > 0){
+					for(var i=0; i< findIndexes.length; i++){
+						$scope.preferences.splice(findIndexes[i], 1);
 					}
 				}
 			}
-			if($scope.forumSMS){
-				if($scope.preferences.indexOf("2b") == -1)
-					$scope.preferences.push("2b", "2c");
-			}
-			else{
-				var findIndexes = [];
-				if($scope.preferences.indexOf("2b") !== -1){
-					findIndexes.push($scope.preferences.indexOf("2b"));
-					findIndexes.push($scope.preferences.indexOf("2c"));
-					if(findIndexes.length > 0){
-						for(var i=0; i< findIndexes.length; i++){
-							$scope.preferences.splice(findIndexes[i], 1);
-						}
+		}
+		if($scope.forumSMS){
+			if($scope.preferences.indexOf("2b") == -1)
+				$scope.preferences.push("2b", "2c");
+		}
+		else{
+			var findIndexes = [];
+			if($scope.preferences.indexOf("2b") !== -1){
+				findIndexes.push($scope.preferences.indexOf("2b"));
+				findIndexes.push($scope.preferences.indexOf("2c"));
+				if(findIndexes.length > 0){
+					for(var i=0; i< findIndexes.length; i++){
+						$scope.preferences.splice(findIndexes[i], 1);
 					}
 				}
 			}
-			if($scope.forumPush){
-				if($scope.preferences.indexOf("1b") == -1)
-					$scope.preferences.push("1b", "1c");
-			}
-			else{
-				var findIndexes = [];
-				if($scope.preferences.indexOf("1b") !== -1){
-					findIndexes.push($scope.preferences.indexOf("1b"));
-					findIndexes.push($scope.preferences.indexOf("1c"));
-					if(findIndexes.length > 0){
-						for(var i=0; i< findIndexes.length; i++){
-							$scope.preferences.splice(findIndexes[i], 1);
-						}
+		}
+		if($scope.forumPush){
+			if($scope.preferences.indexOf("1b") == -1)
+				$scope.preferences.push("1b", "1c");
+		}
+		else{
+			var findIndexes = [];
+			if($scope.preferences.indexOf("1b") !== -1){
+				findIndexes.push($scope.preferences.indexOf("1b"));
+				findIndexes.push($scope.preferences.indexOf("1c"));
+				if(findIndexes.length > 0){
+					for(var i=0; i< findIndexes.length; i++){
+						$scope.preferences.splice(findIndexes[i], 1);
 					}
 				}
 			}
-			if($scope.resultsEmail){
-				if($scope.preferences.indexOf("3d") == -1)
-					$scope.preferences.push("3d");
-			}
-			else{
-				var index = $scope.preferences.indexOf("3d");
-				if(index !== -1)
-					$scope.preferences.splice(index, 1);
-			}
-			if($scope.resultsSMS){
-				if($scope.preferences.indexOf("2d") == -1)
-					$scope.preferences.push("2d");
-			}
-			else{
-				var index = $scope.preferences.indexOf("2d");
-				if(index !== -1)
-					$scope.preferences.splice(index, 1);
-			}
-			if($scope.resultsPush){
-				if($scope.preferences.indexOf("1d") == -1)
-					$scope.preferences.push("1d");
-			}
-			else{
-				var index = $scope.preferences.indexOf("1d");
-				if(index !== -1)
-					$scope.preferences.splice(index, 1);
-			}
-			if($scope.messagesEmail){
-				if($scope.preferences.indexOf("3f") == -1)
-					$scope.preferences.push("3f");
-			}
-			else{
-				var index = $scope.preferences.indexOf("3f");
-				if(index !== -1)
-					$scope.preferences.splice(index, 1);
-			}
-			if($scope.messagesSMS){
-				if($scope.preferences.indexOf("2f") == -1)
-					$scope.preferences.push("2f");
-			}
-			else{
-				var index = $scope.preferences.indexOf("2f");
-				if(index !== -1)
-					$scope.preferences.splice(index, 1);
-			}
-			if($scope.messagesPush){
-				if($scope.preferences.indexOf("1f") == -1)
-					$scope.preferences.push("1f");
-			}
-			else{
-				var index = $scope.preferences.indexOf("1f");
-				if(index !== -1)
-					$scope.preferences.splice(index, 1);
-			}
-			debugger;
-			endpoints.mobileHandler.updateNotifications($scope.apiKey, $scope.userId, $scope.panelistId, $scope.preferences, function(result){
-				
-			});
+		}
+		if($scope.resultsEmail){
+			if($scope.preferences.indexOf("3d") == -1)
+				$scope.preferences.push("3d");
+		}
+		else{
+			var index = $scope.preferences.indexOf("3d");
+			if(index !== -1)
+				$scope.preferences.splice(index, 1);
+		}
+		if($scope.resultsSMS){
+			if($scope.preferences.indexOf("2d") == -1)
+				$scope.preferences.push("2d");
+		}
+		else{
+			var index = $scope.preferences.indexOf("2d");
+			if(index !== -1)
+				$scope.preferences.splice(index, 1);
+		}
+		if($scope.resultsPush){
+			if($scope.preferences.indexOf("1d") == -1)
+				$scope.preferences.push("1d");
+		}
+		else{
+			var index = $scope.preferences.indexOf("1d");
+			if(index !== -1)
+				$scope.preferences.splice(index, 1);
+		}
+		if($scope.messagesEmail){
+			if($scope.preferences.indexOf("3f") == -1)
+				$scope.preferences.push("3f");
+		}
+		else{
+			var index = $scope.preferences.indexOf("3f");
+			if(index !== -1)
+				$scope.preferences.splice(index, 1);
+		}
+		if($scope.messagesSMS){
+			if($scope.preferences.indexOf("2f") == -1)
+				$scope.preferences.push("2f");
+		}
+		else{
+			var index = $scope.preferences.indexOf("2f");
+			if(index !== -1)
+				$scope.preferences.splice(index, 1);
+		}
+		if($scope.messagesPush){
+			if($scope.preferences.indexOf("1f") == -1)
+				$scope.preferences.push("1f");
+		}
+		else{
+			var index = $scope.preferences.indexOf("1f");
+			if(index !== -1)
+				$scope.preferences.splice(index, 1);
+		}
+		debugger;
+		endpoints.mobileHandler.updateNotifications($scope.apiKey, $scope.userId, $scope.panelistId, $scope.preferences, function(result){
+			
+		});
 	}
 });
 
@@ -1674,6 +1732,7 @@ myApp.controller('resetpasswordCtrl', function($scope, $localStorage, $location)
             priority: 0,
             controller: function() {},
             link: function (scope, element, attrs, ctrl) {
+				debugger;
                 var slider;
                 ctrl.update = function() {
                     slider && slider.destroySlider();
@@ -1688,6 +1747,7 @@ myApp.controller('resetpasswordCtrl', function($scope, $localStorage, $location)
             require: '^bxSlider',
             link: function(scope, elm, attr, bxSliderCtrl) {
                 if (scope.$last) {
+					debugger;
                     bxSliderCtrl.update();
                 }
             }
@@ -1705,7 +1765,13 @@ myApp.controller('resetpasswordCtrl', function($scope, $localStorage, $location)
             }
         };
     }]);
-	
+
+myApp.filter('trustAsResourceUrl', ['$sce', function($sce) {
+    return function(val) {
+        return $sce.trustAsResourceUrl(val);
+    };
+}]);
+
 (function (angular) {
     'use strict';
 

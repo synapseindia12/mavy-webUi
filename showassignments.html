@@ -1,4 +1,9 @@
-    <h1 class="hidden">Assignment Page</h1>
+    <style>
+		.grid-block {
+			overflow: visible;
+		}
+	</style>
+	<h1 class="hidden">Assignment Page</h1>
     <!--slideout sidebar left-->
 	<div ng-include="'navigation.html'"></div>
     <!--end header logo & menu-->
@@ -11,7 +16,7 @@
                     <!--featured content-->
                     <article class="card featuredAssignment">
                         <div class="card-section">
-							<div class="arrow_slot" >
+							<div class="arrow_slot" ng-if="!showIframe">
 								<img class="right-arrow" src="images/arrow-right-01.svg" ng-click="getNextTask(i)" ng-hide="hideLeftArrow" />
 								<img class="left-arrow" src="images/arrow-left-01.svg" ng-click="getPreviousTasks(i)" ng-show="hideRightArrow" />
 							</div>
@@ -22,7 +27,7 @@
                         </div>                     
                     </article>
                 </div>
-                <div class="grid-content">
+                <div class="grid-content" ng-if="!showIframe">
                     <article class="card replyToPost">                        
                         <!--avatar container-->
                         <div class="postContent card-section">
@@ -32,6 +37,12 @@
 								<!--example comment one-->
 								<div class="post-comment-reply card-section">
 									<!--metadata for example comment one-->
+									<div class="posterAvatar">
+										<a class="avatarContainer">
+											<img alt="profile image" class="profile" src="{{userAvatarUrl}}" />
+										</a>
+										<p class="name" >{{displayName}}</p>
+									</div>
 									<div class="postMeta">
 										<p class="name" bind-html-compile="displayTasks[0].Subject"></p>
 										<p class="userName" bind-html-compile="displayTasks[0].Title"></p>
@@ -62,6 +73,9 @@
                         </div>
                     </article>
                 </div>
+				<div class="grid-content" ng-if="showIframe">
+					<iframe ng-src="{{iframeSource | trustAsResourceUrl}}" width="100%" height="100%"></iframe>
+				</div>
                 <!--article card content under slider-->
                 <div class="grid-block small-up-1 medium-up-2 large-up-2">                    
                     <div class="grid-content" ng-repeat="assignment in allAssignments">
