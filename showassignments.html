@@ -49,8 +49,55 @@
 										<p class="set-width" bind-html-compile="displayTasks[0].QuestionText"></p>
 										<p class="date"><strong>{{displayTasks[0].ActivationDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
 										<p class="reply-to-post">
+											<a href="javascript:void(0);">Replies ( <span class="replies-count">{{replyCounts}}</span> )</a>
 											<a href="javascript:void(0);" ng-click="gotoReplyBox()">Reply</a>
 										</p>
+									</div>
+									<div ng-repeat="items in allReplies" class="postContent card-section card comment-form" style="display:none">
+										<div class="posterAvatar">
+											<a class="avatarContainer">
+												<img alt="profile image" class="profile" src="{{items.Content.CreatedByUser.AvatarUrl}}" />
+											</a>
+											<p class="name" >{{items.Author.Username}}</p>
+										</div>
+										<div class="postMeta">
+											<!--<p class="name" bind-html-compile="items[0].Subject"></p>
+											<p class="userName" bind-html-compile="displayTasks[0].Title"></p>-->
+											<p class="set-width" bind-html-compile="items.FilteredBody"></p>
+											<p class="date"><strong>{{items.ActivationDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
+											<p class="reply-to-post">
+												<a href="javascript:void(0);" ng-click="gottoChildReplyBox(items.Id, displayTasks[0].TaskId)">Comment</a>
+											</p>
+										</div>
+										<div class="childComments newChildReplyBox childAssignment{{items.Id}}" style="display:none;">
+											<form id="replyForm" class="card-section" method="post" ng-submit="submitChildReply(items.Id, displayTasks[0].TaskId)">
+												<div class="grid-block" id="reply-box">
+													<div class="small-12 medium-12 grid-content">
+														<label class="forum-label">
+															Mark Complete
+															<textarea cols="40" rows="8" name="comment" id="replyNewChild" ng-model="replyNewChild"></textarea>
+														</label>
+														<div id="comment-button">                                                
+															<input type="submit" value="Submit Comment" class="button fa" id="add-comment" />
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+										<div class="childComments assinement-card childAssignment{{items.Id}}" ng-repeat="replies in childReplies" ng-if="replies.ParentId == items.Id" style="display:none;">
+											<div class="posterAvatar">
+												<a class="avatarContainer">
+													<img alt="profile image" class="profile" src="{{replies.Content.CreatedByUser.AvatarUrl}}" />
+												</a>
+												<p class="name" >{{replies.Author.Username}}</p>
+											</div>
+											<div class="postMeta">
+												<!--<p class="name" bind-html-compile="items[0].Subject"></p>
+												<p class="userName" bind-html-compile="displayTasks[0].Title"></p>-->
+												<p class="set-width" bind-html-compile="replies.FilteredBody"></p>
+												<p class="date"><strong>{{replies.ActivationDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
