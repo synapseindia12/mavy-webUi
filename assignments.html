@@ -12,9 +12,9 @@
                     <article class="card featuredAssignment">
                         <div class="card-section">
                             <!--slider content-->
+							<h3 class="boxTitle">Featured Assignments</h3>
                             <ul class="bxslider" bx-slider>
                                 <li ng-repeat="assignment in featuredAssignment" bx-slider-item ng-click="showAssignmentTasks(assignment)" style="cursor: pointer">
-                                    <h3 class="boxTitle">Featured Assignments</h3>
                                     <!--<h4 class="name">Sunblock Brands</h4>-->
                                     <p class="assgnTitle"><strong>{{assignment.modules[0].moduleTitle}}</strong></p>
                                     <p dynamic="{{assignment.modules[0].options.instructions}}"></p>

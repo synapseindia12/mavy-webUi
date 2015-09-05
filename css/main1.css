@@ -514,9 +514,8 @@ span#result-poll-5 {
 /*-poll results-*/
 .percents span {
     color: #191919;
-    /*width: 2.5em;*/ width:50px;
-    /*height: 2.5em;*/ height:50px;
-	line-height:38px;
+    width: 2.5em;
+    height: 2.5em;
     display: inline-block;
     border-radius: 100%;
     border: .125em solid #9193c1;
@@ -853,7 +852,7 @@ img#mavy-logo {
 /*--form page--*/
 .logo {
     text-align: center;
-    /*padding-top: 26px;*/
+    padding-top: 26px;
 }
 
 .logo a {
@@ -941,16 +940,3 @@ button:hover {
 }
 .chat{display: block;margin-top: 5px;}
 .chat img{width: auto !important;}
-
-/*========New css=============*/
-.modal-footer{background:none!important;}
-.btn-primary{background:#9193c1!important;}
-.btn-warning{background:#9193c1!important;}
-.btn-warning:hover, .btn-primary:hover{background:#d5539e!important;}
-.pou-box{margin:0px!important; max-width:100%!important;}
-
-
-
-
-
-

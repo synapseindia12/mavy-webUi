@@ -4,7 +4,7 @@
 		<div id="pollContent">
 			<h5 class="pollQuestion" id="currentUpdaQuestion">{{item.label}}</h5>
 			<p ng-repeat="option in item.options.categories">
-				<input type="radio" name="poll" value="{{option.values}}" ng-model="option.pollvote" />
+				<input type="radio" name="poll" value="{{$index + 1}}" ng-model="option.pollvote" />
 				<label for="poll-radio-{{$index}}" id="label-{{$index}}" class="inline-label">
 					{{option.description}}
 				</label>
