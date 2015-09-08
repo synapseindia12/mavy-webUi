@@ -1,0 +1,8 @@
+Rishabh, here is the relevant code
+[20:36:00] Gurkerl: var media_hash = CryptoJS.HmacSHA1(media_apiKey + media_bucketName + media_projectId + media_sourceAppType + dataString.substr(0,64) + media_type, media_sKey);
+
+  var media_words = CryptoJS.enc.Base64.parse(media_hash.toString(CryptoJS.enc.Base64));
+
+  var media_base64 = CryptoJS.enc.Base64.stringify(media_words);
+
+  _surveymaker.jRockMedia.convertMedia(media_apiKey, media_base64, media_bucketName, media_projectId, media_sourceAppType, media_type, dataString, 0, function(result){
