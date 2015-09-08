@@ -66,7 +66,7 @@
 											<p class="set-width" bind-html-compile="items.FilteredBody"></p>
 											<p class="date"><strong>{{items.ActivationDate | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
 											<p class="reply-to-post">
-												<a href="javascript:void(0);" ng-click="gottoChildReplyBox(items.Id, displayTasks[0].TaskId)">Comment</a>
+												<a href="javascript:void(0);" ng-click="gottoChildReplyBox(items.Id, displayTasks[0].TaskId)">Comment ( <span class="replies-count">{{items.ReplyCount}}</span> )</a>
 											</p>
 										</div>
 										<div class="childComments newChildReplyBox childAssignment{{items.Id}}" style="display:none;">

@@ -137,7 +137,7 @@ myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieSt
 	};	
 });
 
-myApp.controller('signupModalctrl', function($scope, $modalInstance, $facebook, accessToken){
+myApp.controller('signupModalctrl', function($scope, $modalInstance, $facebook, $location, $localStorage, accessToken){
 	$scope.ok = function () {
 		var endpoints = {};
 		$scope.newArray = [];
@@ -231,7 +231,7 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 	
 });
 
-myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStorage){
+myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStorage, $cookieStore){
 	
 	if(!$localStorage.loginDetails){
 		delete $localStorage.loggedIn;
@@ -250,6 +250,7 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 	$scope.allPolls = []; 
 	$rootScope.polesForResults= [];
 	$rootScope.dataforResults = [];
+	$rootScope.totalPollsResults = [];
 	
 	var endpoints = {};
 	endpoints.apiKey = $scope.apiKey;
@@ -291,22 +292,6 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 	
 	$scope.checkPolls = function(result) {
 		$rootScope.incrementedVal = $scope.incrementedVal;
-		debugger;
-		endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, result.result.result.Entries[$scope.incrementedVal].taskId, function(response){
-			for(var i=0; i<result.result.result.Entries.length; i++){
-				if(result.result.result.Entries[i].itemId == response.result.result[0].itemId){
-					for(var j=0; j<response.result.result[0].values.length; j++){
-						response.result.result[0].values[j].count = (response.result.result[0].values[j].count * 100)/response.result.result[0].responseCount;
-						if(result.result.result.Entries[i].options.categories[j])
-						result.result.result.Entries[i].options.categories[j].values = Math.round(response.result.result[0].values[j].count);
-					}
-					if(result.result.result.Entries[i].itemId != $scope.allPolls[0].itemId)
-						$rootScope.dataforResults.push(result.result.result.Entries[i]);
-				}
-			}
-			$scope.displayPollresults = $rootScope.dataforResults;
-			$scope.$apply();
-		});
 		endpoints.mobileHandler.getPanelistPollResponses($scope.apiKey, $scope.userId,$scope.panelistId,result.result.result.Entries[$scope.incrementedVal].taskId, function(response){
 			var ItemId = result.result.result.Entries[$scope.incrementedVal].itemId;
 			if(response.result.success){
@@ -314,6 +299,7 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 					for(var j=0; j<response.result.result[0].responses.length; j++){
 						if(result.result.result.Entries[$scope.incrementedVal].itemId != response.result.result[0].responses[j].itemId){
 							$scope.allPolls.push(result.result.result.Entries[$scope.incrementedVal]);
+							debugger;
 						}
 						else{
 							$scope.allPolls = [];
@@ -322,10 +308,48 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 				}
 				else{
 					$scope.allPolls.push(result.result.result.Entries[$scope.incrementedVal]);
+					debugger;
 				}
 			}
 			
-			$scope.$apply();
+			endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, result.result.result.Entries[$scope.incrementedVal].taskId, function(response){
+				for(var i=0; i<result.result.result.Entries.length; i++){
+					if(result.result.result.Entries[i].itemId == response.result.result[0].itemId){
+						for(var j=0; j<response.result.result[0].values.length; j++){
+							response.result.result[0].values[j].count = (response.result.result[0].values[j].count * 100)/response.result.result[0].responseCount;
+							if(result.result.result.Entries[i].options.categories[j])
+							result.result.result.Entries[i].options.categories[j].values = Math.round(response.result.result[0].values[j].count);
+						}
+						debugger;
+						$rootScope.totalPollsResults.push(result.result.result.Entries[i]);
+						$cookieStore.put('totalPollCounts', $rootScope.totalPollsResults);
+						if($scope.allPolls.length > 0){
+							if(result.result.result.Entries[i].itemId != $scope.allPolls[0].itemId){
+								$rootScope.dataforResults.push(result.result.result.Entries[i]);
+							}
+							else{
+								if(result.result.result.Entries[i-1]){
+									if($rootScope.dataforResults.length == 0)
+										$rootScope.dataforResults.push(result.result.result.Entries[i-1]);
+								}
+								else{
+									if(result.result.result.Entries[i+1]){
+										if($rootScope.dataforResults.length == 0)
+											$rootScope.dataforResults.push(result.result.result.Entries[i+1]);
+									}
+								}
+							}
+						}
+						else{
+							if($rootScope.dataforResults.length == 0)
+								$rootScope.dataforResults.push(result.result.result.Entries[0]);
+						}
+					}
+				}
+				debugger;
+				$scope.displayPollresults = $rootScope.dataforResults;
+				$scope.$apply();
+			});
 			$scope.incrementedVal = $scope.incrementedVal + 1;
 			$scope.recursiveCall(result);
 		});
@@ -365,7 +389,7 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 	}	
 });
 
-myApp.controller('pollResultCtrl', function($scope, $location, $rootScope, $localStorage){
+myApp.controller('pollResultCtrl', function($scope, $location, $rootScope, $localStorage, $cookieStore){
 	if(!$localStorage.loginDetails){
 		delete $localStorage.loggedIn;
 		$location.path('/');
@@ -374,6 +398,8 @@ myApp.controller('pollResultCtrl', function($scope, $location, $rootScope, $loca
 	$scope.resultPolls = [];
 	$scope.panelistResults = $rootScope.allVotes;
 	$scope.displayPollresults = $rootScope.dataforResults;
+	$scope.displayPollTotalResults = $cookieStore.get('TotalPollCounts');
+	//$scope.displayPollTotalResults = $rootScope.totalPollsResults;
 	
 });
 
@@ -850,7 +876,7 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 		$(this).parents('.grid-content').find('.comment-form').show();
 	};
 	
-	$scope.gottoChildReplyBox = function(Id, TaskId) {
+	$scope.gottoChildReplyBox = function(Id, TaskId){
 		$scope.childReplyId = Id;
 		$scope.TaskId = TaskId;
 		$('.childComments').hide();
@@ -858,7 +884,6 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	}
 	
 	$scope.showChildComments = function(parentId){
-		debugger;
 		$scope.childComments = true;
 		$scope.ForumId = parentId;
 	}
