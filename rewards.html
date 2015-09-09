@@ -1,146 +1,10 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Check your Mavy rewards"/>
-    <title>Mavy | Rewards</title>
-    <link href="css/app.css" rel="stylesheet" type="text/css">
-    <link href="css/main.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="css/slidebars.css">
-    <link rel="stylesheet" href="css/tooltipster.css">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet' type='text/css'>
-</head>
-
-<body>
-    <h1 class="hidden">Reward Page</h1>
+    <link href="css/bootstrap-combined.min.css" rel="stylesheet" />
+	<h1 class="hidden">Reward Page</h1>
     <!--slideout sidebar left-->
-    <div class="sb-slidebar sb-style-overlay sb-left sb-width-custom gradient-left container" data-sb-width="35%">
-        <div class="sb-close fa fa-times fa-2x left-close"></div>
-        <ul class="sb-mobile-menu">
-            <li>
-                <a id="feedLink" href="index.html" class="tooltip glow" title="Home">
-                    <img class="link-icon" src="images/feed.svg" alt="feed page link">
-                </a>
-            </li>
-            <li>
-                <a id="assignmentsLink" href="assignments.html" class="tooltip glow" title="Assignment">
-                    <img class="link-icon" src="images/assignment.svg" alt="assignment page link">
-                </a>
-            </li>
-            <li>
-                <a id="forumLink" href="forum.html" class="tooltip glow" title="Forum">
-                    <img class="link-icon" src="images/forum.svg" alt="forum page link">
-                </a>
-                <span class="secondary badge forum-count slide-notification-forum">1</span>
-            </li>
-            <li>
-                <a id="messagesLink" href="messages.html" class="tooltip glow" title="Messages">
-                    <img class="link-icon" src="images/messages.svg" alt="message page link">
-                </a>
-                <span class="secondary badge message-count slide-notification-messages">8</span>
-            </li>
-        </ul>
-    </div>
     <!--slideout sidebar right-->
-    <div class="sb-slidebar sb-right">
-        <div class="grid-content small-12 gradient-right">
-            <nav class="block-list profile-links">
-                <div class="fa fa-times fa-2x sb-close right-close"></div>
-                <header id="slide-right">
-                    <div class="posterAvatar" id="slide-menu-profile">
-                        <a class="avatarContainer" href="#">
-                            <img alt="profile image" class="profile" src="images/avatar.svg">
-                        </a>
-                    </div>
-                    <div class="user-wrapper">
-                        <p id="profile-name" class="name user">
-                            <a class="profile-link" href="profile.html">
-                            Cady Heron
-                            </a>
-                        </p>
-                        <p class="user rewards">
-                            <a class="profile-link" href="rewards.html">
-                                <strong>
-                                    Rewards Balance:
-                                </strong>
-                                <span id="reward-amount">$25.00</span>
-                            </a>
-                        </p>
-                    </div><!--user info-->
-                </header>
-                <!--links for settings slideout menu right-->
-                <header class="profile-header">Settings</header>
-                <ul class="slide-right-links">
-                    <li class="with-chevron block-list-label">
-                        <a href="profile.html">
-                            Profile Information
-                        </a>
-                    </li>
-                    <li class="with-chevron block-list-label">
-                        <a href="notifications.html">
-                            Notification Settings
-                        </a>
-                    </li>
-                    <li class="with-chevron block-list-label">
-                        <a href="resetpassword.html">
-                            Change Password
-                        </a>
-                    </li>
-                    <li class="with-chevron block-list-label">
-                        <a href="#" class="log-out">
-                            Log Out
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div>
+    <div ng-include="'navigation.html'"></div>
     <!--logo and main menu in header-->
-    <header id="main-header" class="navbar sb-slide">
-        <div class="logo">
-            <a class="glow" href="index.html">
-                <img src="images/mavylogo.svg" class="mavy-logo" alt="Mavy logo">
-                <img src="images/mavytext.svg" class="mavy-name" alt="Mavy name">
-            </a>
-        </div>
-        <nav id="desktop-menu">
-            <ul class="desktop-menu">
-                <span id="hide"><!--hides just text links & notifications-->
-                        <li id="feed">
-                            <a href="index.html" class="tooltip glow" title="Home">
-                                <img class="link-icon" src="images/feed.svg" alt="feed page link">
-                            </a>
-                        </li>
-                        <li id="assignment">
-                            <a href="assignments.html" class="tooltip glow" title="Assignments">
-                                <img class="link-icon" src="images/assignment.svg" alt="assignment page link">
-                            </a>
-                        </li>
-                        <li>
-                            <span class="secondary badge forum-count nav-notification-forum">1</span>
-                            <a href="forum.html" class="tooltip glow" title="Forum">
-                            <img class="link-icon" src="images/forum.svg" alt="forum page link">
-                        </a>
-                    </li>
-                    <li>
-                        <span class="secondary badge message-count nav-notification-messages">8</span>
-                        <a href="messages.html" class="tooltip glow" title="Messages">
-                            <img class="link-icon" src="images/messages.svg" alt="message page link">
-                        </a>
-                    </li>
-                </span>
-                <!--end hide class-->
-                <li class="sb-toggle-right">
-                    <img src="images/profile-active.svg" class="link-icon tooltip" title="Settings" alt="profile icon">
-                </li>
-            </ul>
-        </nav>
-        <div class="fa fa-bars fa-2x sb-toggle-left">
-        </div>
-    </header><!--end header logo & menu-->
+    <!--end header logo & menu-->
     <div id="sb-site"><!--wrapper so content moves when slide out menus are clicked-->
         
         <div class="grid-block wrap">
@@ -156,8 +20,8 @@
                             </p>
                         </div>
                         <div class="reward-buttons">
-                            <a class="button cashout" href="#">Cash Out Now</a>
-                            <a class="button detail" href="#">Details</a>
+                            <a class="button cashout" ng-click="openModal()">Cash Out Now</a>
+                            <a class="button detail" ng-click="openDetails()">Details</a>
                         </div>
                     </article><!--end available reward content-->
                 </div>
@@ -239,8 +103,7 @@
                             <p id="current-credit">
                                 $
                                 <span id="current-dollars">
-                                    25</span>.<span id="current-cents">00
-                                </span>
+                                    {{redeemable}}</span>
                             </p>
                         </div>
 
@@ -250,9 +113,8 @@
                             <p id="earned-credit">
                                 $
                                 <span id="earned-dollars">
-                                    175</span>.<span id="earned-cents">00
-                                </span>
-                            </p>
+                                    {{earned}}</span>                            
+							</p>
                         </div>
 
                     </div>
@@ -262,20 +124,6 @@
         </div><!--end content wrapper-->
 
         <!-- Start Footer -->
-        <footer class="footer-text">
-            <ul>
-                <li class="copyright">&#169; Mavy</li>
-                <li>
-                    <a href="#">Terms of Use</a>
-                </li>
-                <li>
-                    <a href="#">Feedback</a>
-                </li>
-                <li>
-                    <a href="#">Privacy</a>
-                </li>
-            </ul>
-        </footer>
     </div><!--end sb-site container-->
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

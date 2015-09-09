@@ -84,15 +84,15 @@
                                 <p class="set-width post-data" dynamic="{{items.Body}}" ng-click="expandForumPage(items.Id)"></p>
                                 <p class="date" ng-click="expandForumPage(items.Id)">{{items.Date | date:"MM/dd/yyyy 'at' h:mma"}}</p>
                                 <p class="reply-to-posts-count">
-                                    <a href="javascript:void(0)">Replies ( <span class="replies-count">{{items.ReplyCount}}</span> )</a>
-                                    <a ng-click='getChilds(items.Id)' style="float:right;margin-right:50px;">Reply</a>
+                                    <a href="javascript:void(0)" ng-click='getChilds(items.Id)'>Replies ( <span class="replies-count">{{items.ReplyCount}}</span> )</a>
+                                    <a ng-click='showReplyBox(items.Id)' style="float:right;margin-right:50px;">Reply</a>
                                    <!-- <a href="javascript:void(0)" class="expand-collapse-toggle" ng-if="showCommentbox(items.Id)">
                                     Replies ( <span class="replies-count">{{items.ReplyCount}}</span> ) 
                                     </a>-->
                                 </p>
                             </div>
                             <!--example comments to post-->
-							<div id="reply-box" class="card comment-form" ng-if="showCommentbox(items.Id)">
+							<div id="reply-box" class="card comment-form showReplyBoxforReply{{items.Id}}" style="display:none">
 								<form id="replyForm" class="card-section" method="post" ng-submit="saveThreadReply(replyText,items.Id)">
 									<div class="grid-block">
 										<div class="small-12 medium-12 grid-content">
@@ -151,7 +151,7 @@
 														</label>
 													 
 														<div id="comment-button">
-															<input type="file" name="file_upload" style="height:42px;position:absolute;width:131px;opacity:0;">
+															<input ng-click="setProjectId(items.Id)" type="file" name="file_upload" style="height:42px;position:absolute;width:131px;opacity:0;">
 															<a class="button" id="add-media" ng-click="mediaUpload()">
 																<span class="fa fa-camera"></span>
 																Upload Media

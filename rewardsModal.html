@@ -1,0 +1,10 @@
+ <div class="modal-header">
+		<h3 class="modal-title">Credits</h3>
+        </div>
+        <div class="modal-body">
+            <h3 ng-if="rewardPoints < 10">You will at least $10 or more Current Credit before being able to cashout</h3>
+			<h3 ng-if="rewardPoints > 10">You are about to cash out your Current Credit of ${{rewardPoints}} for an Amazon Gift Card. The Amazon Gift Code will be sent to your email address {{email}}</h3>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+        </div>

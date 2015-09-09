@@ -12,18 +12,18 @@
                     <article class="card replyToPost">
                         <div class="card-divider reply">
                             <!--post message counter and nav-->
-                            <div class="message-counter">
+                            <!--<div class="message-counter">
                                 <span class="fa fa-sort-asc scroll-up su6"></span>
                                 <div class="reply-count">{{items.ReplyCount}}</div>
                                 <span class="fa fa-sort-desc scroll-dwn sd6">
                                     </span>
-                            </div>
+                            </div>-->
                         </div>
                         <!--avatar container-->
                         <div class="postContent card-section">
                             <div class="posterAvatar">
                                 <a class="avatarContainer" href="javascript:void(0)">
-                                    <img alt="profile image" class="profile" src="{{items.Content.CreatedByUser.AvatarUrl}}">
+                                    <img alt="profile image" class="profile" src="{{items.Content.CreatedByUser.AvatarUrl}}" />
                                 </a>
                             </div>
                             <!--metadata for post reply-->
@@ -34,14 +34,32 @@
                                 <p class="set-width" dynamic="{{items.Body}}"></p>
                                 <p class="date"><strong>{{items.Date | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
                                 <p class="reply-to-posts-count">
-                                    <a ng-click="gotoReplyBox()">Reply</a>
-                                    <!--<a href="javascript:void(0)" class="expand-collapse-toggle">
-                                    Replies ( <span class="replies-count">{{items.ReplyCount}}</span> ) 
-                                    </a>-->
+									<a href="javascript:void(0)" ng-click="showReplies()">Replies ( <span class="replies-count">{{items.ReplyCount}}</span> )</a>
+                                    <a ng-click="gotoReplyBox()" style="float:right;margin-right:50px;">Reply</a>
                                 </p>
                             </div>
+							
+							<div class="card comment-form" ng-if="showreplyBoxes">
+                                <form id="replyForm" class="card-section" method="post" ng-submit="saveThreadReply(replyText,items.Id)">
+                                    <div class="grid-block" id="reply-box">
+                                        <div class="small-12 medium-12 grid-content">
+                                            <label class="forum-label">
+                                                Reply to Post
+                                                <textarea cols="40" rows="8" name="comment" id="reply" ng-model="replyText"></textarea>
+                                            </label>
+                                            <div id="comment-button">
+                                                <a href="#" class="button" id="add-media">
+                                                    <span class="fa fa-camera"></span>
+                                                    Upload Media
+                                                </a>
+                                                <input type="submit" value="Submit Reply" class="button fa" id="add-comment" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                             <!--example comments to post-->
-                            <div class="card" ng-repeat="reply in childThreads">
+                            <div class="card" ng-repeat="reply in childThreads" ng-show="showAllReplies">
 								<div>
                                 <div class="card-divider reply">
                                 </div>
@@ -69,25 +87,7 @@
                             
 
                             <!--reply form-->
-                            <div class="card comment-form">
-                                <form id="replyForm" class="card-section" method="post" ng-submit="saveThreadReply(replyText,items.Id)">
-                                    <div class="grid-block" id="reply-box">
-                                        <div class="small-12 medium-12 grid-content">
-                                            <label class="forum-label">
-                                                Reply to Post
-                                                <textarea cols="40" rows="8" name="comment" id="reply" ng-model="replyText"></textarea>
-                                            </label>
-                                            <div id="comment-button">
-                                                <a href="#" class="button" id="add-media">
-                                                    <span class="fa fa-camera"></span>
-                                                    Upload Media
-                                                </a>
-                                                <input type="submit" value="Submit Reply" class="button fa" id="add-comment">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div><!--end reply form container-->
+                            <!--end reply form container-->
                         </div>
                     </article>
                 </div>
