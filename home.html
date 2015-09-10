@@ -51,11 +51,11 @@
 								<!--metadata for post reply-->
 								<div class="postMeta">
 									<!--post message counter and nav-->
-									<div class="message-counter">
+									<!--<div class="message-counter">
 										<span class="fa fa-sort-asc scroll-up su1"></span>
 									<div class="reply-count">{{post.NumberOfPosts}}</div>
 										<span class="fa fa-sort-desc scroll-dwn sd1"></span>
-									</div>
+									</div>-->
 									
 									<!--<p class="userName">User Name</p>-->
 									<h5 class="postTitle">{{post.Subject}}</h5>
@@ -69,7 +69,7 @@
 
                     <!--start nested assignment boxes-->
 					<div class="grid-block small-up-1 medium-up-2 large-up-2">                    
-						<div class="grid-content" ng-repeat="assignment in allAssignments">
+						<div class="grid-content" ng-repeat="assignment in allAssignments" ng-if="assignment">
 							<article class="card card-margin" ng-click="showAssignmentTasks(assignment)">
 								<div class="card-divider color-code-2">
                                     <h6 class="boxTitle">New Assignment |<span style="text-transform: none;" ng-if="assignment.modules[0].moduleType == 1"> Discussion(s)</span><span style="text-transform: none;" ng-if="assignment.modules[0].moduleType == 2"> Quiz</span><span style="text-transform: none;" ng-if="assignment.modules[0].moduleType == 3"> Diary</span><span style="text-transform: none;" ng-if="assignment.modules[0].moduleType == 4"> Sponsored Quiz</span></h6>

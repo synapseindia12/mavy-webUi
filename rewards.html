@@ -21,7 +21,7 @@
                         </div>
                         <div class="reward-buttons">
                             <a class="button cashout" ng-click="openModal()">Cash Out Now</a>
-                            <a class="button detail" ng-click="openDetails()">Details</a>
+                            <!--<a class="button detail" ng-click="openDetails()">Details</a>-->
                         </div>
                     </article><!--end available reward content-->
                 </div>
@@ -31,11 +31,19 @@
                         <div class="postContent card-divider" id="coh-one">
                             <h6 class="boxTitle">Cashout History</h6>
                             <div class="grid-block small-up-2 medium-up-2 large-up-2">
+                                <div class="card-section card-wrapper" ng-repeat="items in incentivesDataArray">
+                                    <a href="#" class="gift-card-img">
+                                        <img class="gift-card-img" src="images/amazon-giftcard.png" alt="amazon gift card">
+                                    </a>
+                                    <a class="button voucher" ng-click="openDetailsModal(items.code, items.amount)">Resend Code</a>
+                                </div>
+                            </div>
+                            <!--<div class="grid-block small-up-2 medium-up-2 large-up-2">
                                 <div class="card-section card-wrapper">
                                     <a href="#" class="gift-card-img">
                                         <img class="gift-card-img" src="images/amazon-giftcard.png" alt="amazon gift card">
                                     </a>
-                                    <a class="button voucher" href="#">Resend Code</a>
+                                    <a class="button voucher" ng-click="openDetailsModal()">Resend Code</a>
                                 </div>
                                 <div class="card-section card-wrapper">
                                     <a href="#" class="gift-card-img">
@@ -71,21 +79,7 @@
                                     </a>
                                     <a class="button voucher" href="#">Resend Code</a>
                                 </div>
-                            </div>
-                            <div class="grid-block small-up-2 medium-up-2 large-up-2">
-                                <div class="card-section card-wrapper">
-                                    <a href="#" class="gift-card-img">
-                                        <img class="gift-card-img" src="images/amazon-giftcard.png" alt="amazon gift card">
-                                    </a>
-                                    <a class="button voucher" href="#">Resend Code</a>
-                                </div>
-                                <div class="card-section card-wrapper">
-                                    <a href="#" class="gift-card-img">
-                                        <img class="gift-card-img" src="images/amazon-giftcard.png" alt="amazon gift card">
-                                    </a>
-                                    <a class="button voucher" href="#">Resend Code</a>
-                                </div>
-                            </div>
+                            </div>-->
                         </div>
                     </article>
                 </div><!--end cashout content-->

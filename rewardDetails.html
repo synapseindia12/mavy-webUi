@@ -1,8 +1,27 @@
+ <style>
+	.add-container { width: 100%;}
+	.add-logo img { float: left; margin-right: 25px;}
+</style>  
  <div class="modal-header">
             <h3 class="modal-title">Redemption instructions.</h3>
         </div>
         <div class="modal-body">
-            Need to create the HTML.
+			<div class="add-container">
+				<div class="add-logo">
+					<p><img src="images/logo.png"> <strong>Gift Card Amount:</strong> ${{cardAmount}}<br> <strong>Claim Code:</strong> {{claimCode}}</p>
+				</div>
+				<p>| <a href="#">Apply to Account</a> | <a href="#">How to Use</a> |</p>
+				<p>To redeem your gift card, follow these steps:</p>
+				<ol>
+					<li>Visit <a href="http://www.amazon.com/gc">www.amazon.com/gc</a></li>
+					<li>Click Apply to Account and enter the Claim Code when prompted.</li>
+					<li>Gift card funds will be applied automatically to eligible orders during the checkout process.</li>
+					<li>You must pay for any remaining balance on your order with another payment method.</li>
+				</ol>
+				<p>Your gift card claim code may also be entered when prompted during checkout. To redeem your gift card using the Amazon.com 1-Click <sup>&reg;</sup> service, first add the gift card funds to Your Account.</p>
+				<p>If you have question about redeeming your gift card, please visit <a href="http://www.amazon.com/gc-redeem">www.amazon.com/gc-redeem</a>.</p>
+				<p>If you have questions regarding the MyCompany Introductory offer, please contact MyCompany.<p>
+			</div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
