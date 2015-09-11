@@ -15,9 +15,19 @@
                     <article class="card rewards">
                         <div class="postContent card-section" id="available-rewards">
                             <h6 class="boxTitle">Available Rewards</h6>
-                            <p>
-                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-                            </p>
+							<div style="display: inline-block;">
+								<a href="#" class="gift-card-img">
+											<img class="gift-card-img" src="images/amazon-giftcard.png" alt="amazon gift card">
+								</a>
+							</div>
+							<div style="display: inline-block; vertical-align:top; width:80%; padding: 0 10px;">
+								<p>
+									Amazon.com Gift Cards* never expire and can be redeemed	towards millions of items at <a href="http://www.amazon.com" target="_blank">www.amazon.com</a>.
+								</p>
+								<p>
+									Your Current Credit needs to be at least $10.
+								</p>
+							</div>
                         </div>
                         <div class="reward-buttons">
                             <a class="button cashout" ng-click="openModal()">Cash Out Now</a>
@@ -31,11 +41,14 @@
                         <div class="postContent card-divider" id="coh-one">
                             <h6 class="boxTitle">Cashout History</h6>
                             <div class="grid-block small-up-2 medium-up-2 large-up-2">
-                                <div class="card-section card-wrapper" ng-repeat="items in incentivesDataArray">
+                                <div class="card-section card-wrapper voucher-wrapper" ng-repeat="items in incentivesDataArray">
                                     <a href="#" class="gift-card-img">
                                         <img class="gift-card-img" src="images/amazon-giftcard.png" alt="amazon gift card">
                                     </a>
-                                    <a class="button voucher" ng-click="openDetailsModal(items.code, items.amount)">Resend Code</a>
+									<p class="voucher-container">
+										<span>{{items.amount/100}} - {{items.code}}</span>
+										<a class="button voucher" ng-click="openDetailsModal(items.code, items.amount)">Redemption Instructions</a>
+									</p>
                                 </div>
                             </div>
                             <!--<div class="grid-block small-up-2 medium-up-2 large-up-2">

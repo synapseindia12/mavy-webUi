@@ -948,6 +948,9 @@ button:hover {
 .btn-warning{background:#9193c1!important;}
 .btn-warning:hover, .btn-primary:hover{background:#d5539e!important;}
 .pou-box{margin:0px!important; max-width:100%!important;}
+.avatarContainer img.profile {
+    -webkit-transform: none !important;
+}
 
 
 

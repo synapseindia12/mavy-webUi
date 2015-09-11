@@ -73,7 +73,7 @@
                         <div class="postContent card-section">
                             <div class="posterAvatar">
                                 <a class="avatarContainer" ng-href="#/forum-expanded/{{items.Id}}">
-                                    <img alt="profile image" class="profile" src="{{items.Content.CreatedByUser.AvatarUrl}}">
+                                    <img alt="profile image" class="profile" src="{{items.Content.CreatedByUser.AvatarUrl}}" />
                                 </a>
                                 <p class="name" ng-click="expandForumPage(items.Id)">{{items.Author.DisplayName}}</p>
                             </div>
@@ -105,12 +105,12 @@
 											</div>
 											<div id="comment-button">
 												<pre>{{items}}</pre>
-												<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this)" ng-click="setProjectId(items.Id)" id="photo-upload" style="height:42px;position:absolute;width:131px;opacity:0;" />
+												<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this)" ng-click="setProjectId(items.Id, replyText)" id="photo-upload" style="height:42px;position:absolute;width:131px;opacity:0;" />
 												<a class="button" id="add-media" ng-click="mediaUpload()">
 													<span class="fa fa-camera"></span>
 													Upload Media
 												</a>
-												<input type="submit" value="Submit Reply" class="button fa" id="add-comment"  >
+												<input type="submit" value="Submit Reply" class="button fa" id="add-comment" />
 											</div>
 										</div>
 									</div>
@@ -134,10 +134,10 @@
 											
 										<!--	<p class="userName">{{reply.Author.Username}}</p> -->
 											<p class="set-width post-data" dynamic="{{reply.FilteredBody}}"></p>
+											<p class="set-width post-data" ng-if="reply.UnfilteredBodyLinks.image"><img src="{{reply.UnfilteredBodyLinks.image[0]}}" /></p>
 											<p class="date">{{reply.Date | date:"MM/dd/yyyy 'at' h:mma"}}</p>
                                             <p class="reply-to-post">
-                                                <a href="javascript:void(0)" style="float:left;">Comments ( <span class="replies-count">{{reply.ReplyCount}}</span> )</a>
-                                          
+                                                <a href="javascript:void(0)" style="float:left;">Comments ( <span class="replies-count">{{reply.ReplyCount}}</span> )</a>                                  
 												<a ng-click="showChildCommentBox(reply.Id)">Comment</a>
 											</p>
 										</div>
@@ -146,14 +146,12 @@
 												<div class="grid-block">
 													<div class="small-12 medium-12 grid-content">
 														<label class="forum-label">
-															Reply to Post
-                                                            
-															<textarea cols="40" rows="8" name="comment"></textarea>
+															Reply to Post                                                            
+															<textarea cols="40" rows="8" name="comment" ng-model="replyToPost"></textarea>
 														</label>
 													 
 														<div id="comment-button">
-														<pre>{{reply}}</pre>
-															<input onchange="angular.element(this).scope().uploadFile(this)" ng-click="replyProjectId(reply.ThreadId, reply.Id)" type="file" name="file_upload" style="height:42px;position:absolute;width:131px;opacity:0;">
+															<input onchange="angular.element(this).scope().uploadFile(this)" ng-click="replyProjectId(reply.ThreadId, reply.Id, replyToPost)" type="file" name="file_upload" style="height:42px;position:absolute;width:131px;opacity:0;">
 															<a class="button" id="add-media" ng-click="mediaUpload()">
 																<span class="fa fa-camera"></span>
 																Upload Media
@@ -182,18 +180,15 @@
 														<p class="name">{{rep.Author.DisplayName}}</p>
 														<p class="userName">{{rep.Author.Username}}</p>
 														<p class="set-width" dynamic="{{rep.FilteredBody}}"></p>
+														<p class="set-width post-data" ng-if="rep.UnfilteredBodyLinks.image"><img src="{{rep.UnfilteredBodyLinks.image[0]}}" /></p>
 														<p class="date"><strong>{{rep.Date | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
-													   
 													</div>
-													</div>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
                             </div><!--end comment one card-->
-                            
-                            
-
                             <!--reply form
                             <div id="reply-box" class="card comment-form" ng-if="showCommentbox(items.Id)">
                                 <form id="replyForm" class="card-section" method="post" ng-submit="saveThreadReply(replyText,items.Id)">

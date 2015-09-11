@@ -6193,3 +6193,23 @@ blockquote, blockquote p {
 	overflow: hidden;
 	padding: 1rem;
 }
+.voucher-container {
+	display: inline-block;
+	width: 68%;
+	padding-left: 15px;
+}
+.voucher-wrapper a.gift-card-img  {
+	display: inline-block;
+	width: 30%;
+	vertical-align: top;
+}
+.voucher-container span {
+	display: block;
+}
+.voucher-container .voucher{
+	margin-left:0;
+}
+.voucher,
+.voucher:hover {
+	text-decoration: underline;
+}

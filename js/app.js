@@ -127,32 +127,61 @@ myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieSt
 		$facebook.login().then(function(result){
 			if(result.status){
 				$scope.accessToken = result.authResponse.accessToken;
-				$modal.open({
-				  templateUrl: 'signupModal.html',
-				  controller: 'signupModalctrl',
-				  resolve: {
-					accessToken: function(){
-						return $scope.accessToken;
+				$scope.userId = result.authResponse.userID;
+				if($localStorage.userDetails){
+					if($localStorage.userDetails.userId == $scope.userId){
+						$localStorage.loginDetails = $localStorage.userDetails.logindetails;
+						$localStorage.loggedIn = true;
+						$location.path('/dashboard');
 					}
-				  }
-				});
+					else{
+						$modal.open({
+						  templateUrl: 'signupModal.html',
+						  controller: 'signupModalctrl',
+						  resolve: {
+							accessToken: function(){
+								return $scope.accessToken;
+							},
+							userId: function(){
+								return $scope.userId;
+							}
+						  }
+						});
+					}
+				}
+				else {
+					$modal.open({
+					  templateUrl: 'signupModal.html',
+					  controller: 'signupModalctrl',
+					  resolve: {
+						accessToken: function(){
+							return $scope.accessToken;
+						},
+						userId: function(){
+							return $scope.userId;
+						}
+					  }
+					});
+				}
 			}
 		});
 	};	
 });
 
-myApp.controller('signupModalctrl', function($scope, $modalInstance, $facebook, $location, $localStorage, accessToken){
+myApp.controller('signupModalctrl', function($scope, $modalInstance, $facebook, $location, $localStorage, accessToken, userId){
 	$scope.ok = function () {
 		var endpoints = {};
 		$scope.newArray = [];
 		endpoints.mobileHandler = new MobileHandler();
 		$scope.username = $scope.displayname;
 		$scope.token = accessToken;
+		$scope.userId = userId;
 		$scope.userSystemInfo = [];
 		endpoints.mobileHandler.loginFb($scope.username, $scope.token, $scope.userSystemInfo, function(response){
 			if(response.result.success){
 				$localStorage.loggedIn = true;
 				$localStorage.loginDetails = response.result.result;
+				$localStorage.userDetails = {"userId": $scope.userId, "logindetails": response.result.result};
 				$location.path('/dashboard');
 				$scope.$apply();
 			}
@@ -265,6 +294,7 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 			for(var i=0; i<result.result.result.Entries.length; i++){
 				$rootScope.polesForResults.push(result.result.result.Entries[i]);
 			}
+			$rootScope.totalPollsResults = [];
 			$scope.recursiveCall(result);
 		}
 		$scope.$apply();
@@ -273,7 +303,7 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 	$scope.recursiveCall = function(result){
 		$scope.results = result.result.result.Entries;
 		if($scope.results.length > 0){
-			if($scope.incrementedVal < $scope.results.length){
+			if($scope.incrementedVal <= $scope.results.length){
 				$scope.checkPolls(result);
 			}
 			else{
@@ -285,11 +315,11 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 	$scope.newrecursiveCall = function(result){
 		$scope.results = result.result.result.Entries;
 		if($scope.results.length > 0){
-			if($rootScope.incrementedVal < $scope.results.length){
-				$scope.checkPolls(result);
+			if($scope.incrementedVal <= $scope.results.length){
+				$scope.resultCheckPolls(result);
 			}
 			else{
-				return;
+				$location.path('/pollresults');
 			}
 		}
 	};
@@ -367,6 +397,70 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 		});
 	};
 	
+	$scope.resultCheckPolls = function(result) {
+		$rootScope.incrementedVal = $scope.incrementedVal;
+		endpoints.mobileHandler.getPanelistPollResponses($scope.apiKey, $scope.userId,$scope.panelistId,result.result.result.Entries[$scope.incrementedVal].taskId, function(response){
+			var ItemId = result.result.result.Entries[$scope.incrementedVal].itemId;
+			if(response.result.success){
+				if(response.result.result.length > 0){
+					
+				}
+				else{
+					$scope.allPolls.push(result.result.result.Entries[$scope.incrementedVal]);
+				}
+			}
+			
+			endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, result.result.result.Entries[$scope.incrementedVal].taskId, function(response){
+				 for(var i=0; i<result.result.result.Entries.length; i++){
+					if(result.result.result.Entries[i].itemId == response.result.result[0].itemId){
+						for(var j=0; j<response.result.result[0].values.length; j++){
+							debugger;
+							for(var p=0; p<result.result.result.Entries[i].options.categories.length; p++){
+								if(response.result.result[0].values[p]){
+									if(response.result.result[0].values[p].value==(j+1)){
+										response.result.result[0].values[p].count = (response.result.result[0].values[p].count /response.result.result[0].responseCount)*100;
+										result.result.result.Entries[i].options.categories[j].values = Math.round(response.result.result[0].values[p].count);
+									}
+								}
+								else {
+									result.result.result.Entries[i].options.categories[p].values = 0;
+								}
+							}						
+						}
+						$rootScope.totalPollsResults.push(result.result.result.Entries[i]);
+						if($scope.allPolls.length > 0){
+							if(result.result.result.Entries[i].itemId != $scope.allPolls[0].itemId){
+								$rootScope.dataforResults.push(result.result.result.Entries[i]);
+							}
+							else{
+								if(result.result.result.Entries[i-1]){
+									if($rootScope.dataforResults.length == 0)
+										$rootScope.dataforResults.push(result.result.result.Entries[i-1]);
+								}
+								else{
+									if(result.result.result.Entries[i+1]){
+										if($rootScope.dataforResults.length == 0)
+											$rootScope.dataforResults.push(result.result.result.Entries[i+1]);
+									}
+								}
+							}
+						}
+						else{
+							if($rootScope.dataforResults.length == 0)
+								$rootScope.dataforResults.push(result.result.result.Entries[0]);
+						}
+					}
+				}
+				$cookieStore.put('totalPollCounts', $rootScope.totalPollsResults);
+				debugger;
+				$scope.displayPollresults = $rootScope.dataforResults;
+				$scope.incrementedVal = $scope.incrementedVal + 1;
+				$scope.newrecursiveCall(result);
+				$scope.$apply();
+			});
+		});
+	};
+	
 	$scope.submitPoll = function(pollDetails, pollvote){
 		$scope.notes = [];
 		$scope.value = [];
@@ -377,23 +471,21 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 		
 		endpoints.mobileHandler.savePollResponse($scope.apiKey, $scope.userId, $scope.panelistId, response, function(result){
 			if(result.result.success){
-				alert('Thanks for your vote.');				
-				endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, $scope.allPolls[0].taskId, function(response){
-					$rootScope.totalResponseCounts = response.result.result[0].responseCount;
-				});
-				
-				endpoints.mobileHandler.getPanelistPollResponses($scope.apiKey, $scope.userId, $scope.panelistId, $scope.allPolls[0].taskId, function(res){
-					for(var i=0; i< res.result.result[0].responses.length; i++){
-						$scope.allVotes.push(res.result.result[0].responses[i]);
+				alert('Thanks for your vote.');
+				$scope.incrementedVal = 0;
+				endpoints.mobileHandler.getDashboard($scope.apiKey, $scope.userId, 5, null, null, function(result){
+					if(result.result.success){
+						for(var i=0; i<result.result.result.Entries.length; i++){
+							$rootScope.polesForResults.push(result.result.result.Entries[i]);
+						}
+						$rootScope.totalPollsResults = [];
+						$scope.newrecursiveCall(result);
 					}
-					$rootScope.allVotes = $scope.allVotes;
-					$rootScope.allPolls = $scope.allPolls;
-					$location.path('/pollresults');
 					$scope.$apply();
 				});
 			}
 		});
-	}	
+	}
 });
 
 myApp.controller('pollResultCtrl', function($scope, $location, $rootScope, $localStorage, $cookieStore){
@@ -1110,6 +1202,7 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
  $scope.savechildThreadReply = function(threadId,parentId) {
 	if($('#displayReplyBox'+parentId+' textarea').val()){
 	var replyText = $('#displayReplyBox'+parentId+' textarea').val();
+	debugger;
    endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,threadId,parentId,replyText,function(response){
     
     if(response.result.success){     
@@ -1120,13 +1213,12 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
      
      endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,threadId,null,null,function(child){
 
-      if(child.result.result[1].Replies) {
-       for(var j=0; j<child.result.result[1].Replies.length; j++){    
-        if(threadId == child.result.result[1].Replies[j].ThreadId)
-         $scope.childThreads.push(child.result.result[1].Replies[j]);
-       }
-      
-      } 
+	if(child.result.result[1].Replies){
+	   for(var j=0; j<child.result.result[1].Replies.length; j++){    
+		if(threadId == child.result.result[1].Replies[j].ThreadId)
+		 $scope.childThreads.push(child.result.result[1].Replies[j]);
+	   }     
+	}
       
       $scope.$apply();
       debugger;
@@ -1200,11 +1292,10 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 				endpoints.mediaHandler.convertMedia(Apikey, media_base64, bucketName, projectId, sourceAppType, mediaType, $scope.data.userUpload.substring(0,64), 0, function(result){
 					if(result.result.success){
 						if(mediaType == 'image' || mediaType == 'Image'){
-							replyText = "<img src='"+result.result.result.URL+"'>";
-							debugger;
+							replyText = $scope.replyText + "<img src=\""+result.result.result.URL+"\">";
 						}
 						else{
-							replyText = "[view:"+result.result.result.URL+":0:0]";
+							replyText = $scope.replyText + "[view:\""+result.result.result.URL+"\":0:0]";
 						}
 						debugger;
 						endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,$scope.ThreadId,$scope.ParentId,replyText,function(response){
@@ -1226,14 +1317,16 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 		}
 	};
 	var projectId="";
-	$scope.setProjectId = function(id){
+	$scope.setProjectId = function(id, text){
+		$scope.replyText = text;
 		projectId = id;
 		$scope.ThreadId = id;
 		$scope.ParentId = 0;
 	};
 	
-	$scope.replyProjectId = function(threadId, ParentId){
+	$scope.replyProjectId = function(threadId, ParentId, text){
 		debugger;
+		$scope.replyText = text;
 		projectId = threadId;
 		$scope.ThreadId = threadId;
 		$scope.ParentId = ParentId;
