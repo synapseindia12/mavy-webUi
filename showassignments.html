@@ -20,8 +20,8 @@
 								<img class="right-arrow" src="images/arrow-right-01.svg" ng-click="getNextTask(i)" ng-hide="hideLeftArrow" />
 								<img class="left-arrow" src="images/arrow-left-01.svg" ng-click="getPreviousTasks(i)" ng-show="hideRightArrow" />
 							</div>
-                           <h3 class="boxTitle" ng-if="assignment.projectTitle">{{assignment.projectTitle}}</h3>
-						   <h3 class="boxTitle" ng-if="assignment.moduleTitle">{{assignment.moduleTitle}}</h3>
+                           <!--<h3 class="boxTitle" ng-if="assignment.projectTitle">{{assignment.projectTitle}}</h3>-->
+						   <h3 class="boxTitle" ng-if="assignment.modules[0].moduleTitle">{{assignment.modules[0].moduleTitle}}</h3>
                            <p class="assgnTitle" ng-if="assignment.modules" dynamic="{{assignment.modules[0].options.instructions}}"></p>
 						   <p class="assgnTitle" ng-if="!assignment.modules" dynamic="{{assignment.options.instructions}}"></p>
                         </div>                     

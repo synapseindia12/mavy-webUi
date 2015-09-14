@@ -13,11 +13,11 @@
                 <div class="grid-content">
                     <!--start available rewards-->
                     <article class="card rewards">
-                        <div class="postContent card-section" id="available-rewards">
+                        <div class="postContent card-section" id="available-rewards" style="cursor: default">
                             <h6 class="boxTitle">Available Rewards</h6>
 							<div style="display: inline-block;">
-								<a href="#" class="gift-card-img">
-											<img class="gift-card-img" src="images/amazon-giftcard.png" alt="amazon gift card">
+								<a class="gift-card-img" href="javascript:void(0)">
+									<img class="gift-card-img" src="images/amazon-giftcard.png" alt="amazon gift card">
 								</a>
 							</div>
 							<div style="display: inline-block; vertical-align:top; width:80%; padding: 0 10px;">
@@ -46,7 +46,7 @@
                                         <img class="gift-card-img" src="images/amazon-giftcard.png" alt="amazon gift card">
                                     </a>
 									<p class="voucher-container">
-										<span>{{items.amount/100}} - {{items.code}}</span>
+										<span>{{items.code}} ( ${{items.amount/100}} )</span>
 										<a class="button voucher" ng-click="openDetailsModal(items.code, items.amount)">Redemption Instructions</a>
 									</p>
                                 </div>
@@ -96,6 +96,11 @@
                         </div>
                     </article>
                 </div><!--end cashout content-->
+				<div>
+					<p style="font-size:8px; padding: 40px;" >
+						*Amazon.com is not a sponsor of this promotion. Except as required by law, Amazon.com Gift Cards ("GCs") cannot be transferred for value or redeemed for cash. GCs may be used only for purchases of eligible goods on Amazon.com or certain of its affiliated websites. GCs cannot be redeemed for purchases of gift cards. Purchases are deducted from the GC balance. To redeem or view a GC balance, visit "Your Account" on Amazon.com. Amazon is not responsible if a GC is lost, stolen, destroyed or used without permission. For complete terms and conditions, see <a href="http://www.amazon.com/gc-legal">www.amazon.com/gc-legal</a>. GCs are issued by ACI Gift Cards, Inc., a Washington corporation. All Amazon<sup>&reg;</sup>, <sup>&trade;</sup> & <sup>&copy;</sup> are IP of Amazon.com, Inc. or its affiliates. No expiration date or service fees. 
+					</p>
+				</div>
             </section><!--end main reward content-->
 
             <!--right sidebar content-->
@@ -129,7 +134,6 @@
                 </aside>
             </div><!--end right sidebar content-->
         </div><!--end content wrapper-->
-
         <!-- Start Footer -->
     </div><!--end sb-site container-->
 

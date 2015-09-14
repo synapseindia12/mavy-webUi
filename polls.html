@@ -24,7 +24,6 @@
 <aside class="card pollResults">
 	<div class="card-section">
 		<h6 class="boxTitle">Results For Previous Polls</h6>
-		<pre>{{displayPollresults}}</pre>
 		<div id="pollResults" ng-repeat="item in displayPollresults | limitTo: 1">
 			<h5 class="pollQuestion" id="pastQuestion" bind-html-compile="item.pollTitle">{{item.pollTitle}}</h5>
 			<div class="results">

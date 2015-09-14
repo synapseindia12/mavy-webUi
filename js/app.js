@@ -262,6 +262,13 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 		$location.path('/forum-expanded/'+forumId);
 	}
 	
+	$scope.localDate = function(date){
+		var d = new Date(date);
+		//var _utc = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
+    	var _utc = d.toLocaleString();
+    	return _utc;
+	}
+	
 });
 
 myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStorage, $cookieStore){
@@ -303,7 +310,7 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 	$scope.recursiveCall = function(result){
 		$scope.results = result.result.result.Entries;
 		if($scope.results.length > 0){
-			if($scope.incrementedVal <= $scope.results.length){
+			if($scope.incrementedVal < $scope.results.length){
 				$scope.checkPolls(result);
 			}
 			else{
@@ -315,7 +322,7 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 	$scope.newrecursiveCall = function(result){
 		$scope.results = result.result.result.Entries;
 		if($scope.results.length > 0){
-			if($scope.incrementedVal <= $scope.results.length){
+			if($scope.incrementedVal < $scope.results.length){
 				$scope.resultCheckPolls(result);
 			}
 			else{
@@ -1289,13 +1296,19 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 
 				var media_base64 = CryptoJS.enc.Base64.stringify(media_words);
 
-				endpoints.mediaHandler.convertMedia(Apikey, media_base64, bucketName, projectId, sourceAppType, mediaType, $scope.data.userUpload.substring(0,64), 0, function(result){
+				endpoints.mediaHandler.convertMedia(Apikey, media_base64, bucketName, projectId, sourceAppType, mediaType, $scope.data.userUpload, 0, function(result){
 					if(result.result.success){
 						if(mediaType == 'image' || mediaType == 'Image'){
-							replyText = $scope.replyText + "<img src=\""+result.result.result.URL+"\">";
+							if($scope.replyText)
+								replyText = $scope.replyText + "<img src=\""+result.result.result.URL+"\">";
+							else
+								replyText = "<img src=\""+result.result.result.URL+"\">";
 						}
 						else{
-							replyText = $scope.replyText + "[view:\""+result.result.result.URL+"\":0:0]";
+							if($scope.replyText)
+								replyText = $scope.replyText + "[view:\""+result.result.result.URL+"\":0:0]";
+							else
+								replyText = "[view:\""+result.result.result.URL+"\":0:0]";
 						}
 						debugger;
 						endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,$scope.ThreadId,$scope.ParentId,replyText,function(response){
@@ -1331,6 +1344,14 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 		$scope.ThreadId = threadId;
 		$scope.ParentId = ParentId;
 	};
+	
+	$scope.localDate = function(date){
+		var d = new Date(date);
+		//var _utc = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
+    	var _utc = d.toLocaleString();
+    	return _utc;
+	};
+	
 });
 
 myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$routeParams){
@@ -1439,6 +1460,13 @@ myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$
    alert('blank data');
   }
  };
+ 
+ $scope.localDate = function(date){
+		var d = new Date(date);
+		//var _utc = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
+    	var _utc = d.toLocaleString();
+    	return _utc;
+	};
 
 });
 

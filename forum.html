@@ -82,7 +82,8 @@
                                 <!--<p class="userName">User Name</p>-->
                                 <h5 class="postTitle" ng-click="expandForumPage(items.Id)">{{items.Subject}}</h5>
                                 <p class="set-width post-data" dynamic="{{items.Body}}" ng-click="expandForumPage(items.Id)"></p>
-                                <p class="date" ng-click="expandForumPage(items.Id)">{{items.Date | date:"MM/dd/yyyy 'at' h:mma"}}</p>
+                                <!--<p class="date" >{{items.Date | date:"MM/dd/yyyy 'at' h:mma"}}</p>-->
+								<p class="date" ng-click="expandForumPage(items.Id)">{{localDate(items.Date) | date:"MM/dd/yyyy 'at' h:mma"}}</p>
                                 <p class="reply-to-posts-count">
                                     <a href="javascript:void(0)" ng-click='getChilds(items.Id)'>Replies ( <span class="replies-count">{{items.ReplyCount}}</span> )</a>
                                     <a ng-click='showReplyBox(items.Id)' style="float:right;margin-right:50px;">Reply</a>
@@ -135,7 +136,8 @@
 										<!--	<p class="userName">{{reply.Author.Username}}</p> -->
 											<p class="set-width post-data" dynamic="{{reply.FilteredBody}}"></p>
 											<p class="set-width post-data" ng-if="reply.UnfilteredBodyLinks.image"><img src="{{reply.UnfilteredBodyLinks.image[0]}}" /></p>
-											<p class="date">{{reply.Date | date:"MM/dd/yyyy 'at' h:mma"}}</p>
+											<!--<p class="date">{{reply.Date | date:"MM/dd/yyyy 'at' h:mma"}}</p>-->
+											<p class="date">{{localDate(reply.Date) | date:"MM/dd/yyyy 'at' h:mma"}}</p>
                                             <p class="reply-to-post">
                                                 <a href="javascript:void(0)" style="float:left;">Comments ( <span class="replies-count">{{reply.ReplyCount}}</span> )</a>                                  
 												<a ng-click="showChildCommentBox(reply.Id)">Comment</a>
@@ -181,7 +183,8 @@
 														<p class="userName">{{rep.Author.Username}}</p>
 														<p class="set-width" dynamic="{{rep.FilteredBody}}"></p>
 														<p class="set-width post-data" ng-if="rep.UnfilteredBodyLinks.image"><img src="{{rep.UnfilteredBodyLinks.image[0]}}" /></p>
-														<p class="date"><strong>{{rep.Date | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
+														<!--<p class="date"><strong>{{rep.Date | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>-->
+														<p class="date"><strong>{{localDate(rep.Date) | date:"MM/dd/yyyy 'at' h:mma"}}</strong></p>
 													</div>
 												</div>
 											</div>
