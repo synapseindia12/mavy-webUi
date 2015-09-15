@@ -105,9 +105,8 @@
 												<span style="display:inline-block;background:#e6ece1;padding:8px 15px; border-radius:3px; font-size:14px;">{{fileName}}</span>
 											</div>
 											<div id="comment-button">
-												<pre>{{items}}</pre>
 												<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this)" ng-click="setProjectId(items.Id, replyText)" id="photo-upload" style="height:42px;position:absolute;width:131px;opacity:0;" />
-												<a class="button" id="add-media" ng-click="mediaUpload()">
+												<a class="button" id="add-media">
 													<span class="fa fa-camera"></span>
 													Upload Media
 												</a>
@@ -159,7 +158,7 @@
 																Upload Media
 															</a>
 															
-															<input type="submit" value="Submit Reply" class="button fa" id="add-comment"  >
+															<input type="submit" value="Submit Reply" class="button fa" id="add-comment" />
 														</div>
 													</div>
 												</div>

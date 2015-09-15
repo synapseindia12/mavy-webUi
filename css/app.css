@@ -6213,3 +6213,8 @@ blockquote, blockquote p {
 .voucher:hover {
 	text-decoration: underline;
 }
+.card-wrapper p.gift-card-img {
+    display: inline-block;
+    vertical-align: top;
+    width: 30%;
+}

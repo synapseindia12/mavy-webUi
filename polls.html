@@ -28,7 +28,7 @@
 			<h5 class="pollQuestion" id="pastQuestion" bind-html-compile="item.pollTitle">{{item.pollTitle}}</h5>
 			<div class="results">
 				<p class="percents" ng-repeat="option in item.options.categories">
-					<span class="result-text" id="result-poll-11">
+					<span class="result-text" id="result-poll-{{$index}}" ng-class="{'bgColor': applyBackground(item.itemId, $index)}">
 						{{option.values}}%
 					</span>
 					{{option.description}}

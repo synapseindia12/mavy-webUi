@@ -353,53 +353,54 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 			}
 			
 			endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, result.result.result.Entries[$scope.incrementedVal].taskId, function(response){
-				 for(var i=0; i<result.result.result.Entries.length; i++){
-					if(result.result.result.Entries[i].itemId == response.result.result[0].itemId){
-						for(var j=0; j<response.result.result[0].values.length; j++){
-							debugger;
-							for(var p=0; p<result.result.result.Entries[i].options.categories.length; p++){
-								if(response.result.result[0].values[p]){
-									if(response.result.result[0].values[p].value==(j+1)){
-										response.result.result[0].values[p].count = (response.result.result[0].values[p].count /response.result.result[0].responseCount)*100;
-										result.result.result.Entries[i].options.categories[j].values = Math.round(response.result.result[0].values[p].count);
+				if(response.result.success){
+					 for(var i=0; i<result.result.result.Entries.length; i++){
+						if(result.result.result.Entries[i]){
+							if(result.result.result.Entries[i].itemId == response.result.result[0].itemId){
+								for(var j=0; j<response.result.result[0].values.length; j++){
+									for(var p=0; p<result.result.result.Entries[i].options.categories.length; p++){
+										if(response.result.result[0].values[p]){
+											if(response.result.result[0].values[p].value==(j+1)){
+												response.result.result[0].values[p].count = (response.result.result[0].values[p].count /response.result.result[0].responseCount)*100;
+												result.result.result.Entries[i].options.categories[j].values = Math.round(response.result.result[0].values[p].count);
+											}
+										}
+										else {
+											result.result.result.Entries[i].options.categories[p].values = 0;
+										}
+									}						
+								}
+								$rootScope.totalPollsResults.push(result.result.result.Entries[i]);
+								if($scope.allPolls.length > 0){
+									if(result.result.result.Entries[i].itemId != $scope.allPolls[0].itemId){
+										$rootScope.dataforResults.push(result.result.result.Entries[i]);
 									}
-								}
-								else {
-									result.result.result.Entries[i].options.categories[p].values = 0;
-								}
-							}						
-						}
-						$rootScope.totalPollsResults.push(result.result.result.Entries[i]);
-						if($scope.allPolls.length > 0){
-							if(result.result.result.Entries[i].itemId != $scope.allPolls[0].itemId){
-								$rootScope.dataforResults.push(result.result.result.Entries[i]);
-							}
-							else{
-								if(result.result.result.Entries[i-1]){
-									if($rootScope.dataforResults.length == 0)
-										$rootScope.dataforResults.push(result.result.result.Entries[i-1]);
+									else{
+										if(result.result.result.Entries[i-1]){
+											if($rootScope.dataforResults.length == 0)
+												$rootScope.dataforResults.push(result.result.result.Entries[i-1]);
+										}
+										else{
+											if(result.result.result.Entries[i+1]){
+												if($rootScope.dataforResults.length == 0)
+													$rootScope.dataforResults.push(result.result.result.Entries[i+1]);
+											}
+										}
+									}
 								}
 								else{
-									if(result.result.result.Entries[i+1]){
-										if($rootScope.dataforResults.length == 0)
-											$rootScope.dataforResults.push(result.result.result.Entries[i+1]);
-									}
+									if($rootScope.dataforResults.length == 0)
+										$rootScope.dataforResults.push(result.result.result.Entries[0]);
 								}
 							}
 						}
-						else{
-							if($rootScope.dataforResults.length == 0)
-								$rootScope.dataforResults.push(result.result.result.Entries[0]);
-						}
 					}
+					$cookieStore.put('totalPollCounts', $rootScope.totalPollsResults);
+					$scope.displayPollresults = $rootScope.dataforResults;
+					$scope.incrementedVal = $scope.incrementedVal + 1;
+					$scope.recursiveCall(result);
+					$scope.$apply();
 				}
-				debugger;
-				$cookieStore.put('totalPollCounts', $rootScope.totalPollsResults);
-				debugger;
-				$scope.displayPollresults = $rootScope.dataforResults;
-				$scope.incrementedVal = $scope.incrementedVal + 1;
-				$scope.recursiveCall(result);
-				$scope.$apply();
 			});
 		});
 	};
@@ -421,7 +422,6 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 				 for(var i=0; i<result.result.result.Entries.length; i++){
 					if(result.result.result.Entries[i].itemId == response.result.result[0].itemId){
 						for(var j=0; j<response.result.result[0].values.length; j++){
-							debugger;
 							for(var p=0; p<result.result.result.Entries[i].options.categories.length; p++){
 								if(response.result.result[0].values[p]){
 									if(response.result.result[0].values[p].value==(j+1)){
@@ -459,7 +459,6 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 					}
 				}
 				$cookieStore.put('totalPollCounts', $rootScope.totalPollsResults);
-				debugger;
 				$scope.displayPollresults = $rootScope.dataforResults;
 				$scope.incrementedVal = $scope.incrementedVal + 1;
 				$scope.newrecursiveCall(result);
@@ -493,6 +492,19 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 			}
 		});
 	}
+	
+	$scope.applyBackground = function(itemId, index){
+		endpoints.mobileHandler.getPanelistPollResponses($scope.apiKey, $scope.userId,$scope.panelistId,itemId, function(response){
+			if(response.result.success){
+				if(response.result.result.length > 0){
+					if(response.result.result[0].responses[0].values[0] == index +1){
+						$('#result-poll-'+ index).css({'background': '#9193c1'});
+						return true;
+					}
+				}
+			}
+		});
+	}
 });
 
 myApp.controller('pollResultCtrl', function($scope, $location, $rootScope, $localStorage, $cookieStore){
@@ -501,11 +513,33 @@ myApp.controller('pollResultCtrl', function($scope, $location, $rootScope, $loca
 		$location.path('/');
 	}
 	
+	var endpoints = {};
+	endpoints.apiKey = $scope.apiKey;
+	endpoints.mobileHandler = new MobileHandler();
+	
+	var loginDetails = $localStorage.loginDetails;
+	$scope.apiKey = loginDetails[0].value;
+	$scope.userId = loginDetails[1].value;
+	$scope.panelistId = loginDetails[2].value;
+	$scope.registrationId = loginDetails[3].value;
+	
 	$scope.resultPolls = [];
 	$scope.panelistResults = $rootScope.allVotes;
 	$scope.displayPollresults = $rootScope.dataforResults;
 	$scope.displayPollTotalResults = $cookieStore.get('totalPollCounts');
-	//$scope.displayPollTotalResults = $rootScope.totalPollsResults;
+	
+	$scope.applyBackground = function(itemId, index){
+		endpoints.mobileHandler.getPanelistPollResponses($scope.apiKey, $scope.userId,$scope.panelistId,itemId, function(response){
+			if(response.result.success){
+				if(response.result.result.length > 0){
+					if(response.result.result[0].responses[0].values[0] == index +1){
+						$('#results-poll-'+ itemId + '-' + index).css({'background': '#9193c1'});
+						return true;
+					}
+				}
+			}
+		});
+	}
 	
 });
 
@@ -586,7 +620,6 @@ myApp.controller('navCtrl', function($scope, $cookieStore, $rootScope, $location
 	}
 	
 	$scope.showHideimages = function(item){
-		debugger;
 		switch(item){
 			case 'Home':
 				$scope.feedActive = true;
@@ -677,14 +710,13 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	});
 	
 	$scope.showAssignmentTasks = function(assignment){
-		debugger;
 		$cookieStore.put('assignment', assignment);
 		$location.path('/assignments/showAssignment');
 	}
 	
 });
 
- myApp.controller('showassignmentCtrl', function($scope, $cookieStore, $rootScope, $location, $localStorage, $sce){
+ myApp.controller('showassignmentCtrl', function($scope, $cookieStore, $rootScope, $location, $localStorage, $sce, $window){
 	if(!$localStorage.loginDetails){
 		delete $localStorage.loggedIn;
 		$location.path('/');
@@ -729,72 +761,75 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 		$scope.moduleId = $scope.assignment.moduleId;
 		$scope.moduleType = $scope.assignment.moduleType;
 	}
-	
-	if($scope.moduleType == 1){
 		endpoints.mobileHandler.getPanelistModuleTasks($scope.apiKey, $scope.userId, $scope.projectId, $scope.moduleId, $scope.panelistId, 20, 0, function(result){
-			if(result.result.result.AvailableTasks.length > 0){
-				for(var i=0;i<result.result.result.AvailableTasks.length;i++){
-					$scope.tasks.push(result.result.result.AvailableTasks[i]);
-				}
-			}
-		
-			if($scope.tasks.length > 0){
-				endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,$scope.tasks[$scope.i].ForumThreadId,null,null,function(response){
-					$scope.userAvatarUrl = response.result.result[0].Content.CreatedByUser.AvatarUrl;
-					$scope.displayName = response.result.result[0].Author.DisplayName;
-					$scope.displayTasks = [];
-					if(response.result.result[0].Author.DisplayName == $scope.displayName){
-						$scope.displayTasks.push($scope.tasks[$scope.i]);
-					}
-					else{
-						if($scope.tasks[$scope.i].RevealBehaviorId == 1){
-							$scope.displayTasks.push($scope.tasks[$scope.i]);
+			if(result.result.result.AvailableTasks[0]){
+				if(result.result.result.AvailableTasks[0].TaskTypeId == 1){
+					if(result.result.result.AvailableTasks.length > 0){
+						for(var i=0;i<result.result.result.AvailableTasks.length;i++){
+							$scope.tasks.push(result.result.result.AvailableTasks[i]);
 						}
-						else if($scope.tasks[$scope.i].RevealBehaviorId == 2){
-							if(response.result.result[0].Thread.HasParticipated == true)
+					}
+				
+					if($scope.tasks.length > 0){
+						endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,$scope.tasks[$scope.i].ForumThreadId,null,null,function(response){
+							$scope.userAvatarUrl = response.result.result[0].Content.CreatedByUser.AvatarUrl;
+							$scope.displayName = response.result.result[0].Author.DisplayName;
+							$scope.displayTasks = [];
+							if(response.result.result[0].Author.DisplayName == $scope.displayName){
 								$scope.displayTasks.push($scope.tasks[$scope.i]);
-						}
-					}
-					
-					if($scope.displayTasks.length > 0){
-						endpoints.mobileHandler.getTaskReplies($scope.apiKey,$scope.userId, $scope.projectId, $scope.moduleId, $scope.displayTasks[0].TaskId, $scope.panelistId, 20, 0, function(replies){
-							if(replies.result.result[1]){
-								$scope.replyCounts = replies.result.result[1].TotalCount;
-								if(replies.result.success){
-									for(var i=0; i<replies.result.result[1].Replies.length; i++){
-										if(replies.result.result[1].Replies[i].ParentId == 0){
-											$scope.allReplies.push(replies.result.result[1].Replies[i]);
-										}
-										$scope.childReplies.push(replies.result.result[1].Replies[i])
-									}
-								}
 							}
 							else{
-								$scope.replyCounts = 0;
-								$scope.allReplies = [];
-								$scope.childReplies = [];
+								if($scope.tasks[$scope.i].RevealBehaviorId == 1){
+									$scope.displayTasks.push($scope.tasks[$scope.i]);
+								}
+								else if($scope.tasks[$scope.i].RevealBehaviorId == 2){
+									if(response.result.result[0].Thread.HasParticipated == true)
+										$scope.displayTasks.push($scope.tasks[$scope.i]);
+								}
 							}
+							
+							if($scope.displayTasks.length > 0){
+								endpoints.mobileHandler.getTaskReplies($scope.apiKey,$scope.userId, $scope.projectId, $scope.moduleId, $scope.displayTasks[0].TaskId, $scope.panelistId, 20, 0, function(replies){
+									if(replies.result.result[1]){
+										$scope.replyCounts = replies.result.result[1].TotalCount;
+										if(replies.result.success){
+											for(var i=0; i<replies.result.result[1].Replies.length; i++){
+												if(replies.result.result[1].Replies[i].ParentId == 0){
+													$scope.allReplies.push(replies.result.result[1].Replies[i]);
+												}
+												$scope.childReplies.push(replies.result.result[1].Replies[i])
+											}
+										}
+									}
+									else{
+										$scope.replyCounts = 0;
+										$scope.allReplies = [];
+										$scope.childReplies = [];
+									}
+									$scope.$apply();
+								});
+							}							
 							$scope.$apply();
 						});
-					}							
-					$scope.$apply();
-				});
+					}
+				}
+			}
+			else{
+				$scope.showIframe = true;
+				if($scope.assignment.modules){
+					$scope.iframeSource = $scope.assignment.modules[0].options.baseSurveyLink + $scope.panelistId;
+				}
+				else{
+					$scope.iframeSource = $scope.assignment.options.baseSurveyLink + $scope.panelistId;
+				}
+				
+				$scope.iframeHeight = $window.innerHeight;
+				$scope.iframeWidth = $window.innerWidth;
 			}
 		});
-	}
-	else {
-		$scope.showIframe = true;
-		if($scope.assignment.modules){
-			$scope.iframeSource = $scope.assignment.modules[0].options.baseSurveyLink + $scope.panelistId;
-		}
-		else{
-			$scope.iframeSource = $scope.assignment.options.baseSurveyLink + $scope.panelistId;
-		}
-	}
 
 	$scope.markCompleted = function(task) {
 		var reply = $('#reply').val();
-		debugger;
 		if(task.CompletedTaskCount == 0){
 			var Id = 0;
 		}
@@ -820,7 +855,6 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 		$scope.childReplyId = Id;
 		$scope.TaskId = TaskId;
 		var reply = $('#replyNewChild').val();
-		debugger;
 		endpoints.mobileHandler.saveTaskReply($scope.apiKey,$scope.userId,$scope.projectId,$scope.moduleId,$scope.TaskId,$scope.panelistId,$scope.childReplyId,reply,null,null, function(response){
 			alert('Your comment is been submitted');
 			endpoints.mobileHandler.getTaskReplies($scope.apiKey,$scope.userId, $scope.projectId, $scope.moduleId, task.TaskId, $scope.panelistId, 20, 0, function(replies){
@@ -844,7 +878,6 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 					if(response.result.result){
 						if($scope.tasks.length >0){
 							for(var i=0; i<$scope.tasks.length; i++){
-								debugger;
 								if($scope.tasks[i].TaskId != response.result.result.TaskId){
 									isExists = true;
 								}
@@ -970,7 +1003,6 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	}
 	
 	$scope.gotoReplyBox = function(){
-		debugger;
 		if($scope.showReplyBox)
 			$scope.showReplyBox = false;
 		else
@@ -1004,7 +1036,6 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	// }
 	
 	$scope.showChildcomments = function(Id, TaskId){
-		debugger;
 		if($scope.showComments){
 			$scope.showComments = false;
 			$('.showchildCommentsreplies' + Id).hide();
@@ -1018,7 +1049,7 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	}
 });
 
-myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location){
+myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location, $route){
 	
 	$scope.feedActive = false;
 	$scope.assignmentActive = false;
@@ -1052,7 +1083,6 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 			  $scope.activeThreads.push($rootScope.allForums[i]);
 			 }
 			}
-			debugger;
 			$scope.$apply();
 		});
 	};
@@ -1085,7 +1115,6 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 	   $scope.threadId=null;
 	  }
 	  endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,$rootScope.currentId,null,null,function(child){
-	  	debugger;
 		if(child.result.success){
 		   if(child.result.result[1].Replies) {
 			for(var j=0; j<child.result.result[1].Replies.length; j++){    
@@ -1093,7 +1122,6 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 			  $scope.childThreads.push(child.result.result[1].Replies[j]);
 			}
 		   }
-		   debugger;
 		   $scope.$apply();
 		}
 	  });
@@ -1163,7 +1191,6 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
  };
 
  $scope.saveThreadReply=function(replyText,id){
-  debugger;
   if(replyText){
    endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,id,0,replyText,function(response){
     
@@ -1183,14 +1210,11 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
          $scope.childThreads.push(child.result.result[1].Replies[j]);
        }
    
-      } 
-      
+      }
       $scope.$apply();
-      debugger;
       $('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
       
      });
-     debugger;
      $scope.activeThreads = [];
      $scope.loadActiveThreads();
      $('#reply').val('');
@@ -1209,7 +1233,6 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
  $scope.savechildThreadReply = function(threadId,parentId) {
 	if($('#displayReplyBox'+parentId+' textarea').val()){
 	var replyText = $('#displayReplyBox'+parentId+' textarea').val();
-	debugger;
    endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,threadId,parentId,replyText,function(response){
     
     if(response.result.success){     
@@ -1228,10 +1251,8 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 	}
       
       $scope.$apply();
-      debugger;
   
      });
-     debugger;
      $scope.activeThreads = [];
      $scope.loadActiveThreads();
      $('#displayReplyBox'+parentId+' textarea').val('');
@@ -1264,7 +1285,6 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
  // }
  
 	 $scope.uploadFile = function (input){
-		debugger;
 		$scope.data = {};
 		$scope.data.userUpload = '';
 		$scope.fileName="";
@@ -1283,13 +1303,11 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 				//Create a canvas and draw image on Client Side to get the byte[] equivalent
 				var mediaT = input.files[0].type.split('/');
 				mediaType = mediaT[0];
-				debugger;
 				x=e.target.result.split('base64,');
 				$scope.data.userUpload = x[1];
 				console.log($scope.data.userUpload.substring(0,64).length);
 				$scope.fileName = input.files[0].name;
 				$('#upload-content').show();
-				debugger;
 				var media_hash = CryptoJS.HmacSHA1(Apikey + bucketName + projectId + sourceAppType + $scope.data.userUpload.substring(0,64) + mediaType, secret);
 
 				var media_words = CryptoJS.enc.Base64.parse(media_hash.toString(CryptoJS.enc.Base64));
@@ -1310,9 +1328,8 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 							else
 								replyText = "[view:\""+result.result.result.URL+"\":0:0]";
 						}
-						debugger;
 						endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,$scope.ThreadId,$scope.ParentId,replyText,function(response){
-							
+							$route.reload();
 						});
 					}
 					else{
@@ -1338,7 +1355,6 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 	};
 	
 	$scope.replyProjectId = function(threadId, ParentId, text){
-		debugger;
 		$scope.replyText = text;
 		projectId = threadId;
 		$scope.ThreadId = threadId;
@@ -1354,120 +1370,233 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 	
 });
 
-myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$routeParams){
- 
-	$scope.feedActive = false;
-	$scope.assignmentActive = false;
-	$scope.forumActive = true;
-	$scope.messagesactive = false;
-	$scope.childThreads = [];
-	$scope.showreplyBoxes = false;
-	$scope.showAllReplies = true;
-	$scope.parentId =null;
-	$scope.threadId =null;
-	if(!$localStorage.loginDetails){
-	  delete $localStorage.loggedIn;
-	  $location.path('/');
-	}
- var loginDetails = $localStorage.loginDetails;
- $scope.apiKey = loginDetails[0].value;
- $scope.userId = loginDetails[1].value;
- var endpoints = {};
- endpoints.apiKey = $scope.apiKey;
- endpoints.mobileHandler = new MobileHandler();
- endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
-    if(forums.result.result.Threads) {     
-     for(var i=0; i<forums.result.result.Threads.length; i++){   
-      if($routeParams.forumId==forums.result.result.Threads[i].Id){
-       $scope.items=forums.result.result.Threads[i];
-      }
-     }
-    }
-    $scope.$apply();
-   });
- endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,$routeParams.forumId,null,null,function(child){
-   if(child.result.result[1].Replies) {
-    for(var j=0; j<child.result.result[1].Replies.length; j++){    
-     if($routeParams.forumId == child.result.result[1].Replies[j].ThreadId)
-      $scope.childThreads.push(child.result.result[1].Replies[j]);
-    }
-    //$scope.parentId = $scope.childThreads[0].ParentId;
-    //$scope.threadId = $scope.childThreads[0].ThreadId;
-   }
-   $scope.$apply();
-   //$('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
-   $(window).scrollTop(o);
-  });
-
- $scope.gotoReplyBox = function(){
-	if($scope.showreplyBoxes){
+myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$routeParams, $location, $route){ 
+		$scope.feedActive = false;
+		$scope.assignmentActive = false;
+		$scope.forumActive = true;
+		$scope.messagesactive = false;
+		$scope.childThreads = [];
 		$scope.showreplyBoxes = false;
-	}
-	else{
-		$scope.showreplyBoxes = true;
-	}
- };
- 
- $scope.showReplies = function() {
-	if($scope.showAllReplies){
-		$scope.showAllReplies = false;
-	}
-	else{
 		$scope.showAllReplies = true;
-	}
- }
- //$scope.forumExpandedPage = 'setting-page-active';
- $scope.saveThreadReply=function(replyText,id){
-  
-  if(replyText){
-   endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,id,$scope.parentId,replyText,function(response){
-    
-    if(response.result.success){
-     alert('success');
-     
-     $rootScope.currentId = id;
-     if($scope.childThreads.length > 0) {
-      $scope.childThreads = [];
-     } 
-     else{
-      $scope.parentId=null;
-      $scope.threadId=null;
-     }
-     endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,id,null,null,function(child){
+		$scope.parentId =null;
+		$scope.threadId =null;
+		if(!$localStorage.loginDetails){
+		  delete $localStorage.loggedIn;
+		  $location.path('/');
+		}
+	 var loginDetails = $localStorage.loginDetails;
+	 $scope.apiKey = loginDetails[0].value;
+	 $scope.userId = loginDetails[1].value;
+	 var endpoints = {};
+	 endpoints.apiKey = $scope.apiKey;
+	 endpoints.mobileHandler = new MobileHandler();
+	 endpoints.mediaHandler = new MediaHandler();
+	endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
+		if(forums.result.result.Threads){   
+		 for(var i=0; i<forums.result.result.Threads.length; i++){   
+		  if($routeParams.forumId==forums.result.result.Threads[i].Id){
+		   $scope.items=forums.result.result.Threads[i];
+		  }
+		 }
+		}
+		$scope.$apply();
+	});
+	endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,$routeParams.forumId,null,null,function(child){
+		if(child.result.result[1].Replies){
+			for(var j=0; j<child.result.result[1].Replies.length; j++){    
+			 if($routeParams.forumId == child.result.result[1].Replies[j].ThreadId)
+			  $scope.childThreads.push(child.result.result[1].Replies[j]);
+			}
+		}
+		$scope.$apply();
+		$(window).scrollTop(0);
+	});
 
-      if(child.result.result[1].Replies) {
-       for(var j=0; j<child.result.result[1].Replies.length; j++){    
-        if(id == child.result.result[1].Replies[j].ThreadId)
-         $scope.childThreads.push(child.result.result[1].Replies[j]);
-       }
-       $scope.parentId = $scope.childThreads[0].ParentId;
-       $scope.threadId = $scope.childThreads[0].ThreadId;
-      } 
-      
-      $scope.$apply();
-      
-      $('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
-      
-     });
-     $('#reply').val('');
-    }
-    else{
-     alert('Fail');
-    }
-   });
-  }
-  else{
-   alert('blank data');
-  }
- };
+	$scope.gotoReplyBox = function(){
+		if($scope.showreplyBoxes){
+			$scope.showreplyBoxes = false;
+		}
+		else{
+			$scope.showreplyBoxes = true;
+		}
+	};
  
- $scope.localDate = function(date){
+	$scope.showReplies = function() {
+		if($scope.showAllReplies){
+			$scope.showAllReplies = false;
+		}
+		else{
+			$scope.showAllReplies = true;
+		}
+	}
+	
+	$scope.saveThreadReply=function(replyText,id){  
+		if(replyText){
+			endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,id,$scope.parentId,replyText,function(response){    
+				if(response.result.success){
+					alert('success');
+			 
+					$rootScope.currentId = id;
+					if($scope.childThreads.length > 0) {
+						$scope.childThreads = [];
+					} 
+					else{
+						$scope.parentId=null;
+						$scope.threadId=null;
+					}
+					endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,id,null,null,function(child){
+						if(child.result.result[1].Replies){
+							for(var j=0; j<child.result.result[1].Replies.length; j++){    
+								if(id == child.result.result[1].Replies[j].ThreadId)
+									$scope.childThreads.push(child.result.result[1].Replies[j]);
+							}
+							$scope.parentId = $scope.childThreads[0].ParentId;
+							$scope.threadId = $scope.childThreads[0].ThreadId;
+						}      
+						$scope.$apply();
+						$('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
+					});
+					$('#reply').val('');
+				}
+				else{
+					alert('Fail');
+				}
+			});
+		}
+		else{
+			alert('blank data');
+		}
+	};
+ 
+	$scope.localDate = function(date){
 		var d = new Date(date);
-		//var _utc = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
     	var _utc = d.toLocaleString();
     	return _utc;
 	};
+	
+	$scope.showChildCommentBox = function(id) {
+		$('.childCommentBox').hide();	
+		$('#displayReplyBox' + id).show();
+		$scope.nextLevelChild=[];
+		for(var i=0;i<$scope.childThreads.length;i++){
+			if($scope.childThreads[i].ParentId==id){
+				$scope.nextLevelChild.push($scope.childThreads[i]);
+			}
+		}
+	};
+	
+	$scope.savechildThreadReply = function(threadId,parentId) {
+		if($('#displayReplyBox'+parentId+' textarea').val()){
+			var replyText = $('#displayReplyBox'+parentId+' textarea').val();
+			endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,threadId,parentId,replyText,function(response){
+			
+				if(response.result.success){     
+					$rootScope.currentId = threadId;
+					if($scope.childThreads.length > 0) {
+						$scope.childThreads = [];
+					}
+				 
+					endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,threadId,null,null,function(child){
+						if(child.result.result[1].Replies){
+						   for(var j=0; j<child.result.result[1].Replies.length; j++){    
+							if(threadId == child.result.result[1].Replies[j].ThreadId)
+							 $scope.childThreads.push(child.result.result[1].Replies[j]);
+						   }     
+						}		  
+						$scope.$apply();	  
+					});
+					
+					$scope.activeThreads = [];
+					$('#displayReplyBox'+parentId+' textarea').val('');
+					$scope.nextLevelChild =[];
+					$scope.$apply();
+				}
+				else{
+					alert('Fail');
+				}
+			});
+		}
+		else{
+			alert('blank data');
+		}
+	};
+	
+	$scope.uploadFile = function (input){
+		$scope.data = {};
+		$scope.data.userUpload = '';
+		$scope.fileName="";
+		var x="",
+		Apikey = "6OoRO1+3C0askOF2V0gTEE4IUIyN2aNBuJLFoxCgBho=",
+		secret = "Kl9wjZIdiEiQv4Y26Buvjc+ncQhVY25Nj83J5QZ8Pjg=",
+		bucketName = "cfsagency",
+		mediaType="",
+		sourceAppType = "MRTelligent";
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			//reader.readAsDataURL(input);
+			reader.onload = function (e) {	 
+				//Sets the Old Image to new New Image
+				//$('#photo-id').attr('src', e.target.result);	 
+				//Create a canvas and draw image on Client Side to get the byte[] equivalent
+				var mediaT = input.files[0].type.split('/');
+				mediaType = mediaT[0];
+				x=e.target.result.split('base64,');
+				$scope.data.userUpload = x[1];
+				console.log($scope.data.userUpload.substring(0,64).length);
+				$scope.fileName = input.files[0].name;
+				$('#upload-content').show();
+				var media_hash = CryptoJS.HmacSHA1(Apikey + bucketName + projectId + sourceAppType + $scope.data.userUpload.substring(0,64) + mediaType, secret);
 
+				var media_words = CryptoJS.enc.Base64.parse(media_hash.toString(CryptoJS.enc.Base64));
+
+				var media_base64 = CryptoJS.enc.Base64.stringify(media_words);
+
+				endpoints.mediaHandler.convertMedia(Apikey, media_base64, bucketName, projectId, sourceAppType, mediaType, $scope.data.userUpload, 0, function(result){
+					if(result.result.success){
+						if(mediaType == 'image' || mediaType == 'Image'){
+							if($scope.replyText)
+								replyText = $scope.replyText + "<img src=\""+result.result.result.URL+"\">";
+							else
+								replyText = "<img src=\""+result.result.result.URL+"\">";
+						}
+						else{
+							if($scope.replyText)
+								replyText = $scope.replyText + "[view:\""+result.result.result.URL+"\":0:0]";
+							else
+								replyText = "[view:\""+result.result.result.URL+"\":0:0]";
+						}
+						endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,$scope.ThreadId,$scope.ParentId,replyText,function(response){
+							$route.reload();
+						});
+					}
+					else{
+						alert('fail');
+					}
+
+				});
+				$scope.$apply();
+			}					
+			//Renders Image on Page
+			reader.readAsDataURL(input.files[0]);
+
+			
+
+		}
+	};
+	var projectId="";
+	$scope.setProjectId = function(id, text){
+		$scope.replyText = text;
+		projectId = id;
+		$scope.ThreadId = id;
+		$scope.ParentId = 0;
+	};
+	
+	$scope.replyProjectId = function(threadId, ParentId, text){
+		$scope.replyText = text;
+		projectId = threadId;
+		$scope.ThreadId = threadId;
+		$scope.ParentId = ParentId;
+	};
 });
 
 myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $localStorage, $location){
@@ -1522,7 +1651,6 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 	}
 	
 	$scope.expandMessage = function(message){
-	debugger;
 		if($scope.showExpandMessage){
 			$scope.showExpandMessage = false;
 			$scope.internalMessages = [];
@@ -1557,7 +1685,6 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 	};
 	
 	$scope.submitMessageReply = function(items) {
-		debugger;
 		if(items.messageReplyText){
 			endpoints.mobileHandler.sendMessageReply($scope.apiKey, $scope.userId, conversationId, items.messageReplyText, function(result){
 				if(result.result.success){
@@ -1620,16 +1747,12 @@ myApp.controller('messageconversationCtrl', function($scope,$localStorage,$cooki
 	endpoints.mobileHandler.getInboxMessages($scope.apiKey, $scope.userId, $routeParams.conversationId, null, null, function(result){
 		for(var i=0; i<result.result.result.Messages.length; i++){
 				$scope.internalMessages.push(result.result.result.Messages[i]);
-		}
-		
-		debugger;
-		
+		}		
 		$scope.$apply();
 	});	
 	
 	$scope.submitMessageReply = function() {
 		if($scope.messageReplyText){
-			debugger;
 			endpoints.mobileHandler.sendMessageReply($scope.apiKey, $scope.userId, $routeParams.conversationId, $scope.messageReplyText, function(result){
 				if(result.result.success){
 					alert('Successfully Updated');
@@ -1643,7 +1766,6 @@ myApp.controller('messageconversationCtrl', function($scope,$localStorage,$cooki
 				}
 				else{
 					alert('Error');
-					debugger;
 				}
 			});
 		}
@@ -1796,7 +1918,6 @@ myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
 			var resultArray = result.result.result;
 			$scope.preferences = resultArray;
 			for(var i=0; i<resultArray.length; i++){
-				debugger;
 				switch(resultArray[i]){
 					case "3a": 
 						if($scope.preferences.indexOf("3e") !== -1){
@@ -1859,7 +1980,6 @@ myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
 	});
 	
 	$scope.updateNotification = function() {
-		debugger;
 		if($scope.emailCheck){
 			if($scope.preferences.indexOf("3a") == -1)
 				$scope.preferences.push("3a", "3e", "3h");
@@ -2013,7 +2133,6 @@ myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
 			if(index !== -1)
 				$scope.preferences.splice(index, 1);
 		}
-		debugger;
 		endpoints.mobileHandler.updateNotifications($scope.apiKey, $scope.userId, $scope.panelistId, $scope.preferences, function(result){
 			
 		});
@@ -2147,7 +2266,6 @@ myApp.controller('rewardsCtrl', function($scope, $location, $rootScope, $localSt
 });
 
 myApp.controller('rewardsModalCtrl', function($scope, $modalInstance, rewards, $rootScope){
-	debugger;
 	if($rootScope.email){
 			$scope.email = $rootScope.email;
 		}
@@ -2190,7 +2308,6 @@ myApp.controller('rewardDetailsCtrl', function($scope, $rootScope, $modalInstanc
             priority: 0,
             controller: function() {},
             link: function (scope, element, attrs, ctrl) {
-				debugger;
                 var slider;
                 ctrl.update = function() {
                     slider && slider.destroySlider();
@@ -2205,7 +2322,6 @@ myApp.controller('rewardDetailsCtrl', function($scope, $rootScope, $modalInstanc
             require: '^bxSlider',
             link: function(scope, elm, attr, bxSliderCtrl) {
                 if (scope.$last) {
-					debugger;
                     bxSliderCtrl.update();
                 }
             }
