@@ -27,7 +27,7 @@
                         </div>                     
                     </article>
                 </div>
-                <div class="grid-content" ng-if="!showIframe">
+                <div class="grid-content" ng-if="!showIframe && !showPolls">
                     <article class="card replyToPost">                        
                         <!--avatar container-->
                         <div class="postContent card-section">
@@ -123,6 +123,29 @@
                         </div>
                     </article>
                 </div>
+				<div class="grid-content" ng-if="showPolls">
+					<form class="dailyPoll" name="pollForm">
+						<aside class="card pollResults" ng-init="checkUserPolls(tasks[i])">
+							<div id="pollContent">
+								<h5 class="pollQuestion" id="currentUpdaQuestion" bind-html-compile="tasks[i].QuestionText"></h5>
+								<p ng-repeat="option in tasks[i].options.categories" ng-if="tasks[i].type == 'SingleChoice'">
+									<input type="radio" name="poll" id="poll-radio-{{$index}}" value="{{$index + 1}}" ng-model="option.pollvote" />
+									<label for="poll-radio-{{$index}}" id="label-{{$index}}" class="inline-label">
+										{{option.description}}
+									</label>
+								</p>
+								<p ng-repeat="option in tasks[i].options.categories" ng-if="tasks[i].type != 'SingleChoice'">
+									<input type="checkBox" name="poll" id="poll-radio-{{$index}}" value="{{$index + 1}}" ng-model="option.pollvote" />
+									<label for="poll-radio-{{$index}}" id="label-{{$index}}" class="inline-label">
+										{{option.description}}
+									</label>
+								</p>
+								{{option.pollvote}}
+								<button type="submit" class="button" id="pollSubmit" ng-click="submitSocialPolls(tasks[i])">Submit Poll</button>
+							</div>
+						</aside>
+					</form>
+				</div>
 				<div class="grid-content" ng-if="showIframe">
 					<iframe ng-src="{{iframeSource | trustAsResourceUrl}}" width="{{iframeWidth}}" height="{{iframeHeight}}"></iframe>
 				</div>
@@ -138,10 +161,8 @@
                                 <h3 class="quizTitle">{{assignment.moduleTitle}}</h3>
                                 <p dynamic="{{assignment.options.instructions}}"></p>
                             </div>
-
-
                         </article>
-                    </div>                    
+                    </div>
                 </div><!--end assignment content-->                
             </section><!--end main content-->
 

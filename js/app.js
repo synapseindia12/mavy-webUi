@@ -124,6 +124,7 @@ myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieSt
 	};
 	
 	$scope.fbLogin = function() {
+		debugger;
 		$facebook.login().then(function(result){
 			if(result.status){
 				$scope.accessToken = result.authResponse.accessToken;
@@ -164,7 +165,7 @@ myApp.controller('signupCtrl', function($scope, $rootScope, $location, $cookieSt
 					});
 				}
 			}
-		});
+		}, {scope: "email"});
 	};	
 });
 
@@ -262,11 +263,17 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 		$location.path('/forum-expanded/'+forumId);
 	}
 	
-	$scope.localDate = function(date){
+	 $scope.localDate = function(date){
+		
 		var d = new Date(date);
-		//var _utc = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
-    	var _utc = d.toLocaleString();
-    	return _utc;
+    	var offset = d.getTimezoneOffset() / 60;
+    	var hours = d.getHours();
+    	var minsLim = Math.floor(offset)-offset;
+    	var mins = d.getMinutes()/60;
+    	d.setMinutes((mins - minsLim)*60);
+    	d.setHours(hours - Math.ceil(offset));
+
+    	return d;
 	}
 	
 });
@@ -724,6 +731,7 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	$scope.displayName = $cookieStore.get('userName');
 	$scope.showIframe = false;
 	$scope.feedActive = false;
+	$scope.showPolls = false;
 	$scope.assignmentActive = true;
 	$scope.forumActive = false;
 	$scope.messagesactive = false;
@@ -813,6 +821,16 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 						});
 					}
 				}
+				if(result.result.result.AvailableTasks[0].TaskTypeId == 2){
+					$scope.showIframe = false;
+					$scope.showPolls = true;
+					if(result.result.result.AvailableTasks.length > 0){
+						for(var i=0;i<result.result.result.AvailableTasks.length;i++){
+							$scope.tasks.push(result.result.result.AvailableTasks[i]);
+							debugger;
+						}
+					}
+				}
 			}
 			else{
 				$scope.showIframe = true;
@@ -849,6 +867,47 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 				$scope.$apply();
 			});
 		});
+	};
+	
+	$scope.submitSocialPolls = function(task, option) {
+		var answerIds = [];
+		if(task.type == "SingleChoice"){
+			if($('input[name="poll"]:checked')){
+				var value = $('input[name="poll"]:checked').val();
+				answerIds.push(value);
+			}
+		}
+		else{
+			if($("input[name='poll']:checked")){
+				$.each($("input[name='poll']:checked"), function(){
+					answerIds.push($(this).val());
+				});
+			}
+		}
+		if(answerIds.length > 0){
+			if(task){
+				if(task.TaskId && task.TaskStatus != 'Completed'){
+					debugger;
+					endpoints.mobileHandler.createPollTaskVote($scope.apiKey, $scope.userId, $scope.projectId,$scope.moduleId,task.TaskId, $scope.panelistId, answerIds, function(result){
+						alert('Hello');
+						debugger;				
+						// if(replies.result.success){
+							// for(var i=0; i<replies.result.result[1].Replies.length; i++){
+								// if(replies.result.result[1].Replies[i].ParentId == 0){
+									// $scope.allReplies.push(replies.result.result[1].Replies[i]);
+								// }
+								// $scope.childReplies.push(replies.result.result[1].Replies[i])
+							// }
+						// }
+						// $scope.$apply();
+					});
+				}
+			}
+		}
+	};
+	
+	$scope.checkUserPolls = function(task){
+	
 	};
 	
 	$scope.submitChildReply = function(Id, TaskId) {
@@ -946,7 +1005,7 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 			$scope.hideLeftArrow = true;
 			//alert('Project is not yet marked completed. Please complete this task and then move forward');
 		}
-	}
+	};
 	
 	$scope.getPreviousTasks = function(i) {
 		var taskId = $scope.tasks[i].TaskId;
@@ -1000,7 +1059,7 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 		else
 			$scope.hideRightArrow = false;
 			$scope.hideLeftArrow = false;
-	}
+	};
 	
 	$scope.gotoReplyBox = function(){
 		if($scope.showReplyBox)
@@ -1014,7 +1073,7 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 			$scope.repliesCards = false;
 		else
 			$scope.repliesCards = true;
-	}
+	};
 	
 	$scope.gottoChildReplyBox = function(Id, TaskId){
 		if($scope.showReplyBoxforComments){
@@ -1028,7 +1087,7 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 		$scope.childReplyId = Id;
 		$scope.TaskId = TaskId;
 		//$('.childComments').hide();
-	}
+	};
 	
 	// $scope.showChildComments = function(parentId){
 		// $scope.childComments = true;
@@ -1362,10 +1421,16 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 	};
 	
 	$scope.localDate = function(date){
+		
 		var d = new Date(date);
-		//var _utc = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
-    	var _utc = d.toLocaleString();
-    	return _utc;
+    	var offset = d.getTimezoneOffset() / 60;
+    	var hours = d.getHours();
+    	var minsLim = Math.floor(offset)-offset;
+    	var mins = d.getMinutes()/60;
+    	d.setMinutes((mins - minsLim)*60);
+    	d.setHours(hours - Math.ceil(offset));
+
+    	return d;
 	};
 	
 });
@@ -1468,11 +1533,18 @@ myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$
 		}
 	};
  
-	$scope.localDate = function(date){
+	 $scope.localDate = function(date){
+		
 		var d = new Date(date);
-    	var _utc = d.toLocaleString();
-    	return _utc;
-	};
+    	var offset = d.getTimezoneOffset() / 60;
+    	var hours = d.getHours();
+    	var minsLim = Math.floor(offset)-offset;
+    	var mins = d.getMinutes()/60;
+    	d.setMinutes((mins - minsLim)*60);
+    	d.setHours(hours - Math.ceil(offset));
+
+    	return d;
+	}
 	
 	$scope.showChildCommentBox = function(id) {
 		$('.childCommentBox').hide();	
