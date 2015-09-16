@@ -73,7 +73,6 @@
 						<div class="grid-content" ng-repeat="assignment in allAssignments" ng-if="assignment">
 							<article class="card card-margin" ng-click="showAssignmentTasks(assignment)">
 								<div class="card-divider color-code-2">
-									{{assignment.modules[0].moduleType}}
                                     <h6 class="boxTitle">New Assignment |<span style="text-transform: none;" ng-if="assignment.modules[0].moduleType == 1"> Discussion(s)</span><span style="text-transform: none;" ng-if="assignment.modules[0].moduleType == 2"> Quiz</span><span style="text-transform: none;" ng-if="assignment.modules[0].moduleType == 3"> Diary</span><span style="text-transform: none;" ng-if="assignment.modules[0].moduleType == 4"> Sponsored Quiz</span></h6>
                                 </div>
 								<div class="card-section" style="cursor: pointer">

@@ -723,7 +723,7 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	
 });
 
- myApp.controller('showassignmentCtrl', function($scope, $cookieStore, $rootScope, $location, $localStorage, $sce, $window){
+ myApp.controller('showassignmentCtrl', function($scope, $cookieStore, $rootScope, $location, $localStorage, $sce, $window, $route){
 	if(!$localStorage.loginDetails){
 		delete $localStorage.loggedIn;
 		$location.path('/');
@@ -732,6 +732,7 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	$scope.showIframe = false;
 	$scope.feedActive = false;
 	$scope.showPolls = false;
+	$scope.showResults = false;
 	$scope.assignmentActive = true;
 	$scope.forumActive = false;
 	$scope.messagesactive = false;
@@ -769,6 +770,35 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 		$scope.moduleId = $scope.assignment.moduleId;
 		$scope.moduleType = $scope.assignment.moduleType;
 	}
+	
+	$scope.checkUserPolls = function(task){	
+		debugger;
+		endpoints.mobileHandler.getPanelistPollResponses($scope.apiKey, $scope.userId, $scope.panelistId, task.TaskId, function(response){
+			if(response.result.success){
+				if(response.result.result.length > 0){
+					$scope.showResults = true;
+					endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, task.TaskId, function(response){
+						for(var j=0; j<response.result.result[0].values.length; j++){
+							for(var p=0; p<$scope.tasks[$scope.i].options.categories.length; p++){
+								if(response.result.result[0].values[p]){
+									if(response.result.result[0].values[p].value==(j+1)){
+										response.result.result[0].values[p].count = (response.result.result[0].values[p].count /response.result.result[0].responseCount)*100;
+										$scope.tasks[$scope.i].options.categories[j].values = Math.round(response.result.result[0].values[p].count);
+									}
+								}
+								else {
+									$scope.tasks[$scope.i].options.categories[p].values = 0;
+								}
+							}					
+						}
+						$scope.$apply();
+					});
+				}
+			}		
+		});
+			
+	};
+	
 		endpoints.mobileHandler.getPanelistModuleTasks($scope.apiKey, $scope.userId, $scope.projectId, $scope.moduleId, $scope.panelistId, 20, 0, function(result){
 			if(result.result.result.AvailableTasks[0]){
 				if(result.result.result.AvailableTasks[0].TaskTypeId == 1){
@@ -827,9 +857,9 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 					if(result.result.result.AvailableTasks.length > 0){
 						for(var i=0;i<result.result.result.AvailableTasks.length;i++){
 							$scope.tasks.push(result.result.result.AvailableTasks[i]);
-							debugger;
 						}
 					}
+					$scope.checkUserPolls($scope.tasks[$scope.i]);
 				}
 			}
 			else{
@@ -884,30 +914,17 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 				});
 			}
 		}
+		
 		if(answerIds.length > 0){
 			if(task){
-				if(task.TaskId && task.TaskStatus != 'Completed'){
-					debugger;
+				if(task.TaskId){
 					endpoints.mobileHandler.createPollTaskVote($scope.apiKey, $scope.userId, $scope.projectId,$scope.moduleId,task.TaskId, $scope.panelistId, answerIds, function(result){
-						alert('Hello');
-						debugger;				
-						// if(replies.result.success){
-							// for(var i=0; i<replies.result.result[1].Replies.length; i++){
-								// if(replies.result.result[1].Replies[i].ParentId == 0){
-									// $scope.allReplies.push(replies.result.result[1].Replies[i]);
-								// }
-								// $scope.childReplies.push(replies.result.result[1].Replies[i])
-							// }
-						// }
-						// $scope.$apply();
+						alert('Your poll has been submitted');
+						$scope.checkUserPolls(task);
 					});
 				}
 			}
 		}
-	};
-	
-	$scope.checkUserPolls = function(task){
-	
 	};
 	
 	$scope.submitChildReply = function(Id, TaskId) {
@@ -1007,6 +1024,50 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 		}
 	};
 	
+	$scope.getNextPoll = function(i) {
+		debugger;
+		if($scope.tasks[i].TaskStatus == 'Completed'){
+			$scope.i = i+1;
+			if($scope.tasks[$scope.i]){
+				endpoints.mobileHandler.getPanelistPollResponses($scope.apiKey, $scope.userId, $scope.panelistId, $scope.tasks[$scope.i].TaskId, function(response){
+					if(response.result.success){
+						if(response.result.result.length > 0){
+							$scope.showResults = true;
+							endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, $scope.tasks[$scope.i].TaskId, function(response){
+								for(var j=0; j<response.result.result[0].values.length; j++){
+									for(var p=0; p<$scope.tasks[$scope.i].options.categories.length; p++){
+										if(response.result.result[0].values[p]){
+											if(response.result.result[0].values[p].value==(j+1)){
+												response.result.result[0].values[p].count = (response.result.result[0].values[p].count /response.result.result[0].responseCount)*100;
+												$scope.tasks[$scope.i].options.categories[j].values = Math.round(response.result.result[0].values[p].count);
+											}
+										}
+										else {
+											$scope.tasks[$scope.i].options.categories[p].values = 0;
+										}
+									}					
+								}
+								$scope.$apply();
+							});
+						}
+						else{
+							$scope.showResults = false;
+							$scope.hideRightArrow = true;
+							$scope.$apply();
+						}
+					}
+				});
+			}
+			else{
+				$scope.i = i;
+				$scope.hideLeftArrow = true;
+			}
+		}
+		else{
+			alert('Current task is not yet completed');
+		}
+	};
+	
 	$scope.getPreviousTasks = function(i) {
 		var taskId = $scope.tasks[i].TaskId;
 		if($scope.i > 0)
@@ -1059,6 +1120,62 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 		else
 			$scope.hideRightArrow = false;
 			$scope.hideLeftArrow = false;
+	};
+	
+	$scope.getPreviousPoll = function(i){
+		debugger;
+		if($scope.tasks[i-1]){
+			endpoints.mobileHandler.getPanelistPollResponses($scope.apiKey, $scope.userId, $scope.panelistId, $scope.tasks[i-1].TaskId, function(response){
+				if(response.result.success){
+					if(response.result.result.length > 0){
+						$scope.showResults = true;
+						endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, $scope.tasks[i-1].TaskId, function(response){
+							for(var j=0; j<response.result.result[0].values.length; j++){
+								for(var p=0; p<$scope.tasks[$scope.i].options.categories.length; p++){
+									if(response.result.result[0].values[p]){
+										if(response.result.result[0].values[p].value==(j+1)){
+											response.result.result[0].values[p].count = (response.result.result[0].values[p].count /response.result.result[0].responseCount)*100;
+											$scope.tasks[$scope.i].options.categories[j].values = Math.round(response.result.result[0].values[p].count);
+										}
+									}
+									else {
+										$scope.tasks[$scope.i].options.categories[p].values = 0;
+									}
+								}					
+							}
+							$scope.i = i-1;
+							if($scope.i == 0){
+								$scope.hideRightArrow = false;
+								$scope.hideLeftArrow = false;
+							}
+							else{
+								$scope.hideLeftArrow = false;
+								$scope.hideRightArrow = true;
+							}
+							$scope.$apply();
+						});
+					}
+					else{
+						$scope.i = i-1;
+						$scope.showResults = false;
+						$scope.hideRightArrow = true;
+						if($scope.i == 0){
+							$scope.hideRightArrow = false;
+							$scope.hideLeftArrow = false;
+						}
+						else{
+								$scope.hideLeftArrow = false;
+								$scope.hideRightArrow = true;
+							}
+						$scope.$apply();
+					}
+				}
+			});
+		}
+		else {
+			$scope.i = i;
+			$scope.hideRightArrow = true;
+		}
 	};
 	
 	$scope.gotoReplyBox = function(){

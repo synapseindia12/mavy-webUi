@@ -16,9 +16,13 @@
                     <!--featured content-->
                     <article class="card featuredAssignment">
                         <div class="card-section">
-							<div class="arrow_slot" ng-if="!showIframe">
+							<div class="arrow_slot" ng-if="!showIframe && !showPolls">
 								<img class="right-arrow" src="images/arrow-right-01.svg" ng-click="getNextTask(i)" ng-hide="hideLeftArrow" />
 								<img class="left-arrow" src="images/arrow-left-01.svg" ng-click="getPreviousTasks(i)" ng-show="hideRightArrow" />
+							</div>
+							<div class="arrow_slot" ng-if="showPolls">
+								<img class="right-arrow" src="images/arrow-right-01.svg" ng-click="getNextPoll(i)" ng-hide="hideLeftArrow" />
+								<img class="left-arrow" src="images/arrow-left-01.svg" ng-click="getPreviousPoll(i)" ng-show="hideRightArrow" />
 							</div>
                            <!--<h3 class="boxTitle" ng-if="assignment.projectTitle">{{assignment.projectTitle}}</h3>-->
 						   <h3 class="boxTitle" ng-if="assignment.modules[0].moduleTitle">{{assignment.modules[0].moduleTitle}}</h3>
@@ -125,23 +129,28 @@
                 </div>
 				<div class="grid-content" ng-if="showPolls">
 					<form class="dailyPoll" name="pollForm">
-						<aside class="card pollResults" ng-init="checkUserPolls(tasks[i])">
+						<aside class="card pollResults">
 							<div id="pollContent">
 								<h5 class="pollQuestion" id="currentUpdaQuestion" bind-html-compile="tasks[i].QuestionText"></h5>
-								<p ng-repeat="option in tasks[i].options.categories" ng-if="tasks[i].type == 'SingleChoice'">
+								<p ng-repeat="option in tasks[i].options.categories" ng-if="tasks[i].type == 'SingleChoice' && !showResults">
 									<input type="radio" name="poll" id="poll-radio-{{$index}}" value="{{$index + 1}}" ng-model="option.pollvote" />
 									<label for="poll-radio-{{$index}}" id="label-{{$index}}" class="inline-label">
 										{{option.description}}
 									</label>
 								</p>
-								<p ng-repeat="option in tasks[i].options.categories" ng-if="tasks[i].type != 'SingleChoice'">
+								<p ng-repeat="option in tasks[i].options.categories" ng-if="tasks[i].type != 'SingleChoice' && !showResults">
 									<input type="checkBox" name="poll" id="poll-radio-{{$index}}" value="{{$index + 1}}" ng-model="option.pollvote" />
 									<label for="poll-radio-{{$index}}" id="label-{{$index}}" class="inline-label">
 										{{option.description}}
 									</label>
 								</p>
-								{{option.pollvote}}
-								<button type="submit" class="button" id="pollSubmit" ng-click="submitSocialPolls(tasks[i])">Submit Poll</button>
+								<p class="percents" ng-repeat="option in tasks[i].options.categories" ng-if="showResults">
+									<span class="result-text" id="result-poll-{{$index}}">
+										{{option.values}}%
+									</span>
+									{{option.description}}
+								</p>
+								<button type="submit" class="button" id="pollSubmit" ng-click="submitSocialPolls(tasks[i])" ng-if="!showResults">Submit Poll</button>
 							</div>
 						</aside>
 					</form>
