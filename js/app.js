@@ -363,41 +363,43 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 				if(response.result.success){
 					 for(var i=0; i<result.result.result.Entries.length; i++){
 						if(result.result.result.Entries[i]){
-							if(result.result.result.Entries[i].itemId == response.result.result[0].itemId){
-								for(var j=0; j<response.result.result[0].values.length; j++){
-									for(var p=0; p<result.result.result.Entries[i].options.categories.length; p++){
-										if(response.result.result[0].values[p]){
-											if(response.result.result[0].values[p].value==(j+1)){
-												response.result.result[0].values[p].count = (response.result.result[0].values[p].count /response.result.result[0].responseCount)*100;
-												result.result.result.Entries[i].options.categories[j].values = Math.round(response.result.result[0].values[p].count);
+							if(response.result.result[0]){
+								if(result.result.result.Entries[i].itemId == response.result.result[0].itemId){
+									for(var j=0; j<response.result.result[0].values.length; j++){
+										for(var p=0; p<result.result.result.Entries[i].options.categories.length; p++){
+											if(response.result.result[0].values[p]){
+												if(response.result.result[0].values[p].value==(j+1)){
+													response.result.result[0].values[p].count = (response.result.result[0].values[p].count /response.result.result[0].responseCount)*100;
+													result.result.result.Entries[i].options.categories[j].values = Math.round(response.result.result[0].values[p].count);
+												}
 											}
-										}
-										else {
-											result.result.result.Entries[i].options.categories[p].values = 0;
-										}
-									}						
-								}
-								$rootScope.totalPollsResults.push(result.result.result.Entries[i]);
-								if($scope.allPolls.length > 0){
-									if(result.result.result.Entries[i].itemId != $scope.allPolls[0].itemId){
-										$rootScope.dataforResults.push(result.result.result.Entries[i]);
+											else {
+												result.result.result.Entries[i].options.categories[p].values = 0;
+											}
+										}						
 									}
-									else{
-										if(result.result.result.Entries[i-1]){
-											if($rootScope.dataforResults.length == 0)
-												$rootScope.dataforResults.push(result.result.result.Entries[i-1]);
+									$rootScope.totalPollsResults.push(result.result.result.Entries[i]);
+									if($scope.allPolls.length > 0){
+										if(result.result.result.Entries[i].itemId != $scope.allPolls[0].itemId){
+											$rootScope.dataforResults.push(result.result.result.Entries[i]);
 										}
 										else{
-											if(result.result.result.Entries[i+1]){
+											if(result.result.result.Entries[i-1]){
 												if($rootScope.dataforResults.length == 0)
-													$rootScope.dataforResults.push(result.result.result.Entries[i+1]);
+													$rootScope.dataforResults.push(result.result.result.Entries[i-1]);
+											}
+											else{
+												if(result.result.result.Entries[i+1]){
+													if($rootScope.dataforResults.length == 0)
+														$rootScope.dataforResults.push(result.result.result.Entries[i+1]);
+												}
 											}
 										}
 									}
-								}
-								else{
-									if($rootScope.dataforResults.length == 0)
-										$rootScope.dataforResults.push(result.result.result.Entries[0]);
+									else{
+										if($rootScope.dataforResults.length == 0)
+											$rootScope.dataforResults.push(result.result.result.Entries[0]);
+									}
 								}
 							}
 						}
@@ -427,41 +429,43 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 			
 			endpoints.mobileHandler.getPollResponseCounts($scope.apiKey, $scope.userId, result.result.result.Entries[$scope.incrementedVal].taskId, function(response){
 				 for(var i=0; i<result.result.result.Entries.length; i++){
-					if(result.result.result.Entries[i].itemId == response.result.result[0].itemId){
-						for(var j=0; j<response.result.result[0].values.length; j++){
-							for(var p=0; p<result.result.result.Entries[i].options.categories.length; p++){
-								if(response.result.result[0].values[p]){
-									if(response.result.result[0].values[p].value==(j+1)){
-										response.result.result[0].values[p].count = (response.result.result[0].values[p].count /response.result.result[0].responseCount)*100;
-										result.result.result.Entries[i].options.categories[j].values = Math.round(response.result.result[0].values[p].count);
+					if(response.result.result[0]){
+						if(result.result.result.Entries[i].itemId == response.result.result[0].itemId){
+							for(var j=0; j<response.result.result[0].values.length; j++){
+								for(var p=0; p<result.result.result.Entries[i].options.categories.length; p++){
+									if(response.result.result[0].values[p]){
+										if(response.result.result[0].values[p].value==(j+1)){
+											response.result.result[0].values[p].count = (response.result.result[0].values[p].count /response.result.result[0].responseCount)*100;
+											result.result.result.Entries[i].options.categories[j].values = Math.round(response.result.result[0].values[p].count);
+										}
 									}
-								}
-								else {
-									result.result.result.Entries[i].options.categories[p].values = 0;
-								}
-							}						
-						}
-						$rootScope.totalPollsResults.push(result.result.result.Entries[i]);
-						if($scope.allPolls.length > 0){
-							if(result.result.result.Entries[i].itemId != $scope.allPolls[0].itemId){
-								$rootScope.dataforResults.push(result.result.result.Entries[i]);
+									else {
+										result.result.result.Entries[i].options.categories[p].values = 0;
+									}
+								}						
 							}
-							else{
-								if(result.result.result.Entries[i-1]){
-									if($rootScope.dataforResults.length == 0)
-										$rootScope.dataforResults.push(result.result.result.Entries[i-1]);
+							$rootScope.totalPollsResults.push(result.result.result.Entries[i]);
+							if($scope.allPolls.length > 0){
+								if(result.result.result.Entries[i].itemId != $scope.allPolls[0].itemId){
+									$rootScope.dataforResults.push(result.result.result.Entries[i]);
 								}
 								else{
-									if(result.result.result.Entries[i+1]){
+									if(result.result.result.Entries[i-1]){
 										if($rootScope.dataforResults.length == 0)
-											$rootScope.dataforResults.push(result.result.result.Entries[i+1]);
+											$rootScope.dataforResults.push(result.result.result.Entries[i-1]);
+									}
+									else{
+										if(result.result.result.Entries[i+1]){
+											if($rootScope.dataforResults.length == 0)
+												$rootScope.dataforResults.push(result.result.result.Entries[i+1]);
+										}
 									}
 								}
 							}
-						}
-						else{
-							if($rootScope.dataforResults.length == 0)
-								$rootScope.dataforResults.push(result.result.result.Entries[0]);
+							else{
+								if($rootScope.dataforResults.length == 0)
+									$rootScope.dataforResults.push(result.result.result.Entries[0]);
+							}
 						}
 					}
 				}
