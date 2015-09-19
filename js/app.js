@@ -1235,23 +1235,22 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 	$scope.assignmentActive = false;
 	$scope.forumActive = true;
 	$scope.messagesactive = false;
-	 $scope.activeThreads = [];
-	 $scope.childThreads = [];
-	 $scope.nextLevelChild =[];
-	 $scope.showChilds = false;
+	$scope.activeThreads = [];
+	$scope.childThreads = [];
+	$scope.nextLevelChild =[];
+	$scope.showChilds = false;
 	
-	 if(!$localStorage.loginDetails){
-	  delete $localStorage.loggedIn;
-	  $location.path('/');
-	 }
-	 var loginDetails = $localStorage.loginDetails;
-	 $scope.apiKey = loginDetails[0].value;
-	 $scope.userId = loginDetails[1].value;
-	 var endpoints = {};
-	 endpoints.apiKey = $scope.apiKey;
-	 endpoints.mobileHandler = new MobileHandler();
-	 
-	 endpoints.mediaHandler = new MediaHandler();
+	if(!$localStorage.loginDetails){
+		delete $localStorage.loggedIn;
+		$location.path('/');
+	}
+	var loginDetails = $localStorage.loginDetails;
+	$scope.apiKey = loginDetails[0].value;
+	$scope.userId = loginDetails[1].value;
+	var endpoints = {};
+	endpoints.apiKey = $scope.apiKey;
+	endpoints.mobileHandler = new MobileHandler();
+	endpoints.mediaHandler = new MediaHandler();
 	
  //endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(result){
  	$scope.loadActiveThreads = function(){
@@ -1285,27 +1284,27 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 		else
 			$scope.showChilds = true;
 			
-	if($scope.showChilds){
-		$rootScope.currentId = id;
-	  if($scope.childThreads.length > 0) {
-	   $scope.childThreads = [];
-	  } 
-	  else{
-	   $scope.parentId=null;
-	   $scope.threadId=null;
-	  }
-	  endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,$rootScope.currentId,null,null,function(child){
-		if(child.result.success){
-		   if(child.result.result[1].Replies) {
-			for(var j=0; j<child.result.result[1].Replies.length; j++){    
-			 if(id == child.result.result[1].Replies[j].ThreadId)
-			  $scope.childThreads.push(child.result.result[1].Replies[j]);
+		if($scope.showChilds){
+			$rootScope.currentId = id;
+			if($scope.childThreads.length > 0) {
+				$scope.childThreads = [];
 			}
-		   }
-		   $scope.$apply();
+			else {
+				$scope.parentId=null;
+				$scope.threadId=null;
+			}
+			endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,$rootScope.currentId,null,null,function(child){
+				if(child.result.success){
+				   if(child.result.result[1].Replies) {
+					for(var j=0; j<child.result.result[1].Replies.length; j++){    
+					 if(id == child.result.result[1].Replies[j].ThreadId)
+					  $scope.childThreads.push(child.result.result[1].Replies[j]);
+					}
+				   }
+				   $scope.$apply();
+				}
+			});
 		}
-	  });
-	}
 	  
 	};
 	
@@ -1318,153 +1317,138 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 			$scope.replyBoxforReplies = true;
 			$('.showReplyBoxforReply' + Id).show();
 		}
-	}
+	};
  
- $scope.showCommentbox = function(id) {
-  if($scope.childThreads.length>0){
-   for(var i=0; i<$scope.childThreads.length; i++){
-    if(id==$scope.childThreads[0].ThreadId){
-     return true;
-    }
-
-    else{
-     return false;
-    }
-   }
-  }
-  else{ 
-   if(id==$rootScope.currentId){ 
-    return true;
-   }
-  }
-  
- };
- 
- $scope.submitPost = function(){
-  $scope.threadInfo=[{"name":"Subject","value":$scope.postTitle},{"name":"Body","value":$scope.postBody}];
-  endpoints.mobileHandler.createThread($scope.apiKey,$scope.userId,3,$scope.threadInfo,function(response){
-   if(response.result.success){
-    endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
-     if(forums.result.result.Threads) {
-      $rootScope.forumsCount=forums.result.result.Threads.length;
-      $rootScope.allForums=forums.result.result.Threads;
-      for(var i=0; i<$rootScope.allForums.length; i++){   
-       $scope.activeThreads.push($rootScope.allForums[i]);
-      }
-      $scope.postTitle="";
-      $scope.postBody="";
-      $scope.$apply();
-     }
-    });
-   }
-  });  
- };
-
-
- $scope.expandForumPage =function(id){
-  
-  $location.path('/forum-expanded/'+id);
- };
-
- $scope.gotoReplyBox = function(){
-  $('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
- };
-
- $scope.saveThreadReply=function(replyText,id){
-  if(replyText){
-   endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,id,0,replyText,function(response){
-    
-    if(response.result.success){
-     alert('success');
-     
-     $rootScope.currentId = id;
-     if($scope.childThreads.length > 0) {
-      $scope.childThreads = [];
-     } 
-    
-     endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,id,null,null,function(child){
-
-      if(child.result.result[1].Replies) {
-       for(var j=0; j<child.result.result[1].Replies.length; j++){    
-        if(id == child.result.result[1].Replies[j].ThreadId)
-         $scope.childThreads.push(child.result.result[1].Replies[j]);
-       }
-   
-      }
-      $scope.$apply();
-      $('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
-      
-     });
-     $scope.activeThreads = [];
-     $scope.loadActiveThreads();
-     $('#reply').val('');
-     $scope.$apply();
-    }
-    else{
-     alert('Fail');
-    }
-   });
-  }
-  else{
-   alert('blank data');
-  }
- };
- 
- $scope.savechildThreadReply = function(threadId,parentId) {
-	if($('#displayReplyBox'+parentId+' textarea').val()){
-	var replyText = $('#displayReplyBox'+parentId+' textarea').val();
-   endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,threadId,parentId,replyText,function(response){
-    
-    if(response.result.success){     
-     $rootScope.currentId = threadId;
-     if($scope.childThreads.length > 0) {
-      $scope.childThreads = [];
-     } 
-     
-     endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,threadId,null,null,function(child){
-
-	if(child.result.result[1].Replies){
-	   for(var j=0; j<child.result.result[1].Replies.length; j++){    
-		if(threadId == child.result.result[1].Replies[j].ThreadId)
-		 $scope.childThreads.push(child.result.result[1].Replies[j]);
-	   }     
-	}
-      
-      $scope.$apply();
-  
-     });
-     $scope.activeThreads = [];
-     $scope.loadActiveThreads();
-     $('#displayReplyBox'+parentId+' textarea').val('');
-     $scope.nextLevelChild =[];
-      $scope.$apply();
-    }
-    else{
-     alert('Fail');
-    }
-   });
-  }
-  else{
-   alert('blank data');
-  }
- };
- 
- $scope.showChildCommentBox = function(id) {
-	$('.childCommentBox').hide();	
-	$('#displayReplyBox' + id).show();
-	$scope.nextLevelChild=[];
-	for(var i=0;i<$scope.childThreads.length;i++){
-		if($scope.childThreads[i].ParentId==id){
-			$scope.nextLevelChild.push($scope.childThreads[i]);
+	$scope.showCommentbox = function(id) {
+		if($scope.childThreads.length>0){
+			for(var i=0; i<$scope.childThreads.length; i++){
+				if(id==$scope.childThreads[0].ThreadId){
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
 		}
-	}
- }
+		else { 
+			if(id==$rootScope.currentId){ 
+				return true;
+			}
+		}
+	};
+ 
+	$scope.submitPost = function(){
+		$scope.threadInfo=[{"name":"Subject","value":$scope.postTitle},{"name":"Body","value":$scope.postBody}];
+		endpoints.mobileHandler.createThread($scope.apiKey,$scope.userId,3,$scope.threadInfo,function(response){
+			if(response.result.success){
+				endpoints.mobileHandler.getActiveThreads($scope.apiKey,$scope.userId,3,null,null,function(forums){
+					if(forums.result.result.Threads) {
+						$rootScope.forumsCount=forums.result.result.Threads.length;
+						$rootScope.allForums=forums.result.result.Threads;
+						for(var i=0; i<$rootScope.allForums.length; i++){   
+							$scope.activeThreads.push($rootScope.allForums[i]);
+						}
+						$scope.postTitle="";
+						$scope.postBody="";
+						$scope.$apply();
+					}
+				});
+			}
+		});  
+	};
+	
+	$scope.expandForumPage =function(id){ 
+		$location.path('/forum-expanded/'+id);
+	};
+
+	$scope.gotoReplyBox = function(){
+		$('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
+	};
+
+	$scope.saveThreadReply=function(replyText,id){
+		if(replyText){
+			endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,id,0,replyText,function(response){ 
+				if(response.result.success){
+					alert('success');
+					$rootScope.currentId = id;
+					if($scope.childThreads.length > 0) {
+						$scope.childThreads = [];
+					}    
+					endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,id,null,null,function(child){
+						if(child.result.result[1].Replies) {
+							for(var j=0; j<child.result.result[1].Replies.length; j++){    
+								if(id == child.result.result[1].Replies[j].ThreadId)
+									$scope.childThreads.push(child.result.result[1].Replies[j]);
+							}
+						}
+						$scope.$apply();
+						$('html,body').stop().animate({'scrollTop':($('#reply-box').offset().top-$('#reply-box').height())},'500','swing',function(){});
+					});
+					$scope.activeThreads = [];
+					$scope.loadActiveThreads();
+					$('#reply').val('');
+					$scope.$apply();
+				}
+				else{
+					alert('Fail');
+				}
+			});
+		}
+		else{
+			alert('blank data');
+		}
+	};
+ 
+	$scope.savechildThreadReply = function(threadId,parentId){
+		if($('#displayReplyBox'+parentId+' textarea').val()){
+			var replyText = $('#displayReplyBox'+parentId+' textarea').val();
+			endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,threadId,parentId,replyText,function(response){
+				if(response.result.success){
+					$rootScope.currentId = threadId;
+					if($scope.childThreads.length > 0) {
+					  $scope.childThreads = [];
+					}
+					endpoints.mobileHandler.getThreadReplies($scope.apiKey,$scope.userId,threadId,null,null,function(child){
+						if(child.result.result[1].Replies){
+							for(var j=0; j<child.result.result[1].Replies.length; j++){    
+								if(threadId == child.result.result[1].Replies[j].ThreadId)
+									$scope.childThreads.push(child.result.result[1].Replies[j]);
+							}
+						}      
+						$scope.$apply();  
+					});
+					$scope.activeThreads = [];
+					$scope.loadActiveThreads();
+					$('#displayReplyBox'+parentId+' textarea').val('');
+					$scope.nextLevelChild =[];
+					$scope.$apply();
+				}
+				else{
+					alert('Fail');
+				}
+			});
+		}
+		else{
+		   alert('blank data');
+		}
+	};
+ 
+	$scope.showChildCommentBox = function(id) {
+		$('.childCommentBox').hide();	
+		$('#displayReplyBox' + id).show();
+		$scope.nextLevelChild=[];
+		for(var i=0;i<$scope.childThreads.length;i++){
+			if($scope.childThreads[i].ParentId==id){
+				$scope.nextLevelChild.push($scope.childThreads[i]);
+			}
+		}
+	};
  // $scope.mediaUpload= function(){
   // var hash = CryptoJS.HmacSHA1("Message", "akash");
   // alert(hash);
  // }
  
-	 $scope.uploadFile = function (input){
+	$scope.uploadFile = function (input){
 		$scope.data = {};
 		$scope.data.userUpload = '';
 		$scope.fileName="";
@@ -1540,20 +1524,17 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 		$scope.ThreadId = threadId;
 		$scope.ParentId = ParentId;
 	};
-	
-	$scope.localDate = function(date){
 		
+	$scope.localDate = function(date){		
 		var d = new Date(date);
-    	var offset = d.getTimezoneOffset() / 60;
-    	var hours = d.getHours();
-    	var minsLim = Math.floor(offset)-offset;
-    	var mins = d.getMinutes()/60;
-    	d.setMinutes((mins - minsLim)*60);
-    	d.setHours(hours - Math.ceil(offset));
-
-    	return d;
+		var offset = d.getTimezoneOffset() / 60;
+		var hours = d.getHours();
+		var minsLim = Math.floor(offset)-offset;
+		var mins = d.getMinutes()/60;
+		d.setMinutes((mins - minsLim)*60);
+		d.setHours(hours - Math.ceil(offset));
+		return d;
 	};
-	
 });
 
 myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$routeParams, $location, $route){ 
