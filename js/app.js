@@ -82,7 +82,11 @@ myApp.controller('createUserCtrl', function($scope, $location){
 			alert("Passwords Do not match");
 		}
 		else{
-			var attributes = [{'name': 'email', 'value': $scope.uemail}, {'name': 'username', 'value': $scope.uname}, {'name': 'password', 'value': $scope.password}];
+			// var attributes = [{'name': 'email', 'value': $scope.uemail}, {'name': 'username', 'value': $scope.uname}, {'name': 'password', 'value': $scope.password}];
+			
+			var attributes = [{"name": "username","value": "akash"},{"name": "email","value": "akash@sampatti.com"},{"name": "bdate","value": "4/15/1950"},{"name": "gend","value": "M"},{ "name": "education","value": "edu_7"},{"name": "hispanic","value": "No"},{"name": "ethnicitymultichoice","value": "s6_2::"},{"name": "kidsunder18","value": "Yes"},{ "name": "zipc","value": "60607"},{"name": "state", "value": "IL"},{"name": "region","value": "Midwest"},{"name": "income","value": "s9_5"},{"name": "employmentmultichoice","value": "s10_1::s10_2::s10_3::s10_6::"},{"name": "employmentcensus","value": "s10_1"},{"name": "signupmethod","value": "CreateUser"},{"name": "src","value": "src_5"},{"name": "fname","value": "Diego"},{"name": "lname","value": "C"},{"name": "cellphone","value": "773-123-1234"},{"name": "otpdelivery","value": "1"},{"name": "password", "value": "admin@123"}];
+
+
 			endpoints.mobileHandler.createUser(attributes, function(result){
 				alert(result.result.message);
 				$scope.password = '';
@@ -1487,10 +1491,11 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 								replyText = "<img src=\""+result.result.result.URL+"\">";
 						}
 						else{
+							debugger;
 							if($scope.replyText)
-								replyText = $scope.replyText + "[view:\""+result.result.result.URL+"\":0:0]";
+								replyText = $scope.replyText + "[view:"+result.result.result.URL+":0:0]";
 							else
-								replyText = "[view:\""+result.result.result.URL+"\":0:0]";
+								replyText = "[view:"+result.result.result.URL+":0:0]";
 						}
 						endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,$scope.ThreadId,$scope.ParentId,replyText,function(response){
 							$route.reload();
@@ -1734,11 +1739,14 @@ myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$
 								replyText = "<img src=\""+result.result.result.URL+"\">";
 						}
 						else{
+							alert('In there');
+							debugger;
 							if($scope.replyText)
-								replyText = $scope.replyText + "[view:\""+result.result.result.URL+"\":0:0]";
+								replyText = $scope.replyText + "[view:"+result.result.result.URL+":0:0]";
 							else
-								replyText = "[view:\""+result.result.result.URL+"\":0:0]";
+								replyText = "[view:"+result.result.result.URL+":0:0]";
 						}
+						debugger;
 						endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,$scope.ThreadId,$scope.ParentId,replyText,function(response){
 							$route.reload();
 						});
@@ -1773,7 +1781,7 @@ myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$
 	};
 });
 
-myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $localStorage, $location){
+myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $localStorage, $location, $route){
 	if(!$localStorage.loginDetails){
 		delete $localStorage.loggedIn;
 		$location.path('/');
@@ -1834,6 +1842,7 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 			$scope.internalMessages = [];
 			$scope.message = message;
 			conversationId = message.LastMessage.ConversationId;
+			debugger;
 			endpoints.mobileHandler.getInboxMessages($scope.apiKey, $scope.userId, conversationId, null, null, function(result){
 				for(var i=0; i<result.result.result.Messages.length; i++){
 					$scope.internalMessages.push(result.result.result.Messages[i]);
@@ -1846,14 +1855,23 @@ myApp.controller('messagesCtrl', function($scope, $cookieStore, $rootScope, $loc
 	$scope.createNewMessage = function() {
 		$scope.userNames = [];
 		$scope.projectId = '';
-
-		for(var i=0; i<$rootScope.messages[0].Participants.length; i++){
-			$scope.userNames.push($rootScope.messages[0].Participants[i].Username);
+		if($rootScope.messages.length > 0){
+			for(var i=0; i<$rootScope.messages[0].Participants.length; i++){
+				$scope.userNames.push($rootScope.messages[0].Participants[i].Username);
+			}
 		}
+		else{
+			$scope.userNames.push($cookieStore.get('userName'));
+		}
+		debugger;
 		if($scope.userNames.length > 0){
 			endpoints.mobileHandler.sendMessage($scope.apiKey, $scope.userId, $scope.subject, $scope.messageBody, $scope.userNames, null, null, function(result){
-				if(result.result.success)
+				if(result.result.success){
 					alert('Successfully created');
+					$scope.subject = '';
+					$scope.messageBody = '';
+					$route.reload();
+				}
 			});
 		}
 	};
@@ -2025,7 +2043,7 @@ myApp.controller('profileCtrl', function($scope, $localStorage, $location){
 	};
 });
 
-myApp.controller('badgesCtrl', function($scope, $localStorage, $location){
+myApp.controller('badgesCtrl', function($scope, $localStorage, $location, $route){
 
 	if(!$localStorage.loginDetails){
 		delete $localStorage.loggedIn;
@@ -2038,6 +2056,7 @@ myApp.controller('badgesCtrl', function($scope, $localStorage, $location){
 	$scope.panelistId = loginDetails[2].value;
 	$scope.registrationId = loginDetails[3].value;
 	var sectionId = 2;
+	$scope.showLoader = false;
 	
 	var endpoints = {};
 	endpoints.apiKey = $scope.apiKey;
@@ -2061,6 +2080,39 @@ myApp.controller('badgesCtrl', function($scope, $localStorage, $location){
 		}
 		$scope.$apply();
 	});
+	
+	$scope.uploadFile = function (input){
+		$scope.data = {};
+		$scope.data.userUpload = '';
+		$scope.fileName="";
+		var x="";
+		if(input.files && input.files[0]) {
+			$scope.showLoader = true;
+			var reader = new FileReader();
+			//reader.readAsDataURL(input);
+			reader.onload = function (e) {
+				var mediaT = input.files[0].type.split('/');
+				mediaType = mediaT[0];
+				x=e.target.result.split('base64,');
+				$scope.data.userUpload = x[1];
+				//console.log($scope.data.userUpload.substring(0,64).length);
+				$scope.fileName = input.files[0].name;
+				debugger;
+				endpoints.mobileHandler.updateAvatar($scope.apiKey, $scope.userId, $scope.data.userUpload, $scope.fileName, function(result){
+					if(result.result.success){
+						$scope.showLoader = false;
+						$route.reload();
+					}
+					else{
+						alert('fail');
+					}
+				});
+				$scope.$apply();
+			}					
+			//Renders Image on Page
+			reader.readAsDataURL(input.files[0]);
+		}
+	};
 });
 
 myApp.controller('notificationCtrl', function($scope, $localStorage, $location){

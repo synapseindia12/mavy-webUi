@@ -1,7 +1,9 @@
-	<div class="settingAvatar">
-		<a class="avatarContainer" href="#">
-			<img alt="profile image" class="profile" src="{{avatarUrl}}">
-		</a>
+	<div class="settingAvatar" style="width:auto;">		
+		<span class="avatarContainer" style="position:relative;">
+			<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this)" id="photo-upload" style="height:220px;position:absolute;width:100%;opacity:0;cursor:pointer;" />
+			<img alt="profile image" class="profile" src="{{avatarUrl}}" />
+			<img alt="Uploading Image" ng-if="showLoader" class="profile uploadLoader" src="images/loading45.gif" style="position:absolute;left:0;"/>
+		</span>
 	</div>
 	<div class="settingMeta">
 		<p>{{fname}} {{lname}}</p>
