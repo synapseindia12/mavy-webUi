@@ -1,4 +1,4 @@
-var myApp = angular.module("mavyApp", ['ngRoute', 'ngCookies', 'ngStorage', 'ngFacebook', 'ui.mask', 'ui.bootstrap', 'angular-bind-html-compile']);
+var myApp = angular.module("mavyApp", ['ngRoute', 'ngCookies', 'ngStorage', 'ngFacebook', 'ui.mask', 'ui.bootstrap', 'angular-bind-html-compile', 'ngSanitize']);
 myApp.config(function($routeProvider, $httpProvider, $facebookProvider) {
     $routeProvider
         .when('/', {
@@ -1233,7 +1233,7 @@ myApp.controller('assignmentCtrl', function($scope, $location, $cookieStore, $lo
 	}
 });
 
-myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location, $route){
+myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location, $route, $sce){
 	
 	$scope.feedActive = false;
 	$scope.assignmentActive = false;
@@ -1311,6 +1311,10 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 		}
 	  
 	};
+	
+	$scope.trustSrc = function(src) {
+		return $sce.trustAsResourceUrl(src);
+	}
 	
 	$scope.showReplyBox = function(Id){
 		if($scope.replyBoxforReplies){
@@ -1493,9 +1497,9 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 						else{
 							debugger;
 							if($scope.replyText)
-								replyText = $scope.replyText + "[view:"+result.result.result.URL+":0:0]";
+								replyText = $scope.replyText + "[View:"+result.result.result.URL+":0:0]";
 							else
-								replyText = "[view:"+result.result.result.URL+":0:0]";
+								replyText = "[View:"+result.result.result.URL+":0:0]";
 						}
 						endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,$scope.ThreadId,$scope.ParentId,replyText,function(response){
 							$route.reload();
@@ -1742,9 +1746,9 @@ myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$
 							alert('In there');
 							debugger;
 							if($scope.replyText)
-								replyText = $scope.replyText + "[view:"+result.result.result.URL+":0:0]";
+								replyText = $scope.replyText + "[View:"+result.result.result.URL+":0:0]";
 							else
-								replyText = "[view:"+result.result.result.URL+":0:0]";
+								replyText = "[View:"+result.result.result.URL+":0:0]";
 						}
 						debugger;
 						endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,$scope.ThreadId,$scope.ParentId,replyText,function(response){
@@ -1985,6 +1989,8 @@ myApp.controller('profileCtrl', function($scope, $localStorage, $location){
 	$scope.panelistId = loginDetails[2].value;
 	$scope.registrationId = loginDetails[3].value;
 	var sectionId = 2;
+	$scope.yearSelected = true;
+	var selectedYearValue = document.getElementById("birthyear");
 	
 	var endpoints = {};
 	endpoints.apiKey = $scope.apiKey;
@@ -1996,8 +2002,8 @@ myApp.controller('profileCtrl', function($scope, $localStorage, $location){
 	endpoints.mobileHandler.getPanelistAttributes($scope.apiKey, $scope.userId, $scope.panelistId, function(callback){
 		if(callback.result.success){
 			$scope.avatarUrl = callback.result.result.AvatarUrl;
-			$scope.fname = callback.result.result.fname1;
-			$scope.lname = callback.result.result.lname1;
+			$scope.fname = callback.result.result.fname;
+			$scope.lname = callback.result.result.lname;
 			$scope.email = callback.result.result.email;
 			if(callback.result.result.bdate.slice('/')[1] == '/')
 				$scope.selectedMonth = callback.result.result.bdate.slice('/')[0];
@@ -2016,9 +2022,22 @@ myApp.controller('profileCtrl', function($scope, $localStorage, $location){
 				$scope.selectedYear = callback.result.result.bdate.slice('/')[5]+callback.result.result.bdate.slice('/')[6]+callback.result.result.bdate.slice('/')[7]+callback.result.result.bdate.slice('/')[8];
 			if(callback.result.result.bdate.slice('/')[5] == '/')
 				$scope.selectedYear = callback.result.result.bdate.slice('/')[6]+callback.result.result.bdate.slice('/')[7]+callback.result.result.bdate.slice('/')[8]+callback.result.result.bdate.slice('/')[9];
+			if($scope.selectedYear){
+				for(var i=0; i<selectedYearValue.length; i++){
+					if($scope.selectedYear == selectedYearValue.options[i].text){
+						$scope.yearSelected = false;
+						$scope.selectedYear = $scope.selectedYear;
+					}
+				}
+				if($scope.yearSelected)
+					$scope.selectedYear = selectedYearValue.options[selectedYearValue.length -1].text;
+			}
+			
 			$scope.gender = callback.result.result.gend;
 			$scope.zipcode = callback.result.result.zipc;
-			$scope.mobileNumber = callback.result.result.cell_phone;
+			if(callback.result.result.cellphone){
+				$scope.mobileNumber = callback.result.result.cellphone.replace(/-/g, "");
+			}
 			$scope.$apply();			
 		}
 	});
@@ -2032,8 +2051,17 @@ myApp.controller('profileCtrl', function($scope, $localStorage, $location){
 	});
 	
 	$scope.updateProfile = function() {
+		// if(!$scope.selectedYear || !$scope.selectedMonth || !$scope.selectedDate){
+			// alert('Please select date of birth');
+			// return false;
+		// }
+		// if(!$scope.gender){
+			// alert('Gender can not be blank');
+			// return false;
+		// }
+		
 		$scope.bdate = $scope.selectedMonth + '/' + $scope.selectedDate + '/' + $scope.selectedYear;
-		$scope.attributes = [{"name": "fname1", "value": $scope.fname}, {"name": "lname1", "value": $scope.lname}, {"name": "email", "value": $scope.email}, {"name": "bdate", "value": $scope.bdate}, {"name": "gend", "value": $scope.gender}, {"name": "zipc", "value": $scope.zipcode}];
+		$scope.attributes = [{"name": "fname", "value": $scope.fname}, {"name": "lname", "value": $scope.lname}, {"name": "email", "value": $scope.email}, {"name": "bdate", "value": $scope.bdate}, {"name": "gend", "value": $scope.gender}, {"name": "zipc", "value": $scope.zipcode}];
 		$scope.skipAddressVerify = false;
 		endpoints.mobileHandler.updatePanelistAttributes($scope.apiKey, $scope.userId, $scope.panelistId, $scope.attributes, $scope.skipAddressVerify, function(response){
 			if(response.result.success){

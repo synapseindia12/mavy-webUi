@@ -105,13 +105,22 @@
 												<span style="display:inline-block;background:#e6ece1;padding:8px 15px; border-radius:3px; font-size:14px;">{{fileName}}</span>
 											</div>
 											<div id="comment-button">
-												<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this)" ng-click="setProjectId(items.Id, replyText)" id="photo-upload" style="height:42px;position:absolute;width:131px;opacity:0;" />
-												<a class="button" id="add-media">
+												<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this)" ng-click="setProjectId(items.Id, replyText)" id="photo-upload" style="height:42px;position:absolute;width:131px;opacity:0;z-index:20;" />
+												<span class="button" id="add-media" ng-click="mediaUpload()">
+													<span class="fa fa-camera"></span>
+													Upload Media
+												</span>
+												<input type="submit" value="Submit Reply" class="button fa" id="add-comment" />
+											</div>
+											<!--<div id="comment-button">
+												<input onchange="angular.element(this).scope().uploadFile(this)" ng-click="replyProjectId(reply.ThreadId, reply.Id, replyToPost)" type="file" name="file_upload" style="height:42px;position:absolute;width:131px;opacity:0;" />
+												<a class="button" id="add-media" ng-click="mediaUpload()">
 													<span class="fa fa-camera"></span>
 													Upload Media
 												</a>
+												
 												<input type="submit" value="Submit Reply" class="button fa" id="add-comment" />
-											</div>
+											</div>-->
 										</div>
 									</div>
 								</form>
@@ -137,15 +146,14 @@
                                             
 											<p class="set-width post-data" ng-if="reply.UnfilteredBodyLinks.image.length>0"><img src="{{reply.UnfilteredBodyLinks.image[0]}}" /></p>
                                             <p class="set-width post-data" ng-if="reply.UnfilteredBodyLinks.video.length>0">
-                                                <video width="100%">
-                                                    <source  src="{{reply.UnfilteredBodyLinks.video[0]}}" type="video/mp4">
+                                                <video width="100%" controls>
+                                                    <source  ng-src="{{trustSrc(reply.UnfilteredBodyLinks.video[0])}}" type="video/mp4" />
                                                     Your browser does not support the video tag.
                                                 </video>
                                             </p>
-                                            {{reply.UnfilteredBodyLinks}}
                                             <p class="set-width post-data" ng-if="reply.UnfilteredBodyLinks.audio.length>0">
-                                                <audio>
-                                                    <source  src="{{reply.UnfilteredBodyLinks.audio[0]}}" type="audio/mpeg">
+                                                <audio controls>
+                                                    <source  ng-src="{{trustSrc(reply.UnfilteredBodyLinks.audio[0])}}" type="audio/mpeg" />
                                                     Your browser does not support the audio tag.
                                                 </audio>
                                             </p>
@@ -166,11 +174,11 @@
 														</label>
 													 
 														<div id="comment-button">
-															<input onchange="angular.element(this).scope().uploadFile(this)" ng-click="replyProjectId(reply.ThreadId, reply.Id, replyToPost)" type="file" name="file_upload" style="height:42px;position:absolute;width:131px;opacity:0;">
-															<a class="button" id="add-media" ng-click="mediaUpload()">
+															<input onchange="angular.element(this).scope().uploadFile(this)" ng-click="replyProjectId(reply.ThreadId, reply.Id, replyToPost)" type="file" name="file_upload" style="height:42px;position:absolute;width:131px;opacity:0;z-index:20;" />
+															<span class="button" id="add-media" ng-click="mediaUpload()">
 																<span class="fa fa-camera"></span>
 																Upload Media
-															</a>
+															</span>
 															
 															<input type="submit" value="Submit Reply" class="button fa" id="add-comment" />
 														</div>
@@ -199,14 +207,14 @@
                                                         
 														<p class="set-width post-data" ng-if="rep.UnfilteredBodyLinks.image.length>0"><img src="{{rep.UnfilteredBodyLinks.image[0]}}" /></p>
                                                         <p class="set-width post-data" ng-if="reply.UnfilteredBodyLinks.video.length>0">
-                                                            <video width="100%">
-                                                                <source  src="{{reply.UnfilteredBodyLinks.video[0]}}" type="video/mp4">
+                                                            <video width="100%" controls>
+                                                                <source  ng-src="{{trustSrc(reply.UnfilteredBodyLinks.video[0])}}" type="video/mp4" />
                                                                 Your browser does not support the video tag.
                                                             </video>
                                                         </p>
                                                         <p class="set-width post-data" ng-if="reply.UnfilteredBodyLinks.audio.length>0">
-                                                            <audio>
-                                                                <source  src="{{reply.UnfilteredBodyLinks.audio[0]}}" type="audio/mpeg">
+                                                            <audio controls>
+                                                                <source  ng-src="{{trustSrc(reply.UnfilteredBodyLinks.audio[0])}}" type="audio/mpeg" />
                                                                 Your browser does not support the audio tag.
                                                             </audio>
                                                         </p>

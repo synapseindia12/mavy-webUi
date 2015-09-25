@@ -25,16 +25,16 @@
                                     <label for="userFirstName" class="settingLabel">
                                         First Name
                                     </label>
-                                    <input type="text" class="name first bottom-border" name="first_name" id="userFirstName" placeholder="FIRST NAME" ng-model="fname" />
+                                    <input type="text" class="name first bottom-border" name="first_name" id="userFirstName" placeholder="FIRST NAME" ng-model="fname" required />
                                     <label for="userLastName" class="settingLabel">
                                         Last Name
                                     </label>
-                                    <input type="text" class="name last bottom-border" placeholder="LAST NAME" name="last_name" id="userLastName" ng-model="lname" />
+                                    <input type="text" class="name last bottom-border" placeholder="LAST NAME" name="last_name" id="userLastName" ng-model="lname" required />
                                 
                                     <label for="userEmail" class="settingLabel">
                                         Email Address
                                     </label>
-                                    <input type="email" class="email bottom-border" placeholder="EMAIL" name="location" id="userEmail" ng-model="email" />
+                                    <input type="email" class="email bottom-border" placeholder="EMAIL" name="location" id="userEmail" ng-model="email" required />
 
                                     <div class="dob-labels">
                                         <label class="dob month settingLabel">
@@ -50,7 +50,6 @@
 
                                 <div class="dob-input">
                                     <select name="months" class="dob bottom-border" ng-model="selectedMonth" required>
-                                        <option value=""></option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -65,7 +64,6 @@
                                         <option value="12">12</option>
                                     </select>
                                     <select id="form_dob_day" class="dob bottom-border" name="dob_day" ng-model="selectedDate" required>
-										<option value=""></option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -99,7 +97,6 @@
                                         <option value="31">31</option>
                                     </select>
                                     <select id="birthyear" name="birthyear" class="dob bottom-border" ng-model="selectedYear" required>
-                                        <option value=""></option>
                                         <option value="2006">2006</option>
                                         <option value="2005">2005</option>
                                         <option value="2004">2004</option>
@@ -144,7 +141,7 @@
                                         Gender
                                     </label>
 
-                                    <select class="gender" name="gender" id="userGender" ng-model="gender">
+                                    <select class="gender" name="gender" id="userGender" ng-model="gender" required>
                                         <option value="-">-</option>
                                         <option value="F">Female</option>
                                         <option value="M">Male</option>
