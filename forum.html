@@ -201,20 +201,19 @@
 												   
 													<!--metadata for example comment one-->
 													<div class="postMeta">
-														
 													<!--<p class="userName">{{rep.Author.Username}}</p>-->
 														<p class="set-width" dynamic="{{rep.FilteredBody}}"></p>
                                                         
 														<p class="set-width post-data" ng-if="rep.UnfilteredBodyLinks.image.length>0"><img src="{{rep.UnfilteredBodyLinks.image[0]}}" /></p>
-                                                        <p class="set-width post-data" ng-if="reply.UnfilteredBodyLinks.video.length>0">
+                                                        <p class="set-width post-data" ng-if="rep.UnfilteredBodyLinks.video.length>0">
                                                             <video width="100%" controls>
-                                                                <source  ng-src="{{trustSrc(reply.UnfilteredBodyLinks.video[0])}}" type="video/mp4" />
+                                                                <source  ng-src="{{trustSrc(rep.UnfilteredBodyLinks.video[0])}}" type="video/mp4" />
                                                                 Your browser does not support the video tag.
                                                             </video>
                                                         </p>
-                                                        <p class="set-width post-data" ng-if="reply.UnfilteredBodyLinks.audio.length>0">
+                                                        <p class="set-width post-data" ng-if="rep.UnfilteredBodyLinks.audio.length>0">
                                                             <audio controls>
-                                                                <source  ng-src="{{trustSrc(reply.UnfilteredBodyLinks.audio[0])}}" type="audio/mpeg" />
+                                                                <source  ng-src="{{trustSrc(rep.UnfilteredBodyLinks.audio[0])}}" type="audio/mpeg" />
                                                                 Your browser does not support the audio tag.
                                                             </audio>
                                                         </p>

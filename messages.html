@@ -28,7 +28,7 @@
 										<h5 class="postTitle">
 											{{message.LastMessage.Subject}}
 										</h5>
-										<p ng-bind="message.LastMessage.Body"></p>
+										<p dynamic="{{message.LastMessage.Body}}"></p>
 										</div>
 										<p class="date"> {{message.CreatedDate | date:"MM/dd/yyyy 'at' h:mma"}} <span class="chat"><img src="images/chat.png" alt="" />&nbsp;&nbsp;{{message.MessageCount}}</span></p>
 									</div>

@@ -73,7 +73,7 @@ myApp.config(function($routeProvider, $httpProvider, $facebookProvider) {
 		}());
 	});
 	
-myApp.controller('createUserCtrl', function($scope, $location){	
+myApp.controller('createUserCtrl', function($scope, $location){
 	var endpoints = {};
 	endpoints.mobileHandler = new MobileHandler();
 	
@@ -84,7 +84,7 @@ myApp.controller('createUserCtrl', function($scope, $location){
 		else{
 			// var attributes = [{'name': 'email', 'value': $scope.uemail}, {'name': 'username', 'value': $scope.uname}, {'name': 'password', 'value': $scope.password}];
 			
-			var attributes = [{"name": "username","value": "akash"},{"name": "email","value": "akash@sampatti.com"},{"name": "bdate","value": "4/15/1950"},{"name": "gend","value": "M"},{ "name": "education","value": "edu_7"},{"name": "hispanic","value": "No"},{"name": "ethnicitymultichoice","value": "s6_2::"},{"name": "kidsunder18","value": "Yes"},{ "name": "zipc","value": "60607"},{"name": "state", "value": "IL"},{"name": "region","value": "Midwest"},{"name": "income","value": "s9_5"},{"name": "employmentmultichoice","value": "s10_1::s10_2::s10_3::s10_6::"},{"name": "employmentcensus","value": "s10_1"},{"name": "signupmethod","value": "CreateUser"},{"name": "src","value": "src_5"},{"name": "fname","value": "Diego"},{"name": "lname","value": "C"},{"name": "cellphone","value": "773-123-1234"},{"name": "otpdelivery","value": "1"},{"name": "password", "value": "admin@123"}];
+			var attributes = [{"name": "username","value": "rishabh"},{"name": "email","value": "rishabh@sampatti.com"},{"name": "bdate","value": "4/15/1980"},{"name": "gend","value": "M"},{ "name": "education","value": "edu_7"},{"name": "hispanic","value": "No"},{"name": "ethnicitymultichoice","value": "s6_2::"},{"name": "kidsunder18","value": "Yes"},{ "name": "zipc","value": "60607"},{"name": "state", "value": "IL"},{"name": "region","value": "Midwest"},{"name": "income","value": "s9_5"},{"name": "employmentmultichoice","value": "s10_1::s10_2::s10_3::s10_6::"},{"name": "employmentcensus","value": "s10_1"},{"name": "signupmethod","value": "CreateUser"},{"name": "src","value": "src_5"},{"name": "fname","value": "Diego"},{"name": "lname","value": "C"},{"name": "cellphone","value": "773-123-1234"},{"name": "otpdelivery","value": "1"},{"name": "password", "value": "admin@123"}];
 
 
 			endpoints.mobileHandler.createUser(attributes, function(result){
@@ -267,18 +267,18 @@ myApp.controller('indexCtrl', function($scope, $cookieStore, $rootScope, $localS
 		$location.path('/forum-expanded/'+forumId);
 	}
 	
-	 $scope.localDate = function(date){
+	$scope.localDate = function(date){	
 		
 		var d = new Date(date);
-    	var offset = d.getTimezoneOffset() / 60;
-    	var hours = d.getHours();
-    	var minsLim = Math.floor(offset)-offset;
-    	var mins = d.getMinutes()/60;
-    	d.setMinutes((mins - minsLim)*60);
-    	d.setHours(hours - Math.ceil(offset));
-
-    	return d;
-	}
+		var offset = d.getTimezoneOffset() / 60;
+		var hours = d.getHours();
+		var minsLim = Math.floor(offset)-offset;
+		var mins = d.getMinutes()/60;
+		
+		d.setHours(hours - Math.ceil(offset));
+		d.setMinutes((mins - minsLim)*60);
+		return d;
+	};
 	
 });
 
@@ -488,8 +488,9 @@ myApp.controller('pollsCtrl', function($scope, $rootScope, $location, $localStor
 		$scope.allVotes = [];
 		var value = $('input[name="poll"]:checked').val();
 		$scope.value.push(value);
+		debugger;
 		var response = {"projectId": $scope.allPolls[0].projectId, "moduleId": $scope.allPolls[0].moduleId, "taskId": $scope.allPolls[0].taskId, "itemId": $scope.allPolls[0].itemId, "isTestData": false, "notes": $scope.notes, "values": $scope.value};
-		
+		debugger;
 		endpoints.mobileHandler.savePollResponse($scope.apiKey, $scope.userId, $scope.panelistId, response, function(result){
 			if(result.result.success){
 				alert('Thanks for your vote.');
@@ -1308,8 +1309,7 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 				   $scope.$apply();
 				}
 			});
-		}
-	  
+		}	  
 	};
 	
 	$scope.trustSrc = function(src) {
@@ -1502,6 +1502,7 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 								replyText = "[View:"+result.result.result.URL+":0:0]";
 						}
 						endpoints.mobileHandler.saveReply($scope.apiKey,$scope.userId,$scope.ThreadId,$scope.ParentId,replyText,function(response){
+							debugger;
 							$route.reload();
 						});
 					}
@@ -1534,14 +1535,16 @@ myApp.controller('forumCtrl', function($scope,$localStorage,$rootScope,$location
 		$scope.ParentId = ParentId;
 	};
 		
-	$scope.localDate = function(date){		
+	$scope.localDate = function(date){	
+		
 		var d = new Date(date);
 		var offset = d.getTimezoneOffset() / 60;
 		var hours = d.getHours();
 		var minsLim = Math.floor(offset)-offset;
 		var mins = d.getMinutes()/60;
-		d.setMinutes((mins - minsLim)*60);
+		
 		d.setHours(hours - Math.ceil(offset));
+		d.setMinutes((mins - minsLim)*60);
 		return d;
 	};
 });
@@ -1644,18 +1647,16 @@ myApp.controller('forumExpandedCtrl', function($scope,$localStorage,$rootScope,$
 		}
 	};
  
-	 $scope.localDate = function(date){
-		
+	$scope.localDate = function(date){		
 		var d = new Date(date);
-    	var offset = d.getTimezoneOffset() / 60;
-    	var hours = d.getHours();
-    	var minsLim = Math.floor(offset)-offset;
-    	var mins = d.getMinutes()/60;
-    	d.setMinutes((mins - minsLim)*60);
-    	d.setHours(hours - Math.ceil(offset));
-
-    	return d;
-	}
+		var offset = d.getTimezoneOffset() / 60;
+		var hours = d.getHours();
+		var minsLim = Math.floor(offset)-offset;
+		var mins = d.getMinutes()/60;		
+		d.setHours(hours - Math.ceil(offset));
+		d.setMinutes((mins - minsLim)*60);
+		return d;
+	};
 	
 	$scope.showChildCommentBox = function(id) {
 		$('.childCommentBox').hide();	
@@ -2061,7 +2062,7 @@ myApp.controller('profileCtrl', function($scope, $localStorage, $location){
 		// }
 		
 		$scope.bdate = $scope.selectedMonth + '/' + $scope.selectedDate + '/' + $scope.selectedYear;
-		$scope.attributes = [{"name": "fname", "value": $scope.fname}, {"name": "lname", "value": $scope.lname}, {"name": "email", "value": $scope.email}, {"name": "bdate", "value": $scope.bdate}, {"name": "gend", "value": $scope.gender}, {"name": "zipc", "value": $scope.zipcode}];
+		$scope.attributes = [{"name": "fname", "value": $scope.fname}, {"name": "lname", "value": $scope.lname}, {"name": "email", "value": $scope.email}, {"name": "bdate", "value": $scope.bdate}, {"name": "gend", "value": $scope.gender}, {"name": "zipc", "value": $scope.zipcode}, {"name": "cellphone", "value": $scope.mobileNumber}];
 		$scope.skipAddressVerify = false;
 		endpoints.mobileHandler.updatePanelistAttributes($scope.apiKey, $scope.userId, $scope.panelistId, $scope.attributes, $scope.skipAddressVerify, function(response){
 			if(response.result.success){
@@ -2234,6 +2235,7 @@ myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
 	});
 	
 	$scope.updateNotification = function() {
+		debugger;
 		if($scope.emailCheck){
 			if($scope.preferences.indexOf("3a") == -1)
 				$scope.preferences.push("3a", "3e", "3h");
@@ -2252,8 +2254,29 @@ myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
 			}
 		}
 		if($scope.smsCheck){
-			if($scope.preferences.indexOf("2a") == -1)
-				$scope.preferences.push("2a", "2e", "2h");
+			if($scope.preferences.indexOf("2a") == -1){
+				endpoints.mobileHandler.getPanelistAttributes($scope.apiKey, $scope.userId, $scope.panelistId, function(callback){
+					if(callback.result.success){
+						if(callback.result.result.cellphone){
+							$scope.mobileNumber = callback.result.result.cellphone.replace(/-/g, "");
+							if($scope.mobileNumber.length == 10){
+								$scope.preferences.push("2a", "2e", "2h");
+							}
+							else{
+								alert('Phone Number not valid');
+								$scope.smsCheck = '';
+								$location.path('/profile');
+							}
+						}
+						else{
+							alert('Please update your phone number');
+							$scope.smsCheck = '';
+							$location.path('/profile');
+						}
+					}
+					$scope.$apply();
+				});
+			}
 		}
 		else{
 			var findIndexes = [];
@@ -2302,8 +2325,29 @@ myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
 			}
 		}
 		if($scope.forumSMS){
-			if($scope.preferences.indexOf("2b") == -1)
-				$scope.preferences.push("2b", "2c");
+			if($scope.preferences.indexOf("2b") == -1){
+				endpoints.mobileHandler.getPanelistAttributes($scope.apiKey, $scope.userId, $scope.panelistId, function(callback){
+					if(callback.result.success){
+						if(callback.result.result.cellphone){
+							$scope.mobileNumber = callback.result.result.cellphone.replace(/-/g, "");
+							if($scope.mobileNumber.length == 10){
+								$scope.preferences.push("2b", "2c");
+							}
+							else{
+								alert('Phone Number not valid');
+								$scope.forumSMS = '';
+								$location.path('/profile');
+							}
+						}
+						else{
+							alert('Please update your phone number');
+							$scope.forumSMS = '';
+							$location.path('/profile');
+						}
+					}
+					$scope.$apply();
+				});
+			}
 		}
 		else{
 			var findIndexes = [];
@@ -2343,8 +2387,29 @@ myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
 				$scope.preferences.splice(index, 1);
 		}
 		if($scope.resultsSMS){
-			if($scope.preferences.indexOf("2d") == -1)
-				$scope.preferences.push("2d");
+			if($scope.preferences.indexOf("2d") == -1){
+				endpoints.mobileHandler.getPanelistAttributes($scope.apiKey, $scope.userId, $scope.panelistId, function(callback){
+					if(callback.result.success){
+						if(callback.result.result.cellphone){
+							$scope.mobileNumber = callback.result.result.cellphone.replace(/-/g, "");
+							if($scope.mobileNumber.length == 10){
+								$scope.preferences.push("2d");
+							}
+							else{
+								alert('Phone Number not valid');
+								$scope.forumSMS = '';
+								$location.path('/profile');
+							}
+						}
+						else{
+							alert('Please update your phone number');
+							$scope.forumSMS = '';
+							$location.path('/profile');
+						}
+					}
+					$scope.$apply();
+				});
+			}
 		}
 		else{
 			var index = $scope.preferences.indexOf("2d");
@@ -2370,8 +2435,29 @@ myApp.controller('notificationCtrl', function($scope, $localStorage, $location){
 				$scope.preferences.splice(index, 1);
 		}
 		if($scope.messagesSMS){
-			if($scope.preferences.indexOf("2f") == -1)
-				$scope.preferences.push("2f");
+			if($scope.preferences.indexOf("2f") == -1){
+				endpoints.mobileHandler.getPanelistAttributes($scope.apiKey, $scope.userId, $scope.panelistId, function(callback){
+					if(callback.result.success){
+						if(callback.result.result.cellphone){
+							$scope.mobileNumber = callback.result.result.cellphone.replace(/-/g, "");
+							if($scope.mobileNumber.length == 10){
+								$scope.preferences.push("2f");
+							}
+							else{
+								alert('Phone Number not valid');
+								$scope.forumSMS = '';
+								$location.path('/profile');
+							}
+						}
+						else{
+							alert('Please update your phone number');
+							$scope.forumSMS = '';
+							$location.path('/profile');
+						}
+					}
+					$scope.$apply();
+				});
+			}
 		}
 		else{
 			var index = $scope.preferences.indexOf("2f");
