@@ -4,13 +4,13 @@
 		<div id="pollContent">
 			<h5 class="pollQuestion" id="currentUpdaQuestion" bind-html-compile="item.pollTitle"></h5>
 			<p ng-repeat="option in item.options.categories" ng-if="item.type == 'SingleChoice'">
-				<input type="radio" name="poll" id="poll-radio-{{$index}}" value="{{$index + 1}}" ng-model="option.pollvote" />
+				<input type="radio" name="poll" id="poll-radio-{{$index}}" value="{{option.values}}" ng-model="option.pollvote" />
 				<label for="poll-radio-{{$index}}" id="label-{{$index}}" class="inline-label">
 					{{option.description}}
 				</label>
 			</p>
 			<p ng-repeat="option in item.options.categories" ng-if="item.type != 'SingleChoice'">
-				<input type="checkBox" name="poll" id="poll-radio-{{$index}}" value="{{$index + 1}}" ng-model="option.pollvote" />
+				<input type="checkBox" name="poll" id="poll-radio-{{$index}}" value="{{option.values}}" ng-model="option.pollvote" />
 				<label for="poll-radio-{{$index}}" id="label-{{$index}}" class="inline-label">
 					{{option.description}}
 				</label>
